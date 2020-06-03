@@ -67,6 +67,8 @@ export function chargerParams(event) {
 		general_config.nb_array = results.nb_array;
 		general_config.grid_vertical2D = results.grid_vertical2D;
 		general_config.data_road = results.data_road;
+		general_config.id_sbl_array_vertical_plane = results.id_sbl_array_vertical_plane;
+		general_config.id_meso_array_vertical_plane = results.id_meso_array_vertical_plane;
 		
 		
 		//Position et angle de la camera
