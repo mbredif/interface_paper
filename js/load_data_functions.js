@@ -65,6 +65,8 @@ export function chargerParams(event) {
 		general_config.active_color_class= results.active_color_class;
 		general_config.temp_values = results.temp_values;
 		general_config.nb_array = results.nb_array;
+		general_config.grid_vertical2D = results.grid_vertical2D;
+		general_config.data_road = results.data_road;
 		
 		
 		//Position et angle de la camera
@@ -229,6 +231,7 @@ export function loadChosenData() {
 	let dataO = $('#data_o').val().split('fakepath\\')[1];
 	let dataU = $('#data_u').val().split('fakepath\\')[1];
 	let dataV = $('#data_v').val().split('fakepath\\')[1];
+	let data_road = $('#data_road').val().split('fakepath\\')[1];
 	// a adapter quand on aura les fichiers meso NH
 	if (dataO.split("O")[1] !== dataU.split("U")[1] || dataO.split("O")[1] !== dataV.split("V")[1] ||
 	dataV.split("V")[1] !== dataU.split("U")[1]) {
@@ -248,6 +251,12 @@ export function loadChosenData() {
 		"./CSV/"+ dataV, 
 		[{'level':2, 'data':general_config.data_points_V_2}], 
 		"#ff5733");
+		
+		$.getJSON( "./geojson/"+ data_road, function( data ) {
+			general_config.data_road = data;
+		});
+		
+		
 		$('#data_loaded').html("Chargement réussi");
 		$('#data_block').hide()
 		//attend 1.5 seconde avant de fermer l'onglet
@@ -259,6 +268,7 @@ export function loadChosenData() {
 function closeChoiceContainer() {
 	let choiceContainer = document.getElementById("choose_data_container");
 	choiceContainer.style.height = "0em";
+	console.log(general_config);
 }
 
 function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
