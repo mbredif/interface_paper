@@ -89,6 +89,15 @@ export function recreate_scene() {
     }
     general_config.grid_plane = new THREE.Object3D();
     create_2D_plane_series(general_config.data_points_O_2,general_config.data_points_U_2,general_config.data_points_V_2,general_config.grid_plane,general_config.id_sbl_array_real_plane,general_config.id_meso_array_real_plane,general_config.temp_array,general_config.THAT,general_config.THAT_W,general_config.HCanopy,general_config.HCanopy_w);
+	
+	if(general_config.grid_vertical2D == null){
+	} else {
+		scene.remove(general_config.grid_vertical2D);
+	}
+	general_config.grid_vertical2D = new THREE.Object3D();
+		
+	create_2D_vertical_plane_series(general_config.data_road, general_config.grid_vertical2D, general_config.id_sbl_array_vertical_plane,general_config.id_meso_array_vertical_plane,general_config.temp_array,general_config.THAT,general_config.THAT_W,general_config.HCanopy,general_config.HCanopy_w);
+	create_temp_histogram();
 
 	datackbx.forEach(box => {
 		
@@ -235,7 +244,7 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
     
 		feature_bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( feature_coord_array_32, 3 ) );
 		feature_bufferGeometry.setAttribute( 'normal', new THREE.BufferAttribute( feature_normal_32, 3 ) );
-				
+								
 		var texture = new THREE.DataTexture3D( general_config.data_volume_3D.data_temp, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length );
 		texture.format = THREE.RedFormat;
 		texture.type = THREE.FloatType;
@@ -248,23 +257,10 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 
 		// Colormap textures
 		var cmtextures = {
-			blue_red_2: new THREE.TextureLoader().load( 'color/blue_red_2.png', render )
+			blue_red_2: new THREE.TextureLoader().load( 'color/blue_red_2.png', render ),
+			orange_red: new THREE.TextureLoader().load( 'color/orange_red.png', render )
 		};
 
-		var clim_1 = (temp_array[0] - general_config.data_volume_3D.temp_min)/(general_config.data_volume_3D.temp_max - general_config.data_volume_3D.temp_min);
-		var clim_2 = (temp_array[1] - general_config.data_volume_3D.temp_min)/(general_config.data_volume_3D.temp_max - general_config.data_volume_3D.temp_min);
-		if(clim_1 < 0){
-			clim_1 = 0;
-		}
-		if(clim_1 > 1){
-			clim_1 = 1;
-		}
-		if(clim_2 < 0){
-			clim_2 = 0;
-		}
-		if(clim_2 > 1){
-			clim_2 = 1;
-		}
 
 		var limit_meso_array = [1.0,2.0,4.0,6.0,9.0,13.0,47.0,60.0,132.0,218.4,322.1,446.5,595.8,775.0,989.9,1247.9,1557.5,1929.0,2374.8,2909.8,3551.8,4251.8,4951.8,5651.8,6351.8,7051.8,7751.8,8451.8,9151.8,9851.8,10551.8,11251.8,11951.8,12651.8,13351.8,14051.8,14751.8,15451.8];	
     
@@ -273,7 +269,7 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
             uniforms: {
                 u_data: { value: texture },
                 zs_data: { value: texture_zs},
-                u_cmdata: { value: cmtextures.blue_red_2 },
+                u_cmdata: { value: cmtextures.orange_red },
                 u_clim: { value: [general_config.temp_array[0],general_config.temp_array[1]] },
                 u_size: { value: [general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length] },
                 x_min:{type: "f", value: 154.3850000000093},
@@ -382,8 +378,6 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 			}
 		}
 		
-		console.log(features_points_array);
-		
 		var feature_coord_array_32 = new Float32Array(features_points_array);
 		var feature_normal_32 = new Float32Array(features_normal_array);
 
@@ -404,23 +398,9 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 
 		// Colormap textures
 		var cmtextures = {
-			blue_red_2: new THREE.TextureLoader().load( 'color/blue_red_2.png', render )
+			blue_red_2: new THREE.TextureLoader().load( 'color/blue_red_2.png', render ),
+			orange_red: new THREE.TextureLoader().load( 'color/orange_red.png', render )
 		};
-
-		var clim_1 = (temp_array[0] - general_config.data_volume_3D.temp_min)/(general_config.data_volume_3D.temp_max - general_config.data_volume_3D.temp_min);
-		var clim_2 = (temp_array[1] - general_config.data_volume_3D.temp_min)/(general_config.data_volume_3D.temp_max - general_config.data_volume_3D.temp_min);
-		if(clim_1 < 0){
-			clim_1 = 0;
-		}
-		if(clim_1 > 1){
-			clim_1 = 1;
-		}
-		if(clim_2 < 0){
-			clim_2 = 0;
-		}
-		if(clim_2 > 1){
-			clim_2 = 1;
-		}
 
 		var limit_meso_array = [1.0,2.0,4.0,6.0,9.0,13.0,47.0,60.0,132.0,218.4,322.1,446.5,595.8,775.0,989.9,1247.9,1557.5,1929.0,2374.8,2909.8,3551.8,4251.8,4951.8,5651.8,6351.8,7051.8,7751.8,8451.8,9151.8,9851.8,10551.8,11251.8,11951.8,12651.8,13351.8,14051.8,14751.8,15451.8];	
     
@@ -429,7 +409,7 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
             uniforms: {
                 u_data: { value: texture },
                 zs_data: { value: texture_zs},
-                u_cmdata: { value: cmtextures.blue_red_2 },
+                u_cmdata: { value: cmtextures.orange_red },
                 u_clim: { value: [general_config.temp_array[0],general_config.temp_array[1]] },
                 u_size: { value: [general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length] },
                 x_min:{type: "f", value: 154.3850000000093},
