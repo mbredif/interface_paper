@@ -1,0 +1,24 @@
+{
+  "name": "interface_visu_3d_urclim-master",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000S\u0000t\u0000a\u0000g\u0000e\u0000\r\u0000 \u0000",
+  "main": "main.js",
+  "scripts": {
+    "watch": "parcel serve ./interface_visu_3D_urclim.html",
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aviinil/Stage.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aviinil/Stage/issues"
+  },
+  "homepage": "https://github.com/Aviinil/Stage#readme",
+  "dependencies": {
+    "jquery": "^3.5.0",
+    "parcel": "^1.12.4"
+  }
+}
