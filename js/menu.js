@@ -134,7 +134,7 @@ export function sblValues() {
         ckbx3.className="2D_vertical_planes ckbx_sbl_2D_vertical_planes";
         ckbx3.id="SBL_"+i;
 
-		ckbx3.addEventListener('click', () => handleCreationPoints(ckbx3.id));
+		ckbx3.addEventListener('click', () => handleCreationVerticalPlane(ckbx3.id));
         
         inputContainer2D.append(ckbx);
         inputContainer3D.append(ckbx2);
@@ -273,5 +273,7 @@ function nouvelObjet() {
     newObj.active_color_class= general_config.active_color_class;
     newObj.temp_values = general_config.temp_values;
     newObj.nb_array = general_config.nb_array;
+	newObj.grid_vertical2D = general_config.grid_vertical2D;
+    newObj.data_road = general_config.data_road;
     return newObj;
 }
