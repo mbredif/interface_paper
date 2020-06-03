@@ -275,5 +275,7 @@ function nouvelObjet() {
     newObj.nb_array = general_config.nb_array;
 	newObj.grid_vertical2D = general_config.grid_vertical2D;
     newObj.data_road = general_config.data_road;
+	newObj.id_sbl_array_vertical_plane = general_config.id_sbl_array_vertical_plane;
+    newObj.id_meso_array_vertical_plane = general_config.id_meso_array_vertical_plane;
     return newObj;
 }
