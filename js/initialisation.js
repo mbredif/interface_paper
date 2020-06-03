@@ -94,7 +94,9 @@ export var general_config = {
     "data_url":null,
     "url_data_road":null,
     "url_data_bat":null,
-    "grid_bat":null
+    "grid_bat":null,
+	"grid_vertical2D":null,
+	"data_road":null
 }	
 
 export function init(){
