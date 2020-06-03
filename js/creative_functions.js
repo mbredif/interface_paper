@@ -120,7 +120,339 @@ export function recreate_scene() {
 	})
 }
 
-export function create_2D_vertical_plane_series(){
+export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_array,id_meso_array,temp_array,THAT,THAT_W,HCanopy,HCanopy_w){
+	
+	var features_points_array = [];
+	var features_normal_array = [];
+	
+	let tab_temp = [];
+    //let tab_temp2 = general_config.temp_values;
+    
+    general_config.temp_values = [];
+    var ni = general_config.data_ni, 
+    nj = general_config.data_nj;
+       
+    general_config.z_min = null;
+    general_config.z_max = null;
+    general_config.x_min = null;
+    general_config.x_max = null;
+    general_config.y_min = null;
+    general_config.y_max = null;
+    
+    general_config.h_min = null;
+    general_config.h_max = null;
+    
+    for(var m=0; m<id_sbl_array.length; m++){
+		var h = HCanopy[id_sbl_array[m]-1];
+        var h_w = HCanopy_w[id_sbl_array[m]-1];
+		
+		
+		var lz = (h - h_w)*2; 
+		        
+        if(general_config.h_min != null && general_config.h_max != null){
+            if(h_w < general_config.h_min){
+                general_config.h_min = h_w;
+            }
+            if((h_w + lz) > general_config.h_max){
+                general_config.h_max = (h_w + lz);
+            }
+        } else {
+            general_config.h_min = h_w;
+            general_config.h_max = (h_w + lz);
+        }
+                
+		
+		for(var a =0; a< road_summit_data.features.length - 1; a++){
+			var feature_1 = road_summit_data.features[a];
+			var feature_2 = road_summit_data.features[a+1];
+			
+			if(feature_2.properties.id_road != feature_1.properties.id_road){
+				continue;
+			} else {							
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_w + lz)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_w)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_w + lz)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_w)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_w)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_w + lz)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				
+				var N_X = - ((feature_2.properties.MNT + h_w)*general_config.cst_Z-(feature_1.properties.MNT + h_w + lz)*general_config.cst_Z)*((feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				var N_Y = ((feature_2.properties.MNT + h_w)*general_config.cst_Z-(feature_1.properties.MNT + h_w + lz)*general_config.cst_Z)*((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X-(feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);
+				
+				var normal_vector = new THREE.Vector2( N_X, N_Y );
+				normal_vector.normalize();
+				
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				
+				if(general_config.x_min != null && general_config.x_max != null){
+					if((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris) < general_config.x_min){
+						general_config.x_min = feature_1.geometry.coordinates[0]-general_config.Coord_X_paris;
+					}
+					if((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris) > general_config.x_max){
+						general_config.x_max = feature_1.geometry.coordinates[0]-general_config.Coord_X_paris;
+					}
+				} else {
+					general_config.x_min = feature_1.geometry.coordinates[0]-general_config.Coord_X_paris;
+					general_config.x_max = feature_1.geometry.coordinates[0]-general_config.Coord_X_paris;
+				}
+				
+				if(general_config.y_min != null && general_config.y_max != null){
+					if((-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)) < general_config.y_min){
+						general_config.y_min = -(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris);
+					}
+					if((-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)) > general_config.y_max){
+						general_config.y_max = -(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris);
+					}
+				} else {
+					general_config.y_min = -(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris);
+					general_config.y_max = -(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris);
+				}
+				
+				if(general_config.z_min != null && general_config.z_max != null){
+					if((feature_1.properties.MNT + h_w) < general_config.z_min){
+						general_config.z_min = feature_1.properties.MNT + h_w;
+					}
+					if((feature_1.properties.MNT + h_w + lz) > general_config.z_max){
+						general_config.z_max = feature_1.properties.MNT + h_w + lz;
+					}
+				} else {
+					general_config.z_min = feature_1.properties.MNT + h_w;
+					general_config.z_max = feature_1.properties.MNT + h_w + lz;
+				}
+			}
+		}
+		
+		var feature_coord_array_32 = new Float32Array(features_points_array);
+		var feature_normal_32 = new Float32Array(features_normal_array);
+
+		var feature_bufferGeometry = new THREE.BufferGeometry();
+    
+		feature_bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( feature_coord_array_32, 3 ) );
+		feature_bufferGeometry.setAttribute( 'normal', new THREE.BufferAttribute( feature_normal_32, 3 ) );
+				
+		var texture = new THREE.DataTexture3D( general_config.data_volume_3D.data_temp, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length );
+		texture.format = THREE.RedFormat;
+		texture.type = THREE.FloatType;
+		texture.unpackAlignment = 1;
+
+		var texture_zs = new THREE.DataTexture( general_config.data_volume_3D.data_zs, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length);
+		texture_zs.format = THREE.RedFormat;
+		texture_zs.type = THREE.FloatType;
+		texture_zs.unpackAlignment = 1;
+
+		// Colormap textures
+		var cmtextures = {
+			blue_red_2: new THREE.TextureLoader().load( 'color/blue_red_2.png', render )
+		};
+
+		var clim_1 = (temp_array[0] - general_config.data_volume_3D.temp_min)/(general_config.data_volume_3D.temp_max - general_config.data_volume_3D.temp_min);
+		var clim_2 = (temp_array[1] - general_config.data_volume_3D.temp_min)/(general_config.data_volume_3D.temp_max - general_config.data_volume_3D.temp_min);
+		if(clim_1 < 0){
+			clim_1 = 0;
+		}
+		if(clim_1 > 1){
+			clim_1 = 1;
+		}
+		if(clim_2 < 0){
+			clim_2 = 0;
+		}
+		if(clim_2 > 1){
+			clim_2 = 1;
+		}
+
+		var limit_meso_array = [1.0,2.0,4.0,6.0,9.0,13.0,47.0,60.0,132.0,218.4,322.1,446.5,595.8,775.0,989.9,1247.9,1557.5,1929.0,2374.8,2909.8,3551.8,4251.8,4951.8,5651.8,6351.8,7051.8,7751.8,8451.8,9151.8,9851.8,10551.8,11251.8,11951.8,12651.8,13351.8,14051.8,14751.8,15451.8];	
+    
+		var road_material = new THREE.ShaderMaterial( {
+            side: THREE.DoubleSide,
+            uniforms: {
+                u_data: { value: texture },
+                zs_data: { value: texture_zs},
+                u_cmdata: { value: cmtextures.blue_red_2 },
+                u_clim: { value: [general_config.temp_array[0],general_config.temp_array[1]] },
+                u_size: { value: [general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length] },
+                x_min:{type: "f", value: 154.3850000000093},
+                x_max:{type: "f", value: 779.4010000000708},
+                y_min:{type: "f", value: 604.3519999999553},
+                y_max:{type: "f", value: 1227.0260000005364},
+                zs: {type: "f", value: 46.81231},
+                mesolimit: {value: limit_meso_array},
+                cst_X: {value: general_config.cst_X},
+                cst_Y: {value: general_config.cst_Y},
+                cst_Z: {value: general_config.cst_Z},
+            },
+            vertexShader: document.getElementById( 'vertexshader_3D_plane' ).textContent,
+            fragmentShader: document.getElementById( 'fragmentshader_3D_plane' ).textContent
+            } );
+				
+		var feature_mesh = new THREE.Mesh( feature_bufferGeometry, road_material);
+		
+		grid.add(feature_mesh);
+		scene.add(grid);
+	}	
+    
+	for(var m=0; m<id_meso_array.length; m++){
+		var h = THAT[id_meso_array[m]-1];
+        var h_w = THAT_W[id_meso_array[m]-1];
+		
+		
+		var lz = (h - h_w)*2;   
+		
+		if(general_config.h_min != null && general_config.h_max != null){
+            if(h_w < general_config.h_min){
+                general_config.h_min = h_w;
+            }
+            if((h_w + lz) > general_config.h_max){
+                general_config.h_max = (h_w + lz);
+            }
+        } else {
+            general_config.h_min = h_w;
+            general_config.h_max = (h_w + lz);
+        }
+        
+		          
+		for(var a =0; a< road_summit_data.features.length - 1; a++){
+			var feature_1 = road_summit_data.features[a];
+			var feature_2 = road_summit_data.features[a+1];
+			
+			if(feature_2.properties.id_road != feature_1.properties.id_road){
+				continue;
+			} else {
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_w + lz)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);			
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_w)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_w + lz)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_w)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_w)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_w + lz)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				
+				var N_X = - ((feature_2.properties.MNT + h_w)*general_config.cst_Z-(feature_1.properties.MNT + h_w + lz)*general_config.cst_Z)*((feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				var N_Y = ((feature_2.properties.MNT + h_w)*general_config.cst_Z-(feature_1.properties.MNT + h_w + lz)*general_config.cst_Z)*((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X-(feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);
+				
+				var normal_vector = new THREE.Vector2( N_X, N_Y );
+				normal_vector.normalize();
+				
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+				
+				if(general_config.x_min != null && general_config.x_max != null){
+					if((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris) < general_config.x_min){
+						general_config.x_min = feature_1.geometry.coordinates[0]-general_config.Coord_X_paris;
+					}
+					if((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris) > general_config.x_max){
+						general_config.x_max = feature_1.geometry.coordinates[0]-general_config.Coord_X_paris;
+					}
+				} else {
+					general_config.x_min = feature_1.geometry.coordinates[0]-general_config.Coord_X_paris;
+					general_config.x_max = feature_1.geometry.coordinates[0]-general_config.Coord_X_paris;
+				}
+				
+				if(general_config.y_min != null && general_config.y_max != null){
+					if((-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)) < general_config.y_min){
+						general_config.y_min = -(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris);
+					}
+					if((-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)) > general_config.y_max){
+						general_config.y_max = -(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris);
+					}
+				} else {
+					general_config.y_min = -(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris);
+					general_config.y_max = -(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris);
+				}
+				
+				if(general_config.z_min != null && general_config.z_max != null){
+					if((feature_1.properties.MNT + h_w) < general_config.z_min){
+						general_config.z_min = feature_1.properties.MNT + h_w;
+					}
+					if((feature_1.properties.MNT + h_w + lz) > general_config.z_max){
+						general_config.z_max = feature_1.properties.MNT + h_w + lz;
+					}
+				} else {
+					general_config.z_min = feature_1.properties.MNT + h_w;
+					general_config.z_max = feature_1.properties.MNT + h_w + lz;
+				}
+			}
+		}
+		
+		console.log(features_points_array);
+		
+		var feature_coord_array_32 = new Float32Array(features_points_array);
+		var feature_normal_32 = new Float32Array(features_normal_array);
+
+		var feature_bufferGeometry = new THREE.BufferGeometry();
+    
+		feature_bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( feature_coord_array_32, 3 ) );
+		feature_bufferGeometry.setAttribute( 'normal', new THREE.BufferAttribute( feature_normal_32, 3 ) );
+				
+		var texture = new THREE.DataTexture3D( general_config.data_volume_3D.data_temp, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length );
+		texture.format = THREE.RedFormat;
+		texture.type = THREE.FloatType;
+		texture.unpackAlignment = 1;
+
+		var texture_zs = new THREE.DataTexture( general_config.data_volume_3D.data_zs, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length);
+		texture_zs.format = THREE.RedFormat;
+		texture_zs.type = THREE.FloatType;
+		texture_zs.unpackAlignment = 1;
+
+		// Colormap textures
+		var cmtextures = {
+			blue_red_2: new THREE.TextureLoader().load( 'color/blue_red_2.png', render )
+		};
+
+		var clim_1 = (temp_array[0] - general_config.data_volume_3D.temp_min)/(general_config.data_volume_3D.temp_max - general_config.data_volume_3D.temp_min);
+		var clim_2 = (temp_array[1] - general_config.data_volume_3D.temp_min)/(general_config.data_volume_3D.temp_max - general_config.data_volume_3D.temp_min);
+		if(clim_1 < 0){
+			clim_1 = 0;
+		}
+		if(clim_1 > 1){
+			clim_1 = 1;
+		}
+		if(clim_2 < 0){
+			clim_2 = 0;
+		}
+		if(clim_2 > 1){
+			clim_2 = 1;
+		}
+
+		var limit_meso_array = [1.0,2.0,4.0,6.0,9.0,13.0,47.0,60.0,132.0,218.4,322.1,446.5,595.8,775.0,989.9,1247.9,1557.5,1929.0,2374.8,2909.8,3551.8,4251.8,4951.8,5651.8,6351.8,7051.8,7751.8,8451.8,9151.8,9851.8,10551.8,11251.8,11951.8,12651.8,13351.8,14051.8,14751.8,15451.8];	
+    
+		var road_material = new THREE.ShaderMaterial( {
+            side: THREE.DoubleSide,
+            uniforms: {
+                u_data: { value: texture },
+                zs_data: { value: texture_zs},
+                u_cmdata: { value: cmtextures.blue_red_2 },
+                u_clim: { value: [general_config.temp_array[0],general_config.temp_array[1]] },
+                u_size: { value: [general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length] },
+                x_min:{type: "f", value: 154.3850000000093},
+                x_max:{type: "f", value: 779.4010000000708},
+                y_min:{type: "f", value: 604.3519999999553},
+                y_max:{type: "f", value: 1227.0260000005364},
+                zs: {type: "f", value: 46.81231},
+                mesolimit: {value: limit_meso_array},
+                cst_X: {value: general_config.cst_X},
+                cst_Y: {value: general_config.cst_Y},
+                cst_Z: {value: general_config.cst_Z},
+            },
+            vertexShader: document.getElementById( 'vertexshader_3D_plane' ).textContent,
+            fragmentShader: document.getElementById( 'fragmentshader_3D_plane' ).textContent
+            } );
+				
+		var feature_mesh = new THREE.Mesh( feature_bufferGeometry, road_material);
+		
+		grid.add(feature_mesh);
+		scene.add(grid);
+		
+	}
+	
 	
 	
 }
@@ -3428,6 +3760,10 @@ export function mix(start, end, percent) {
     return start + ((percent) * (end - start));
 }
 
+export function import_road_geojson(geojson_file,grid,scene,nature_type) {
+	
+};
+
 export function import_geojson(geojson_file,grid,scene,nature_type) {
 
 var features_points_array = [];
@@ -4015,130 +4351,7 @@ export function create_temp_histogram(){
         }
 }
 
-export function import_road_geojson(geojson_file,grid,scene) {
 
-var features_points_array = [];
-var features_color_array = [];
-var features_normal_array = [];
-
-var roads_height = 25;
-
-var texture = new THREE.DataTexture3D( general_config.data_volume_3D.data_temp, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length );
-texture.format = THREE.RedFormat;
-texture.type = THREE.FloatType;
-texture.unpackAlignment = 1;
-
-var texture_zs = new THREE.DataTexture( general_config.data_volume_3D.data_zs, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length);
-texture_zs.format = THREE.RedFormat;
-texture_zs.type = THREE.FloatType;
-texture_zs.unpackAlignment = 1;
-
-// Colormap textures
-cmtextures = {
-    blue_red_2: new THREE.TextureLoader().load( 'color/blue_red_2.png', render )
-};
-
-
-var clim_1 = (general_config.temp_array[0] - general_config.data_volume_3D.temp_min)/(general_config.data_volume_3D.temp_max - general_config.data_volume_3D.temp_min);
-var clim_2 = (general_config.temp_array[1] - general_config.data_volume_3D.temp_min)/(general_config.data_volume_3D.temp_max - general_config.data_volume_3D.temp_min);
-if(clim_1 < 0){
-    clim_1 = 0;
-}
-if(clim_1 > 1){
-    clim_1 = 1;
-}
-if(clim_2 < 0){
-    clim_2 = 0;
-}
-if(clim_2 > 1){
-    clim_2 = 1;
-}
-
-
-var limit_meso_array = [1.0,2.0,4.0,6.0,9.0,13.0,47.0,60.0,132.0,218.4,322.1,446.5,595.8,775.0,989.9,1247.9,1557.5,1929.0,2374.8,2909.8,3551.8,4251.8,4951.8,5651.8,6351.8,7051.8,7751.8,8451.8,9151.8,9851.8,10551.8,11251.8,11951.8,12651.8,13351.8,14051.8,14751.8,15451.8];	
-    
-var road_material = new THREE.ShaderMaterial( {
-                    side: THREE.DoubleSide,
-                    uniforms: {
-                        u_data: { value: texture },
-                        zs_data: { value: texture_zs},
-                        u_cmdata: { value: cmtextures.blue_red_2 },
-                        u_clim: { value: [general_config.temp_array[0],general_config.temp_array[1]] },
-                        u_size: { value: [general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length] },
-                        x_min:{type: "f", value: 154.3850000000093},
-                        x_max:{type: "f", value: 779.4010000000708},
-                        y_min:{type: "f", value: 604.3519999999553},
-                        y_max:{type: "f", value: 1227.0260000005364},
-                        zs: {type: "f", value: 46.81231},
-                        mesolimit: {value: limit_meso_array},
-                        cst_X: {value: general_config.cst_X},
-                        cst_Y: {value: general_config.cst_Y},
-                        cst_Z: {value: general_config.cst_Z},
-                    },
-                    vertexShader: document.getElementById( 'vertexshader_3D_plane' ).textContent,
-                    fragmentShader: document.getElementById( 'fragmentshader_3D_plane' ).textContent
-                } );
-
-    
-  for(var a =0; a< geojson_file.features.length - 1; a++){
-        var feature_1 = geojson_file.features[a];
-        var feature_2 = geojson_file.features[a+1];
-        
-        if(feature_2.properties.id_road != feature_1.properties.id_road){
-            continue;
-        } else {
-                    
-        var building_color = getRoadColor(feature_1.properties.type); 
-                    
-        features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push(feature_1.properties.MNT*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-        features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + roads_height)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-        features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push(feature_2.properties.MNT*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-        
-        features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + roads_height)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-        features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + roads_height)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-        features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push(feature_2.properties.MNT*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-        
-        var N_X = - ((feature_2.properties.MNT + roads_height)*general_config.cst_Z-feature_1.properties.MNT*general_config.cst_Z)*((feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-        var N_Y = ((feature_2.properties.MNT + roads_height)*general_config.cst_Z-feature_1.properties.MNT*general_config.cst_Z)*((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X-(feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);
-        
-        var normal_vector = new THREE.Vector2( N_X, N_Y );
-        normal_vector.normalize();
-        
-        features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
-        features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
-        features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
-        features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
-        features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
-        features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
-                                        
-        features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-        features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-        features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-        features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-        features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-        features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-        }
-                    
-        
-  }
-  
-  var feature_coord_array_32 = new Float32Array(features_points_array);
-    var feature_colors_32 = new Float32Array(features_color_array);
-    var feature_normal_32 = new Float32Array(features_normal_array);		
-        
-    var feature_material = new THREE.MeshPhongMaterial( { vertexColors: THREE.VertexColors, emissive: 0x072534, side: THREE.DoubleSide, flatShading: true } );
-    var feature_bufferGeometry = new THREE.BufferGeometry();
-    
-    feature_bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( feature_coord_array_32, 3 ) );
-    feature_bufferGeometry.setAttribute( 'normal', new THREE.BufferAttribute( feature_normal_32, 3 ) );
-    feature_bufferGeometry.setAttribute( 'color', new THREE.BufferAttribute( feature_colors_32, 3 ) );
-    var feature_mesh = new THREE.Mesh( feature_bufferGeometry, road_material);
-        
-    general_config.grid.add(feature_mesh);
-    scene.add(general_config.grid);
-    
-
-}
 
 export function getRoadColor(type){
     var color = {"r":100, "g":100, "b":100};
