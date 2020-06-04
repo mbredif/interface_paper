@@ -527,16 +527,21 @@
 		uniform sampler3D u_data;
 		uniform sampler2D zs_data;
 		uniform sampler2D u_cmdata;
-		
+				
 		uniform float x_min;
 		uniform float x_max;
 		uniform float y_min;
 		uniform float y_max;
-		uniform float mesolimit[38];
+		//uniform float sbl_limit[7];
+		//uniform float meso_limit[32];
+		uniform float meso_limit[38];
+		uniform float type_model;
 		uniform float cst_X;
 		uniform float cst_Y;
 		uniform float cst_Z;
 		uniform float zs;
+		
+		uniform bool sbl_meso_level[37];
 
 		float sample1(vec3 texcoords) {
 				/* Sample float value from a 3D texture. Assumes intensity data. */
@@ -550,31 +555,67 @@
 				float voxel_position_z = 0.0;
 				vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
 				float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
-				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
-					voxel_position_z = 0.0;
+				
+				if(type_model < 0.5 ){
+					if((new_zs+ meso_limit[0])*cst_Z > v_position[1]){
+						discard;
+					} else {
+						for(int i=1; i< 7; i++){
+							if((new_zs + meso_limit[i])*cst_Z > v_position[1]){
+								float z_min = new_zs + meso_limit[i-1];
+								float z_max = new_zs + meso_limit[i];
+								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+								break;
+							}				
+						}
+					}
 				} else {
-					for(int i=1; i< 38; i++){
-						if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
-							float z_min = new_zs + mesolimit[i-1];
-							float z_max = new_zs + mesolimit[i];
-							voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
-							break;
-						}				
+					if((new_zs+ meso_limit[7])*cst_Z > v_position[1]){
+						if((new_zs)*cst_Z > v_position[1]){
+							discard;
+						}
+						else {
+							voxel_position_z = 6.0;
+						}
+					} else {
+						for(int i=8; i< 38; i++){
+							if((new_zs + meso_limit[i])*cst_Z > v_position[1]){
+								float z_min = new_zs + meso_limit[i-1];
+								float z_max = new_zs + meso_limit[i];
+								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+								break;
+							}				
+						}
 					}
 				}
 				
 				vec3 voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
-		
-				float val = sample1(voxel_position/u_size);
+						
+				//float val = sample1(voxel_position/u_size);
 				
-				if(val<u_clim[0]){
-					gl_FragColor = vec4(0.0,0.0,0.0,0.0);
-				} else if(val>u_clim[1]){
-					gl_FragColor = vec4(0.0,0.0,0.0,0.0);
-				} else{
-					float new_val = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
-					gl_FragColor = texture2D(u_cmdata, vec2(new_val, 0.5));
+				float val = fract(float(int(voxel_position_z))/(u_size[2]/7.0));
+				
+				if(sbl_meso_level[int(voxel_position_z)] == false){
+					discard;
+				} else {
+				
+				gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
+				
+				//int intpart = (int)voxel_position_z;
+				//double decpart = voxel_position_z - intpart;
+				//
+				//gl_FragColor = vec4(decpart,0.0,0.0,1.0);
+	
+				//	if(val<u_clim[0]){
+				//		discard;
+				//	} else if(val>u_clim[1]){
+				//		discard;
+				//	} else{
+				//		float new_val = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
+				//		gl_FragColor = texture2D(u_cmdata, vec2(new_val, 0.5));
+				//	}
 				}
+				
 					
 				
 				
