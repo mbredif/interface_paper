@@ -140,7 +140,7 @@ export function handleCreationVerticalPlane(id) {
     general_config.grid_vertical2D = new THREE.Object3D();
 		
 	create_2D_vertical_plane_series(general_config.data_road, general_config.grid_vertical2D, general_config.id_sbl_array_vertical_plane,general_config.id_meso_array_vertical_plane,general_config.temp_array,general_config.THAT,general_config.THAT_W,general_config.HCanopy,general_config.HCanopy_w);
-    create_temp_histogram();
+    //create_temp_histogram();
 }
 
 function removeValue(array, value) {
