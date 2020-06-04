@@ -27,6 +27,8 @@ export var general_config = {
     "id_sbl_array":[],
     "id_meso_array_real_plane":[],
     "id_sbl_array_real_plane":[],
+	"id_sbl_array_vertical_plane":[],
+	"id_meso_array_vertical_plane":[],
     "type_points":1,
     "domain_min":15,
     "domain_max": 35,
@@ -67,8 +69,10 @@ export var general_config = {
     "Coord_X_paris":651948.0,
     "THAT":[-30.0,30.0,96.0,175.2,270.2,384.3,521.1,685.4,882.4,1118.9,1402.7,1743.3,2151.9,2642.3,3230.8,3901.8,4601.8,5301.8,6001.8,6701.8,7401.8,8101.8,8801.8,9501.8,10201.8,10901.8,11601.8,12301.8,13001.8,13701.8,14401.8,15101.8],
     "THAT_W":[-60.0,0.0,60.0,132.0,218.4,322.1,446.5,595.8,775.0,989.9,1247.9,1557.5,1929.0,2374.8,2909.8,3551.8,4251.8,4951.8,5651.8,6351.8,7051.8,7751.8,8451.8,9151.8,9851.8,10551.8,11251.8,11951.8,12651.8,13351.8,14051.8,14751.8],
-    "HCanopy":[0.5,2,4, 6.5, 10, 29],
-    "HCanopy_w":[0,1,3,5,8,12],
+    //"HCanopy":[0.5,2,4, 6.5, 10, 29],
+    //"HCanopy_w":[0,1,3,5,8,12],
+	"HCanopy":[1.5,3,5, 7.5, 11, 30],
+    "HCanopy_w":[1,2,4,6,9,13],
     "HCL_color_scales": [
         {'name':'sequential_red_sotr','scale':['#FADDC3','#F9C29C','#F6A173','#F17B51','#EA4C3B']},
         {'name':'sequential_red_2_sotr','scale':['#FDF5EB','#FFD3A7','#FE945C','#DD3B24','#88002D']},
@@ -284,7 +288,7 @@ export function init(){
                 $("#temp_min_input").val(parseFloat($("#temp_max_input").val())-1)
             }
             general_config.temp_array = [parseFloat($("#temp_min_input").val())+273.15,parseFloat($("#temp_max_input").val())+273.15];
-            recreate_scene()
+            recreate_scene();
             if (general_config.domain_min > parseFloat($("#temp_min_input").val())) {
                 general_config.domain_min = (parseFloat($("#temp_min_input").val())) -1;
             }
