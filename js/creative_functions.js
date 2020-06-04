@@ -72,7 +72,6 @@ export function activate_animation() {
 export function activate_animation_second_part(material) {
     if(general_config.grid != null){
         general_config.grid.children[0].material = material;
-        
     }
     if(general_config.grid_plane != null){
         general_config.grid_plane.children[0].material = material;
@@ -176,6 +175,7 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		
 		var features_points_array = [];
 		var features_normal_array = [];
+
 		
 		var h_min = HCanopy_w[0];
 		var h_max = HCanopy_w[HCanopy_w.length - 1] + (HCanopy[HCanopy.length - 1] - HCanopy_w[HCanopy_w.length - 1])*2;
@@ -409,46 +409,14 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
         for(var j=0; j<nj; j++){
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
-                var h;
-                var h_w;
-                switch(id_sbl_array[m]){
-                    case 1:
-                        temp = MesoNH_O_array[index_1].teb_1;
-                        h = HCanopy[0];
-                        h_w = HCanopy_w[0];
-                        break;
-                    case 2:
-                        temp = MesoNH_O_array[index_1].teb_2;
-                        h = HCanopy[1];
-                        h_w = HCanopy_w[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].teb_3;
-                        h = HCanopy[2];
-                        h_w = HCanopy_w[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].teb_4;
-                        h = HCanopy[3];
-                        h_w = HCanopy_w[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].teb_5;
-                        h = HCanopy[4];
-                        h_w = HCanopy_w[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].teb_6;
-                        h = HCanopy[5];
-                        h_w = HCanopy_w[5];
-                        break;
-                    default:
-                        return;
-                }
+
+                var id = id_sbl_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
+                var h = HCanopy[id - 1];
+                var h_w = HCanopy_w[id - 1];
+				
                 // pour 'effectifs egaux', tableau temporaire
-                tab_temp.push(parseFloat(temp));
-                
-                
+                tab_temp.push(temp);
 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
@@ -516,169 +484,13 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
                 
-                var h;
-                var h_w;
-                switch(id_meso_array[m]){
-                    case 2:
-                        temp = MesoNH_O_array[index_1].tht_2;
-                        h = THAT[1];
-                        h_w = THAT_W[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].tht_3;
-                        h = THAT[2];
-                        h_w = THAT_W[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].tht_4;
-                        h = THAT[3];
-                        h_w = THAT_W[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].tht_5;
-                        h = THAT[4];
-                        h_w = THAT_W[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].tht_6;
-                        h = THAT[5];
-                        h_w = THAT_W[5];
-                        break;
-                    case 7:
-                        temp = MesoNH_O_array[index_1].tht_7;
-                        h = THAT[6];
-                        h_w = THAT_W[6];
-                        break;
-                    case 8:
-                        temp = MesoNH_O_array[index_1].tht_8;
-                        h = THAT[7];
-                        h_w = THAT_W[7];
-                        break;
-                    case 9:
-                        temp = MesoNH_O_array[index_1].tht_9;
-                        h = THAT[8];
-                        h_w = THAT_W[8];
-                        break;
-                    case 10:
-                        temp = MesoNH_O_array[index_1].tht_10;
-                        h = THAT[9];
-                        h_w = THAT_W[9];
-                        break;
-                    case 11:
-                        temp = MesoNH_O_array[index_1].tht_11;
-                        h = THAT[10];
-                        h_w = THAT_W[10];
-                        break;
-                    case 12:
-                        temp = MesoNH_O_array[index_1].tht_12;
-                        h = THAT[11];
-                        h_w = THAT_W[11];
-                        break;
-                    case 13:
-                        temp = MesoNH_O_array[index_1].tht_13;
-                        h = THAT[12];
-                        h_w = THAT_W[12];
-                        break;
-                    case 14:
-                        temp = MesoNH_O_array[index_1].tht_14;
-                        h = THAT[13];
-                        h_w = THAT_W[13];
-                        break;
-                    case 15:
-                        temp = MesoNH_O_array[index_1].tht_15;
-                        h = THAT[14];
-                        h_w = THAT_W[14];
-                        break;
-                    case 16:
-                        temp = MesoNH_O_array[index_1].tht_16;
-                        h = THAT[15];
-                        h_w = THAT_W[15];
-                        break;
-                    case 17:
-                        temp = MesoNH_O_array[index_1].tht_17;
-                        h = THAT[16];
-                        h_w = THAT_W[16];
-                        break;
-                    case 18:
-                        temp = MesoNH_O_array[index_1].tht_18;
-                        h = THAT[17];
-                        h_w = THAT_W[17];
-                        break;
-                    case 19:
-                        temp = MesoNH_O_array[index_1].tht_19;
-                        h = THAT[18];
-                        h_w = THAT_W[18];
-                        break;
-                    case 20:
-                        temp = MesoNH_O_array[index_1].tht_20;
-                        h = THAT[19];
-                        h_w = THAT_W[19];
-                        break;
-                    case 21:
-                        temp = MesoNH_O_array[index_1].tht_21;
-                        h = THAT[20];
-                        h_w = THAT_W[20];
-                        break;
-                    case 22:
-                        temp = MesoNH_O_array[index_1].tht_22;
-                        h = THAT[21];
-                        h_w = THAT_W[21];
-                        break;
-                    case 23:
-                        temp = MesoNH_O_array[index_1].tht_23;
-                        h = THAT[22];
-                        h_w = THAT_W[22];
-                        break;
-                    case 24:
-                        temp = MesoNH_O_array[index_1].tht_24;
-                        h = THAT[23];
-                        h_w = THAT_W[23];
-                        break;
-                    case 25:
-                        temp = MesoNH_O_array[index_1].tht_25;
-                        h = THAT[24];
-                        h_w = THAT_W[24];
-                        break;
-                    case 26:
-                        temp = MesoNH_O_array[index_1].tht_26;
-                        h = THAT[25];
-                        h_w = THAT_W[25];
-                        break;
-                    case 27:
-                        temp = MesoNH_O_array[index_1].tht_27;
-                        h = THAT[26];
-                        h_w = THAT_W[26];
-                        break;
-                    case 28:
-                        temp = MesoNH_O_array[index_1].tht_28;
-                        h = THAT[27];
-                        h_w = THAT_W[27];
-                        break;
-                    case 29:
-                        temp = MesoNH_O_array[index_1].tht_29;
-                        h = THAT[28];
-                        h_w = THAT_W[28];
-                        break;
-                    case 30:
-                        temp = MesoNH_O_array[index_1].tht_30;
-                        h = THAT[29];
-                        h_w = THAT_W[29];
-                        break;
-                    case 31:
-                        temp = MesoNH_O_array[index_1].tht_31;
-                        h = THAT[30];
-                        h_w = THAT_W[30];
-                        break;
-                    case 32:
-                        temp = MesoNH_O_array[index_1].tht_32;
-                        h = THAT[31];
-                        h_w = THAT_W[31];
-                        break;
-                    default:
-                        return;
-                }
+                var id = id_meso_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
+                var h = THAT[id - 1];
+                var h_w = THAT_W[id - 1];
+				
                  // pour 'effectifs egaux', tableau temporaire
-                 tab_temp.push(parseFloat(temp));
+                 tab_temp.push(temp);
                                
 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
@@ -751,44 +563,10 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
         for(var j=0; j<nj; j++){
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
-                var temp;
-                var h;
-                var h_w;
-                switch(id_sbl_array[m]){
-                    case 1:
-                        temp = MesoNH_O_array[index_1].teb_1;
-                        h = HCanopy[0];
-                        h_w = HCanopy_w[0];
-                        break;
-                    case 2:
-                        temp = MesoNH_O_array[index_1].teb_2;
-                        h = HCanopy[1];
-                        h_w = HCanopy_w[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].teb_3;
-                        h = HCanopy[2];
-                        h_w = HCanopy_w[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].teb_4;
-                        h = HCanopy[3];
-                        h_w = HCanopy_w[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].teb_5;
-                        h = HCanopy[4];
-                        h_w = HCanopy_w[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].teb_6;
-                        h = HCanopy[5];
-                        h_w = HCanopy_w[5];
-                        break;
-                    default:
-                        return;
-                }
-                
+                var id = id_sbl_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
+                var h = HCanopy[id - 1];
+                var h_w = HCanopy_w[id - 1];                
                 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
@@ -809,7 +587,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                 }
                 
                 
-                general_config.temp_values.push(parseFloat(temp));
+                general_config.temp_values.push(temp);
                 var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                 
                 var color_rgb = hexToRgb(color_hex)
@@ -897,168 +675,10 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
                 
-                var temp;
-                var h;
-                var h_w;
-                switch(id_meso_array[m]){
-                    case 2:
-                        temp = MesoNH_O_array[index_1].tht_2;
-                        h = THAT[1];
-                        h_w = THAT_W[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].tht_3;
-                        h = THAT[2];
-                        h_w = THAT_W[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].tht_4;
-                        h = THAT[3];
-                        h_w = THAT_W[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].tht_5;
-                        h = THAT[4];
-                        h_w = THAT_W[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].tht_6;
-                        h = THAT[5];
-                        h_w = THAT_W[5];
-                        break;
-                    case 7:
-                        temp = MesoNH_O_array[index_1].tht_7;
-                        h = THAT[6];
-                        h_w = THAT_W[6];
-                        break;
-                    case 8:
-                        temp = MesoNH_O_array[index_1].tht_8;
-                        h = THAT[7];
-                        h_w = THAT_W[7];
-                        break;
-                    case 9:
-                        temp = MesoNH_O_array[index_1].tht_9;
-                        h = THAT[8];
-                        h_w = THAT_W[8];
-                        break;
-                    case 10:
-                        temp = MesoNH_O_array[index_1].tht_10;
-                        h = THAT[9];
-                        h_w = THAT_W[9];
-                        break;
-                    case 11:
-                        temp = MesoNH_O_array[index_1].tht_11;
-                        h = THAT[10];
-                        h_w = THAT_W[10];
-                        break;
-                    case 12:
-                        temp = MesoNH_O_array[index_1].tht_12;
-                        h = THAT[11];
-                        h_w = THAT_W[11];
-                        break;
-                    case 13:
-                        temp = MesoNH_O_array[index_1].tht_13;
-                        h = THAT[12];
-                        h_w = THAT_W[12];
-                        break;
-                    case 14:
-                        temp = MesoNH_O_array[index_1].tht_14;
-                        h = THAT[13];
-                        h_w = THAT_W[13];
-                        break;
-                    case 15:
-                        temp = MesoNH_O_array[index_1].tht_15;
-                        h = THAT[14];
-                        h_w = THAT_W[14];
-                        break;
-                    case 16:
-                        temp = MesoNH_O_array[index_1].tht_16;
-                        h = THAT[15];
-                        h_w = THAT_W[15];
-                        break;
-                    case 17:
-                        temp = MesoNH_O_array[index_1].tht_17;
-                        h = THAT[16];
-                        h_w = THAT_W[16];
-                        break;
-                    case 18:
-                        temp = MesoNH_O_array[index_1].tht_18;
-                        h = THAT[17];
-                        h_w = THAT_W[17];
-                        break;
-                    case 19:
-                        temp = MesoNH_O_array[index_1].tht_19;
-                        h = THAT[18];
-                        h_w = THAT_W[18];
-                        break;
-                    case 20:
-                        temp = MesoNH_O_array[index_1].tht_20;
-                        h = THAT[19];
-                        h_w = THAT_W[19];
-                        break;
-                    case 21:
-                        temp = MesoNH_O_array[index_1].tht_21;
-                        h = THAT[20];
-                        h_w = THAT_W[20];
-                        break;
-                    case 22:
-                        temp = MesoNH_O_array[index_1].tht_22;
-                        h = THAT[21];
-                        h_w = THAT_W[21];
-                        break;
-                    case 23:
-                        temp = MesoNH_O_array[index_1].tht_23;
-                        h = THAT[22];
-                        h_w = THAT_W[22];
-                        break;
-                    case 24:
-                        temp = MesoNH_O_array[index_1].tht_24;
-                        h = THAT[23];
-                        h_w = THAT_W[23];
-                        break;
-                    case 25:
-                        temp = MesoNH_O_array[index_1].tht_25;
-                        h = THAT[24];
-                        h_w = THAT_W[24];
-                        break;
-                    case 26:
-                        temp = MesoNH_O_array[index_1].tht_26;
-                        h = THAT[25];
-                        h_w = THAT_W[25];
-                        break;
-                    case 27:
-                        temp = MesoNH_O_array[index_1].tht_27;
-                        h = THAT[26];
-                        h_w = THAT_W[26];
-                        break;
-                    case 28:
-                        temp = MesoNH_O_array[index_1].tht_28;
-                        h = THAT[27];
-                        h_w = THAT_W[27];
-                        break;
-                    case 29:
-                        temp = MesoNH_O_array[index_1].tht_29;
-                        h = THAT[28];
-                        h_w = THAT_W[28];
-                        break;
-                    case 30:
-                        temp = MesoNH_O_array[index_1].tht_30;
-                        h = THAT[29];
-                        h_w = THAT_W[29];
-                        break;
-                    case 31:
-                        temp = MesoNH_O_array[index_1].tht_31;
-                        h = THAT[30];
-                        h_w = THAT_W[30];
-                        break;
-                    case 32:
-                        temp = MesoNH_O_array[index_1].tht_32;
-                        h = THAT[31];
-                        h_w = THAT_W[31];
-                        break;
-                    default:
-                        return;
-                }
+                var id = id_meso_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
+                var h = THAT[id - 1];
+                var h_w = THAT_W[id - 1];
                                                 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
@@ -1078,7 +698,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                     percentage_color = 1;
                 }
                                     
-                general_config.temp_values.push(parseFloat(temp));
+                general_config.temp_values.push(temp);
                 var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                                      
                 
@@ -1228,44 +848,14 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
         for(var j=0; j<nj; j++){
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
-                var h;
-                var h_w;
-                switch(id_sbl_array[m]){
-                    case 1:
-                        temp = MesoNH_O_array[index_1].teb_1;
-                        h = HCanopy[0];
-                        h_w = HCanopy_w[0];
-                        break;
-                    case 2:
-                        temp = MesoNH_O_array[index_1].teb_2;
-                        h = HCanopy[1];
-                        h_w = HCanopy_w[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].teb_3;
-                        h = HCanopy[2];
-                        h_w = HCanopy_w[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].teb_4;
-                        h = HCanopy[3];
-                        h_w = HCanopy_w[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].teb_5;
-                        h = HCanopy[4];
-                        h_w = HCanopy_w[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].teb_6;
-                        h = HCanopy[5];
-                        h_w = HCanopy_w[5];
-                        break;
-                    default:
-                        return;
-                }
-				                
-                tab_temp.push(parseFloat(temp));
+
+                var id = id_sbl_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
+                var h = HCanopy[id - 1];
+                var h_w = HCanopy_w[id - 1];
+                
+                tab_temp.push(temp);
+
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
                 var z_o = MesoNH_O_array[index_1].zs + h;
@@ -1332,169 +922,12 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
                 
-                var h;
-                var h_w;
-                switch(id_meso_array[m]){
-                    case 2:
-                        temp = MesoNH_O_array[index_1].tht_2;
-                        h = THAT[1];
-                        h_w = THAT_W[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].tht_3;
-                        h = THAT[2];
-                        h_w = THAT_W[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].tht_4;
-                        h = THAT[3];
-                        h_w = THAT_W[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].tht_5;
-                        h = THAT[4];
-                        h_w = THAT_W[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].tht_6;
-                        h = THAT[5];
-                        h_w = THAT_W[5];
-                        break;
-                    case 7:
-                        temp = MesoNH_O_array[index_1].tht_7;
-                        h = THAT[6];
-                        h_w = THAT_W[6];
-                        break;
-                    case 8:
-                        temp = MesoNH_O_array[index_1].tht_8;
-                        h = THAT[7];
-                        h_w = THAT_W[7];
-                        break;
-                    case 9:
-                        temp = MesoNH_O_array[index_1].tht_9;
-                        h = THAT[8];
-                        h_w = THAT_W[8];
-                        break;
-                    case 10:
-                        temp = MesoNH_O_array[index_1].tht_10;
-                        h = THAT[9];
-                        h_w = THAT_W[9];
-                        break;
-                    case 11:
-                        temp = MesoNH_O_array[index_1].tht_11;
-                        h = THAT[10];
-                        h_w = THAT_W[10];
-                        break;
-                    case 12:
-                        temp = MesoNH_O_array[index_1].tht_12;
-                        h = THAT[11];
-                        h_w = THAT_W[11];
-                        break;
-                    case 13:
-                        temp = MesoNH_O_array[index_1].tht_13;
-                        h = THAT[12];
-                        h_w = THAT_W[12];
-                        break;
-                    case 14:
-                        temp = MesoNH_O_array[index_1].tht_14;
-                        h = THAT[13];
-                        h_w = THAT_W[13];
-                        break;
-                    case 15:
-                        temp = MesoNH_O_array[index_1].tht_15;
-                        h = THAT[14];
-                        h_w = THAT_W[14];
-                        break;
-                    case 16:
-                        temp = MesoNH_O_array[index_1].tht_16;
-                        h = THAT[15];
-                        h_w = THAT_W[15];
-                        break;
-                    case 17:
-                        temp = MesoNH_O_array[index_1].tht_17;
-                        h = THAT[16];
-                        h_w = THAT_W[16];
-                        break;
-                    case 18:
-                        temp = MesoNH_O_array[index_1].tht_18;
-                        h = THAT[17];
-                        h_w = THAT_W[17];
-                        break;
-                    case 19:
-                        temp = MesoNH_O_array[index_1].tht_19;
-                        h = THAT[18];
-                        h_w = THAT_W[18];
-                        break;
-                    case 20:
-                        temp = MesoNH_O_array[index_1].tht_20;
-                        h = THAT[19];
-                        h_w = THAT_W[19];
-                        break;
-                    case 21:
-                        temp = MesoNH_O_array[index_1].tht_21;
-                        h = THAT[20];
-                        h_w = THAT_W[20];
-                        break;
-                    case 22:
-                        temp = MesoNH_O_array[index_1].tht_22;
-                        h = THAT[21];
-                        h_w = THAT_W[21];
-                        break;
-                    case 23:
-                        temp = MesoNH_O_array[index_1].tht_23;
-                        h = THAT[22];
-                        h_w = THAT_W[22];
-                        break;
-                    case 24:
-                        temp = MesoNH_O_array[index_1].tht_24;
-                        h = THAT[23];
-                        h_w = THAT_W[23];
-                        break;
-                    case 25:
-                        temp = MesoNH_O_array[index_1].tht_25;
-                        h = THAT[24];
-                        h_w = THAT_W[24];
-                        break;
-                    case 26:
-                        temp = MesoNH_O_array[index_1].tht_26;
-                        h = THAT[25];
-                        h_w = THAT_W[25];
-                        break;
-                    case 27:
-                        temp = MesoNH_O_array[index_1].tht_27;
-                        h = THAT[26];
-                        h_w = THAT_W[26];
-                        break;
-                    case 28:
-                        temp = MesoNH_O_array[index_1].tht_28;
-                        h = THAT[27];
-                        h_w = THAT_W[27];
-                        break;
-                    case 29:
-                        temp = MesoNH_O_array[index_1].tht_29;
-                        h = THAT[28];
-                        h_w = THAT_W[28];
-                        break;
-                    case 30:
-                        temp = MesoNH_O_array[index_1].tht_30;
-                        h = THAT[29];
-                        h_w = THAT_W[29];
-                        break;
-                    case 31:
-                        temp = MesoNH_O_array[index_1].tht_31;
-                        h = THAT[30];
-                        h_w = THAT_W[30];
-                        break;
-                    case 32:
-                        temp = MesoNH_O_array[index_1].tht_32;
-                        h = THAT[31];
-                        h_w = THAT_W[31];
-                        break;
-                    default:
-                        return;
-                }
+                var id = id_meso_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
+                var h = THAT[id - 1];
+                var h_w = THAT_W[id - 1];
                 
-                tab_temp.push(parseFloat(temp))
+                tab_temp.push(temp)
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
                 var z_o = MesoNH_O_array[index_1].zs + h;
@@ -1550,8 +983,6 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     general_config.y_min = y_o - l_y/2;
                     general_config.y_max = y_o + l_y/2;
                 }
-            
-                
             }
         }
     }	
@@ -1562,43 +993,11 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
         for(var j=0; j<nj; j++){
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
-                var temp;
-                var h;
-                var h_w;
-                switch(id_sbl_array[m]){
-                    case 1:
-                        temp = MesoNH_O_array[index_1].teb_1;
-                        h = HCanopy[0];
-                        h_w = HCanopy_w[0];
-                        break;
-                    case 2:
-                        temp = MesoNH_O_array[index_1].teb_2;
-                        h = HCanopy[1];
-                        h_w = HCanopy_w[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].teb_3;
-                        h = HCanopy[2];
-                        h_w = HCanopy_w[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].teb_4;
-                        h = HCanopy[3];
-                        h_w = HCanopy_w[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].teb_5;
-                        h = HCanopy[4];
-                        h_w = HCanopy_w[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].teb_6;
-                        h = HCanopy[5];
-                        h_w = HCanopy_w[5];
-                        break;
-                    default:
-                        return;
-                }
+				
+                var id = id_sbl_array[m];
+                var temp = MesoNH_O_array[index_1]['teb_'+id];
+                var h = HCanopy[id - 1];
+                var h_w = HCanopy_w[id - 1];
                 
                 var tmin = temperature_scale[0];
                 var tmax = temperature_scale[1];
@@ -1668,7 +1067,7 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                         percentage_color = 1;
                     }
                     
-                    general_config.temp_values.push(parseFloat(temp));
+                    general_config.temp_values.push(temp);
                     var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                             
                     
@@ -1693,7 +1092,7 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
                 } else {
-                    general_config.temp_values.push(parseFloat(temp));
+                    general_config.temp_values.push(temp);
                 }
                 
             }
@@ -1705,169 +1104,11 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
                 
-                var temp;
-                var h;
-                var h_w;
-                switch(id_meso_array[m]){
-                    case 2:
-                        temp = MesoNH_O_array[index_1].tht_2;
-                        h = THAT[1];
-                        h_w = THAT_W[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].tht_3;
-                        h = THAT[2];
-                        h_w = THAT_W[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].tht_4;
-                        h = THAT[3];
-                        h_w = THAT_W[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].tht_5;
-                        h = THAT[4];
-                        h_w = THAT_W[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].tht_6;
-                        h = THAT[5];
-                        h_w = THAT_W[5];
-                        break;
-                    case 7:
-                        temp = MesoNH_O_array[index_1].tht_7;
-                        h = THAT[6];
-                        h_w = THAT_W[6];
-                        break;
-                    case 8:
-                        temp = MesoNH_O_array[index_1].tht_8;
-                        h = THAT[7];
-                        h_w = THAT_W[7];
-                        break;
-                    case 9:
-                        temp = MesoNH_O_array[index_1].tht_9;
-                        h = THAT[8];
-                        h_w = THAT_W[8];
-                        break;
-                    case 10:
-                        temp = MesoNH_O_array[index_1].tht_10;
-                        h = THAT[9];
-                        h_w = THAT_W[9];
-                        break;
-                    case 11:
-                        temp = MesoNH_O_array[index_1].tht_11;
-                        h = THAT[10];
-                        h_w = THAT_W[10];
-                        break;
-                    case 12:
-                        temp = MesoNH_O_array[index_1].tht_12;
-                        h = THAT[11];
-                        h_w = THAT_W[11];
-                        break;
-                    case 13:
-                        temp = MesoNH_O_array[index_1].tht_13;
-                        h = THAT[12];
-                        h_w = THAT_W[12];
-                        break;
-                    case 14:
-                        temp = MesoNH_O_array[index_1].tht_14;
-                        h = THAT[13];
-                        h_w = THAT_W[13];
-                        break;
-                    case 15:
-                        temp = MesoNH_O_array[index_1].tht_15;
-                        h = THAT[14];
-                        h_w = THAT_W[14];
-                        break;
-                    case 16:
-                        temp = MesoNH_O_array[index_1].tht_16;
-                        h = THAT[15];
-                        h_w = THAT_W[15];
-                        break;
-                    case 17:
-                        temp = MesoNH_O_array[index_1].tht_17;
-                        h = THAT[16];
-                        h_w = THAT_W[16];
-                        break;
-                    case 18:
-                        temp = MesoNH_O_array[index_1].tht_18;
-                        h = THAT[17];
-                        h_w = THAT_W[17];
-                        break;
-                    case 19:
-                        temp = MesoNH_O_array[index_1].tht_19;
-                        h = THAT[18];
-                        h_w = THAT_W[18];
-                        break;
-                    case 20:
-                        temp = MesoNH_O_array[index_1].tht_20;
-                        h = THAT[19];
-                        h_w = THAT_W[19];
-                        break;
-                    case 21:
-                        temp = MesoNH_O_array[index_1].tht_21;
-                        h = THAT[20];
-                        h_w = THAT_W[20];
-                        break;
-                    case 22:
-                        temp = MesoNH_O_array[index_1].tht_22;
-                        h = THAT[21];
-                        h_w = THAT_W[21];
-                        break;
-                    case 23:
-                        temp = MesoNH_O_array[index_1].tht_23;
-                        h = THAT[22];
-                        h_w = THAT_W[22];
-                        break;
-                    case 24:
-                        temp = MesoNH_O_array[index_1].tht_24;
-                        h = THAT[23];
-                        h_w = THAT_W[23];
-                        break;
-                    case 25:
-                        temp = MesoNH_O_array[index_1].tht_25;
-                        h = THAT[24];
-                        h_w = THAT_W[24];
-                        break;
-                    case 26:
-                        temp = MesoNH_O_array[index_1].tht_26;
-                        h = THAT[25];
-                        h_w = THAT_W[25];
-                        break;
-                    case 27:
-                        temp = MesoNH_O_array[index_1].tht_27;
-                        h = THAT[26];
-                        h_w = THAT_W[26];
-                        break;
-                    case 28:
-                        temp = MesoNH_O_array[index_1].tht_28;
-                        h = THAT[27];
-                        h_w = THAT_W[27];
-                        break;
-                    case 29:
-                        temp = MesoNH_O_array[index_1].tht_29;
-                        h = THAT[28];
-                        h_w = THAT_W[28];
-                        break;
-                    case 30:
-                        temp = MesoNH_O_array[index_1].tht_30;
-                        h = THAT[29];
-                        h_w = THAT_W[29];
-                        break;
-                    case 31:
-                        temp = MesoNH_O_array[index_1].tht_31;
-                        h = THAT[30];
-                        h_w = THAT_W[30];
-                        break;
-                    case 32:
-                        temp = MesoNH_O_array[index_1].tht_32;
-                        h = THAT[31];
-                        h_w = THAT_W[31];
-                        break;
-                    default:
-                        return;
-                }
-                           
+                var id = id_meso_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
+                var h = THAT[id - 1];
+                var h_w = THAT_W[id - 1];
+				  
                 var tmin = temperature_scale[0];
                 var tmax = temperature_scale[1];
                 if (temp >= tmin && temp <= tmax) {
@@ -1935,7 +1176,7 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                         percentage_color = 1;
                     }
                     
-                    general_config.temp_values.push(parseFloat(temp));
+                    general_config.temp_values.push(temp);
                     var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                     
 
@@ -1961,7 +1202,7 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
                 } else {
-                    general_config.temp_values.push(parseFloat(temp));
+                    general_config.temp_values.push(temp);
                 }
                 
                 
@@ -2018,44 +1259,14 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
         for(var j=0; j<nj; j++){
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
-                var h;
-                var h_w;
-                switch(id_sbl_array[m]){
-                    case 1:
-                        temp = MesoNH_O_array[index_1].teb_1;
-                        h = HCanopy[0];
-                        h_w = HCanopy_w[0];
-                        break;
-                    case 2:
-                        temp = MesoNH_O_array[index_1].teb_2;
-                        h = HCanopy[1];
-                        h_w = HCanopy_w[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].teb_3;
-                        h = HCanopy[2];
-                        h_w = HCanopy_w[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].teb_4;
-                        h = HCanopy[3];
-                        h_w = HCanopy_w[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].teb_5;
-                        h = HCanopy[4];
-                        h_w = HCanopy_w[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].teb_6;
-                        h = HCanopy[5];
-                        h_w = HCanopy_w[5];
-                        break;
-                    default:
-                        return;
-                }
+				
+				
+                var id = id_sbl_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
+                var h = HCanopy[id - 1];
+                var h_w = HCanopy_w[id - 1];
                 
-                tab_temp.push(parseFloat(temp))
+                tab_temp.push(temp)
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
                 var z_o = MesoNH_O_array[index_1].zs + h;
@@ -2122,169 +1333,12 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
                 
-                var h;
-                var h_w;
-                switch(id_meso_array[m]){
-                    case 2:
-                        temp = MesoNH_O_array[index_1].tht_2;
-                        h = THAT[1];
-                        h_w = THAT_W[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].tht_3;
-                        h = THAT[2];
-                        h_w = THAT_W[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].tht_4;
-                        h = THAT[3];
-                        h_w = THAT_W[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].tht_5;
-                        h = THAT[4];
-                        h_w = THAT_W[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].tht_6;
-                        h = THAT[5];
-                        h_w = THAT_W[5];
-                        break;
-                    case 7:
-                        temp = MesoNH_O_array[index_1].tht_7;
-                        h = THAT[6];
-                        h_w = THAT_W[6];
-                        break;
-                    case 8:
-                        temp = MesoNH_O_array[index_1].tht_8;
-                        h = THAT[7];
-                        h_w = THAT_W[7];
-                        break;
-                    case 9:
-                        temp = MesoNH_O_array[index_1].tht_9;
-                        h = THAT[8];
-                        h_w = THAT_W[8];
-                        break;
-                    case 10:
-                        temp = MesoNH_O_array[index_1].tht_10;
-                        h = THAT[9];
-                        h_w = THAT_W[9];
-                        break;
-                    case 11:
-                        temp = MesoNH_O_array[index_1].tht_11;
-                        h = THAT[10];
-                        h_w = THAT_W[10];
-                        break;
-                    case 12:
-                        temp = MesoNH_O_array[index_1].tht_12;
-                        h = THAT[11];
-                        h_w = THAT_W[11];
-                        break;
-                    case 13:
-                        temp = MesoNH_O_array[index_1].tht_13;
-                        h = THAT[12];
-                        h_w = THAT_W[12];
-                        break;
-                    case 14:
-                        temp = MesoNH_O_array[index_1].tht_14;
-                        h = THAT[13];
-                        h_w = THAT_W[13];
-                        break;
-                    case 15:
-                        temp = MesoNH_O_array[index_1].tht_15;
-                        h = THAT[14];
-                        h_w = THAT_W[14];
-                        break;
-                    case 16:
-                        temp = MesoNH_O_array[index_1].tht_16;
-                        h = THAT[15];
-                        h_w = THAT_W[15];
-                        break;
-                    case 17:
-                        temp = MesoNH_O_array[index_1].tht_17;
-                        h = THAT[16];
-                        h_w = THAT_W[16];
-                        break;
-                    case 18:
-                        temp = MesoNH_O_array[index_1].tht_18;
-                        h = THAT[17];
-                        h_w = THAT_W[17];
-                        break;
-                    case 19:
-                        temp = MesoNH_O_array[index_1].tht_19;
-                        h = THAT[18];
-                        h_w = THAT_W[18];
-                        break;
-                    case 20:
-                        temp = MesoNH_O_array[index_1].tht_20;
-                        h = THAT[19];
-                        h_w = THAT_W[19];
-                        break;
-                    case 21:
-                        temp = MesoNH_O_array[index_1].tht_21;
-                        h = THAT[20];
-                        h_w = THAT_W[20];
-                        break;
-                    case 22:
-                        temp = MesoNH_O_array[index_1].tht_22;
-                        h = THAT[21];
-                        h_w = THAT_W[21];
-                        break;
-                    case 23:
-                        temp = MesoNH_O_array[index_1].tht_23;
-                        h = THAT[22];
-                        h_w = THAT_W[22];
-                        break;
-                    case 24:
-                        temp = MesoNH_O_array[index_1].tht_24;
-                        h = THAT[23];
-                        h_w = THAT_W[23];
-                        break;
-                    case 25:
-                        temp = MesoNH_O_array[index_1].tht_25;
-                        h = THAT[24];
-                        h_w = THAT_W[24];
-                        break;
-                    case 26:
-                        temp = MesoNH_O_array[index_1].tht_26;
-                        h = THAT[25];
-                        h_w = THAT_W[25];
-                        break;
-                    case 27:
-                        temp = MesoNH_O_array[index_1].tht_27;
-                        h = THAT[26];
-                        h_w = THAT_W[26];
-                        break;
-                    case 28:
-                        temp = MesoNH_O_array[index_1].tht_28;
-                        h = THAT[27];
-                        h_w = THAT_W[27];
-                        break;
-                    case 29:
-                        temp = MesoNH_O_array[index_1].tht_29;
-                        h = THAT[28];
-                        h_w = THAT_W[28];
-                        break;
-                    case 30:
-                        temp = MesoNH_O_array[index_1].tht_30;
-                        h = THAT[29];
-                        h_w = THAT_W[29];
-                        break;
-                    case 31:
-                        temp = MesoNH_O_array[index_1].tht_31;
-                        h = THAT[30];
-                        h_w = THAT_W[30];
-                        break;
-                    case 32:
-                        temp = MesoNH_O_array[index_1].tht_32;
-                        h = THAT[31];
-                        h_w = THAT_W[31];
-                        break;
-                    default:
-                        return;
-                }
+                var id = id_meso_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
+                var h = THAT[id - 1];
+                var h_w = THAT_W[id - 1];
 
-                tab_temp.push(parseFloat(temp));
+                tab_temp.push(temp);
                                                 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
@@ -2354,43 +1408,10 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
         for(var j=0; j<nj; j++){
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
-                var temp;
-                var h;
-                var h_w;
-                switch(id_sbl_array[m]){
-                    case 1:
-                        temp = MesoNH_O_array[index_1].teb_1;
-                        h = HCanopy[0];
-                        h_w = HCanopy_w[0];
-                        break;
-                    case 2:
-                        temp = MesoNH_O_array[index_1].teb_2;
-                        h = HCanopy[1];
-                        h_w = HCanopy_w[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].teb_3;
-                        h = HCanopy[2];
-                        h_w = HCanopy_w[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].teb_4;
-                        h = HCanopy[3];
-                        h_w = HCanopy_w[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].teb_5;
-                        h = HCanopy[4];
-                        h_w = HCanopy_w[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].teb_6;
-                        h = HCanopy[5];
-                        h_w = HCanopy_w[5];
-                        break;
-                    default:
-                        return;
-                }
+                var id = id_sbl_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
+                var h = HCanopy[id - 1];
+                var h_w = HCanopy_w[id - 1];
                 
                 var x_u = MesoNH_U_array[index_1].x - general_config.Coord_X_paris;
                 var y_u = MesoNH_U_array[index_1].y - general_config.Coord_Y_paris;
@@ -2415,7 +1436,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     percentage_color = 1;
                 }
                 
-                general_config.temp_values.push(parseFloat(temp));
+                general_config.temp_values.push(temp);
                 var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                 
 
@@ -2482,169 +1503,11 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
                 
-                var temp;
-                var h;
-                var h_w;
-                switch(id_meso_array[m]){
-                    case 2:
-                        temp = MesoNH_O_array[index_1].tht_2;
-                        h = THAT[1];
-                        h_w = THAT_W[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].tht_3;
-                        h = THAT[2];
-                        h_w = THAT_W[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].tht_4;
-                        h = THAT[3];
-                        h_w = THAT_W[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].tht_5;
-                        h = THAT[4];
-                        h_w = THAT_W[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].tht_6;
-                        h = THAT[5];
-                        h_w = THAT_W[5];
-                        break;
-                    case 7:
-                        temp = MesoNH_O_array[index_1].tht_7;
-                        h = THAT[6];
-                        h_w = THAT_W[6];
-                        break;
-                    case 8:
-                        temp = MesoNH_O_array[index_1].tht_8;
-                        h = THAT[7];
-                        h_w = THAT_W[7];
-                        break;
-                    case 9:
-                        temp = MesoNH_O_array[index_1].tht_9;
-                        h = THAT[8];
-                        h_w = THAT_W[8];
-                        break;
-                    case 10:
-                        temp = MesoNH_O_array[index_1].tht_10;
-                        h = THAT[9];
-                        h_w = THAT_W[9];
-                        break;
-                    case 11:
-                        temp = MesoNH_O_array[index_1].tht_11;
-                        h = THAT[10];
-                        h_w = THAT_W[10];
-                        break;
-                    case 12:
-                        temp = MesoNH_O_array[index_1].tht_12;
-                        h = THAT[11];
-                        h_w = THAT_W[11];
-                        break;
-                    case 13:
-                        temp = MesoNH_O_array[index_1].tht_13;
-                        h = THAT[12];
-                        h_w = THAT_W[12];
-                        break;
-                    case 14:
-                        temp = MesoNH_O_array[index_1].tht_14;
-                        h = THAT[13];
-                        h_w = THAT_W[13];
-                        break;
-                    case 15:
-                        temp = MesoNH_O_array[index_1].tht_15;
-                        h = THAT[14];
-                        h_w = THAT_W[14];
-                        break;
-                    case 16:
-                        temp = MesoNH_O_array[index_1].tht_16;
-                        h = THAT[15];
-                        h_w = THAT_W[15];
-                        break;
-                    case 17:
-                        temp = MesoNH_O_array[index_1].tht_17;
-                        h = THAT[16];
-                        h_w = THAT_W[16];
-                        break;
-                    case 18:
-                        temp = MesoNH_O_array[index_1].tht_18;
-                        h = THAT[17];
-                        h_w = THAT_W[17];
-                        break;
-                    case 19:
-                        temp = MesoNH_O_array[index_1].tht_19;
-                        h = THAT[18];
-                        h_w = THAT_W[18];
-                        break;
-                    case 20:
-                        temp = MesoNH_O_array[index_1].tht_20;
-                        h = THAT[19];
-                        h_w = THAT_W[19];
-                        break;
-                    case 21:
-                        temp = MesoNH_O_array[index_1].tht_21;
-                        h = THAT[20];
-                        h_w = THAT_W[20];
-                        break;
-                    case 22:
-                        temp = MesoNH_O_array[index_1].tht_22;
-                        h = THAT[21];
-                        h_w = THAT_W[21];
-                        break;
-                    case 23:
-                        temp = MesoNH_O_array[index_1].tht_23;
-                        h = THAT[22];
-                        h_w = THAT_W[22];
-                        break;
-                    case 24:
-                        temp = MesoNH_O_array[index_1].tht_24;
-                        h = THAT[23];
-                        h_w = THAT_W[23];
-                        break;
-                    case 25:
-                        temp = MesoNH_O_array[index_1].tht_25;
-                        h = THAT[24];
-                        h_w = THAT_W[24];
-                        break;
-                    case 26:
-                        temp = MesoNH_O_array[index_1].tht_26;
-                        h = THAT[25];
-                        h_w = THAT_W[25];
-                        break;
-                    case 27:
-                        temp = MesoNH_O_array[index_1].tht_27;
-                        h = THAT[26];
-                        h_w = THAT_W[26];
-                        break;
-                    case 28:
-                        temp = MesoNH_O_array[index_1].tht_28;
-                        h = THAT[27];
-                        h_w = THAT_W[27];
-                        break;
-                    case 29:
-                        temp = MesoNH_O_array[index_1].tht_29;
-                        h = THAT[28];
-                        h_w = THAT_W[28];
-                        break;
-                    case 30:
-                        temp = MesoNH_O_array[index_1].tht_30;
-                        h = THAT[29];
-                        h_w = THAT_W[29];
-                        break;
-                    case 31:
-                        temp = MesoNH_O_array[index_1].tht_31;
-                        h = THAT[30];
-                        h_w = THAT_W[30];
-                        break;
-                    case 32:
-                        temp = MesoNH_O_array[index_1].tht_32;
-                        h = THAT[31];
-                        h_w = THAT_W[31];
-                        break;
-                    default:
-                        return;
-                }
-                                                
+                var id = id_meso_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
+                var h = THAT[id - 1];
+                var h_w = THAT_W[id - 1];
+				
                 var x_u = MesoNH_U_array[index_1].x - general_config.Coord_X_paris;
                 var y_u = MesoNH_U_array[index_1].y - general_config.Coord_Y_paris;
                 var z_u = MesoNH_U_array[index_1].zs + h;
@@ -2669,7 +1532,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     percentage_color = 1;
                 }
                 
-                general_config.temp_values.push(parseFloat(temp));
+                general_config.temp_values.push(temp);
                 var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                                          
                 var color_rgb = hexToRgb(color_hex)
@@ -2795,44 +1658,13 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
         for(var j=0; j<nj; j++){
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
-                var h;
-                var h_w;
-                switch(id_sbl_array[m]){
-                    case 1:
-                        temp = MesoNH_O_array[index_1].teb_1;
-                        h = HCanopy[0];
-                        h_w = HCanopy_w[0];
-                        break;
-                    case 2:
-                        temp = MesoNH_O_array[index_1].teb_2;
-                        h = HCanopy[1];
-                        h_w = HCanopy_w[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].teb_3;
-                        h = HCanopy[2];
-                        h_w = HCanopy_w[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].teb_4;
-                        h = HCanopy[3];
-                        h_w = HCanopy_w[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].teb_5;
-                        h = HCanopy[4];
-                        h_w = HCanopy_w[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].teb_6;
-                        h = HCanopy[5];
-                        h_w = HCanopy_w[5];
-                        break;
-                    default:
-                        return;
-                }
-                
-                tab_temp.push(parseFloat(temp))
+				
+                var id = id_sbl_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
+                var h = HCanopy[id - 1];
+                var h_w = HCanopy_w[id - 1];
+				
+                tab_temp.push(temp)
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
                 var z_o = MesoNH_O_array[index_1].zs + h;
@@ -2892,175 +1724,18 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
             }
         }
     }	
-    
-
+     
+	
     for(var m=0; m<id_meso_array.length; m++){
         for(var j=0; j<nj; j++){
             for(var i=0; i<ni; i++){
-                var index_1 = j*ni + i;
-                
-                var h;
-                var h_w;
-                switch(id_meso_array[m]){
-                    case 2:
-                        temp = MesoNH_O_array[index_1].tht_2;
-                        h = THAT[1];
-                        h_w = THAT_W[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].tht_3;
-                        h = THAT[2];
-                        h_w = THAT_W[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].tht_4;
-                        h = THAT[3];
-                        h_w = THAT_W[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].tht_5;
-                        h = THAT[4];
-                        h_w = THAT_W[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].tht_6;
-                        h = THAT[5];
-                        h_w = THAT_W[5];
-                        break;
-                    case 7:
-                        temp = MesoNH_O_array[index_1].tht_7;
-                        h = THAT[6];
-                        h_w = THAT_W[6];
-                        break;
-                    case 8:
-                        temp = MesoNH_O_array[index_1].tht_8;
-                        h = THAT[7];
-                        h_w = THAT_W[7];
-                        break;
-                    case 9:
-                        temp = MesoNH_O_array[index_1].tht_9;
-                        h = THAT[8];
-                        h_w = THAT_W[8];
-                        break;
-                    case 10:
-                        temp = MesoNH_O_array[index_1].tht_10;
-                        h = THAT[9];
-                        h_w = THAT_W[9];
-                        break;
-                    case 11:
-                        temp = MesoNH_O_array[index_1].tht_11;
-                        h = THAT[10];
-                        h_w = THAT_W[10];
-                        break;
-                    case 12:
-                        temp = MesoNH_O_array[index_1].tht_12;
-                        h = THAT[11];
-                        h_w = THAT_W[11];
-                        break;
-                    case 13:
-                        temp = MesoNH_O_array[index_1].tht_13;
-                        h = THAT[12];
-                        h_w = THAT_W[12];
-                        break;
-                    case 14:
-                        temp = MesoNH_O_array[index_1].tht_14;
-                        h = THAT[13];
-                        h_w = THAT_W[13];
-                        break;
-                    case 15:
-                        temp = MesoNH_O_array[index_1].tht_15;
-                        h = THAT[14];
-                        h_w = THAT_W[14];
-                        break;
-                    case 16:
-                        temp = MesoNH_O_array[index_1].tht_16;
-                        h = THAT[15];
-                        h_w = THAT_W[15];
-                        break;
-                    case 17:
-                        temp = MesoNH_O_array[index_1].tht_17;
-                        h = THAT[16];
-                        h_w = THAT_W[16];
-                        break;
-                    case 18:
-                        temp = MesoNH_O_array[index_1].tht_18;
-                        h = THAT[17];
-                        h_w = THAT_W[17];
-                        break;
-                    case 19:
-                        temp = MesoNH_O_array[index_1].tht_19;
-                        h = THAT[18];
-                        h_w = THAT_W[18];
-                        break;
-                    case 20:
-                        temp = MesoNH_O_array[index_1].tht_20;
-                        h = THAT[19];
-                        h_w = THAT_W[19];
-                        break;
-                    case 21:
-                        temp = MesoNH_O_array[index_1].tht_21;
-                        h = THAT[20];
-                        h_w = THAT_W[20];
-                        break;
-                    case 22:
-                        temp = MesoNH_O_array[index_1].tht_22;
-                        h = THAT[21];
-                        h_w = THAT_W[21];
-                        break;
-                    case 23:
-                        temp = MesoNH_O_array[index_1].tht_23;
-                        h = THAT[22];
-                        h_w = THAT_W[22];
-                        break;
-                    case 24:
-                        temp = MesoNH_O_array[index_1].tht_24;
-                        h = THAT[23];
-                        h_w = THAT_W[23];
-                        break;
-                    case 25:
-                        temp = MesoNH_O_array[index_1].tht_25;
-                        h = THAT[24];
-                        h_w = THAT_W[24];
-                        break;
-                    case 26:
-                        temp = MesoNH_O_array[index_1].tht_26;
-                        h = THAT[25];
-                        h_w = THAT_W[25];
-                        break;
-                    case 27:
-                        temp = MesoNH_O_array[index_1].tht_27;
-                        h = THAT[26];
-                        h_w = THAT_W[26];
-                        break;
-                    case 28:
-                        temp = MesoNH_O_array[index_1].tht_28;
-                        h = THAT[27];
-                        h_w = THAT_W[27];
-                        break;
-                    case 29:
-                        temp = MesoNH_O_array[index_1].tht_29;
-                        h = THAT[28];
-                        h_w = THAT_W[28];
-                        break;
-                    case 30:
-                        temp = MesoNH_O_array[index_1].tht_30;
-                        h = THAT[29];
-                        h_w = THAT_W[29];
-                        break;
-                    case 31:
-                        temp = MesoNH_O_array[index_1].tht_31;
-                        h = THAT[30];
-                        h_w = THAT_W[30];
-                        break;
-                    case 32:
-                        temp = MesoNH_O_array[index_1].tht_32;
-                        h = THAT[31];
-                        h_w = THAT_W[31];
-                        break;
-                    default:
-                        return;
-                }
-                tab_temp.push(parseFloat(temp));
+                var index_1 = j*ni + i;          
+                var id = id_meso_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
+                var h = THAT[id - 1];
+                var h_w = THAT_W[id - 1];
+				
+                tab_temp.push(temp);
                                                 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
@@ -3130,44 +1805,11 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
         for(var j=0; j<nj; j++){
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
-                var temp;
-                var h;
-                var h_w;
-                switch(id_sbl_array[m]){
-                    case 1:
-                        temp = MesoNH_O_array[index_1].teb_1;
-                        h = HCanopy[0];
-                        h_w = HCanopy_w[0];
-                        break;
-                    case 2:
-                        temp = MesoNH_O_array[index_1].teb_2;
-                        h = HCanopy[1];
-                        h_w = HCanopy_w[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].teb_3;
-                        h = HCanopy[2];
-                        h_w = HCanopy_w[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].teb_4;
-                        h = HCanopy[3];
-                        h_w = HCanopy_w[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].teb_5;
-                        h = HCanopy[4];
-                        h_w = HCanopy_w[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].teb_6;
-                        h = HCanopy[5];
-                        h_w = HCanopy_w[5];
-                        break;
-                    default:
-                        return;
-                }
-                
+				
+                var id = id_sbl_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
+                var h = HCanopy[id - 1];
+                var h_w = HCanopy_w[id - 1];                
                 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
@@ -3187,7 +1829,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                     percentage_color = 1;
                 }
                 
-                general_config.temp_values.push(parseFloat(temp));
+                general_config.temp_values.push(temp);
                 var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                 
                 var color_rgb = hexToRgb(color_hex)
@@ -3297,168 +1939,10 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
                 
-                var temp;
-                var h;
-                var h_w;
-                switch(id_meso_array[m]){
-                    case 2:
-                        temp = MesoNH_O_array[index_1].tht_2;
-                        h = THAT[1];
-                        h_w = THAT_W[1];
-                        break;
-                    case 3:
-                        temp = MesoNH_O_array[index_1].tht_3;
-                        h = THAT[2];
-                        h_w = THAT_W[2];
-                        break;
-                    case 4:
-                        temp = MesoNH_O_array[index_1].tht_4;
-                        h = THAT[3];
-                        h_w = THAT_W[3];
-                        break;
-                    case 5:
-                        temp = MesoNH_O_array[index_1].tht_5;
-                        h = THAT[4];
-                        h_w = THAT_W[4];
-                        break;
-                    case 6:
-                        temp = MesoNH_O_array[index_1].tht_6;
-                        h = THAT[5];
-                        h_w = THAT_W[5];
-                        break;
-                    case 7:
-                        temp = MesoNH_O_array[index_1].tht_7;
-                        h = THAT[6];
-                        h_w = THAT_W[6];
-                        break;
-                    case 8:
-                        temp = MesoNH_O_array[index_1].tht_8;
-                        h = THAT[7];
-                        h_w = THAT_W[7];
-                        break;
-                    case 9:
-                        temp = MesoNH_O_array[index_1].tht_9;
-                        h = THAT[8];
-                        h_w = THAT_W[8];
-                        break;
-                    case 10:
-                        temp = MesoNH_O_array[index_1].tht_10;
-                        h = THAT[9];
-                        h_w = THAT_W[9];
-                        break;
-                    case 11:
-                        temp = MesoNH_O_array[index_1].tht_11;
-                        h = THAT[10];
-                        h_w = THAT_W[10];
-                        break;
-                    case 12:
-                        temp = MesoNH_O_array[index_1].tht_12;
-                        h = THAT[11];
-                        h_w = THAT_W[11];
-                        break;
-                    case 13:
-                        temp = MesoNH_O_array[index_1].tht_13;
-                        h = THAT[12];
-                        h_w = THAT_W[12];
-                        break;
-                    case 14:
-                        temp = MesoNH_O_array[index_1].tht_14;
-                        h = THAT[13];
-                        h_w = THAT_W[13];
-                        break;
-                    case 15:
-                        temp = MesoNH_O_array[index_1].tht_15;
-                        h = THAT[14];
-                        h_w = THAT_W[14];
-                        break;
-                    case 16:
-                        temp = MesoNH_O_array[index_1].tht_16;
-                        h = THAT[15];
-                        h_w = THAT_W[15];
-                        break;
-                    case 17:
-                        temp = MesoNH_O_array[index_1].tht_17;
-                        h = THAT[16];
-                        h_w = THAT_W[16];
-                        break;
-                    case 18:
-                        temp = MesoNH_O_array[index_1].tht_18;
-                        h = THAT[17];
-                        h_w = THAT_W[17];
-                        break;
-                    case 19:
-                        temp = MesoNH_O_array[index_1].tht_19;
-                        h = THAT[18];
-                        h_w = THAT_W[18];
-                        break;
-                    case 20:
-                        temp = MesoNH_O_array[index_1].tht_20;
-                        h = THAT[19];
-                        h_w = THAT_W[19];
-                        break;
-                    case 21:
-                        temp = MesoNH_O_array[index_1].tht_21;
-                        h = THAT[20];
-                        h_w = THAT_W[20];
-                        break;
-                    case 22:
-                        temp = MesoNH_O_array[index_1].tht_22;
-                        h = THAT[21];
-                        h_w = THAT_W[21];
-                        break;
-                    case 23:
-                        temp = MesoNH_O_array[index_1].tht_23;
-                        h = THAT[22];
-                        h_w = THAT_W[22];
-                        break;
-                    case 24:
-                        temp = MesoNH_O_array[index_1].tht_24;
-                        h = THAT[23];
-                        h_w = THAT_W[23];
-                        break;
-                    case 25:
-                        temp = MesoNH_O_array[index_1].tht_25;
-                        h = THAT[24];
-                        h_w = THAT_W[24];
-                        break;
-                    case 26:
-                        temp = MesoNH_O_array[index_1].tht_26;
-                        h = THAT[25];
-                        h_w = THAT_W[25];
-                        break;
-                    case 27:
-                        temp = MesoNH_O_array[index_1].tht_27;
-                        h = THAT[26];
-                        h_w = THAT_W[26];
-                        break;
-                    case 28:
-                        temp = MesoNH_O_array[index_1].tht_28;
-                        h = THAT[27];
-                        h_w = THAT_W[27];
-                        break;
-                    case 29:
-                        temp = MesoNH_O_array[index_1].tht_29;
-                        h = THAT[28];
-                        h_w = THAT_W[28];
-                        break;
-                    case 30:
-                        temp = MesoNH_O_array[index_1].tht_30;
-                        h = THAT[29];
-                        h_w = THAT_W[29];
-                        break;
-                    case 31:
-                        temp = MesoNH_O_array[index_1].tht_31;
-                        h = THAT[30];
-                        h_w = THAT_W[30];
-                        break;
-                    case 32:
-                        temp = MesoNH_O_array[index_1].tht_32;
-                        h = THAT[31];
-                        h_w = THAT_W[31];
-                        break;
-                    default:
-                        return;
-                }
+                var id = id_meso_array[m];
+                var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
+                var h = THAT[id - 1];
+                var h_w = THAT_W[id - 1];
                                                 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
@@ -3478,7 +1962,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                     percentage_color = 1;
                 }
                 
-                general_config.temp_values.push(parseFloat(temp));
+                general_config.temp_values.push(temp);
                 var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                                    
                 var color_rgb = hexToRgb(color_hex)
@@ -4071,7 +2555,7 @@ export function getHCLcolor(tableau, temp, percentage, HCLscale){
     }
     //A adapter quand on changera les couleurs par un .png
     for (i = 0 ;  i < nb_arr; ++i) {
-        if (parseFloat(temp) >= array[i][0] && parseFloat(temp) <= array[i][array[i].length-1]) {
+        if (temp >= array[i][0] && temp <= array[i][array[i].length-1]) {
             color = HCLscale[i];
             return color;
         }
@@ -4323,197 +2807,25 @@ export function create_data_texture(Meso_NH, x_length, y_length, z_length, temp_
     for (var t=0; t< Meso_NH.length; t++){
         data_zs.push(Meso_NH[t].zs);
     }
-    
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].teb_1- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].teb_1);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].teb_2- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].teb_2);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].teb_3- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].teb_3);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].teb_4- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].teb_4);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].teb_5- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].teb_5);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].teb_6- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].teb_6);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_2- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_2);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_3- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_3);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_4- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_4);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_5- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_5);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_6- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_6);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_7- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_7);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_8- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_8);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_9- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_9);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_10- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_10);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_11- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_11);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_12- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_12);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_13- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_13);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_14- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_14);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_15- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_15);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_16- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_16);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_17- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_17);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_18- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_18);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_19- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_19);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_20- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_20);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_21- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_21);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_22- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_22);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_23- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_23);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_24- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_24);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_25- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_25);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_26- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_26);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_27- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_27);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_28- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_28);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_29- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_29);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_30- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_30);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_31- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_31);
-    }
-    for (var t=0; t< Meso_NH.length; t++){
-        var ratio_temp = (Meso_NH[t].tht_32- temp_min)/(temp_max-temp_min);
-        data_array.push(ratio_temp);
-        data_array_temp.push(Meso_NH[t].tht_32);
-    }
+
+	for (var id = 1; id <= 6; id++) {
+		for (var t=0; t< Meso_NH.length; t++){
+			data_array_temp.push(Meso_NH[t]['teb_'+id]);
+		}
+	}
+	for (var id = 2; id <= 32; id++) {
+		for (var t=0; t< Meso_NH.length; t++){
+			data_array_temp.push(Meso_NH[t]['tht_'+id]);
+		}
+	}
+	
+    for (var t=0; t< data_array_temp.length; t++){
+		data_array.push((data_array_temp[t] - temp_min)/(temp_max-temp_min));
+	}
     
     var data_array_32 = new Float32Array(data_array);
     var data_array_temp_32 = new Float32Array(data_array_temp);	
     var data_zs_32 = new Float32Array(data_zs);			
-    
     
     volume.data = data_array_32;
     volume.data_temp = data_array_temp_32;
