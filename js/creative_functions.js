@@ -4,44 +4,82 @@ import * as THREE from './three.module.js';
 
 export function activate_animation() {
     var material;
+		
+	var texture = new THREE.DataTexture3D( general_config.data_volume_3D.data_temp, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length );
+	texture.format = THREE.RedFormat;
+	texture.type = THREE.FloatType;
+	texture.unpackAlignment = 1;
+	
+	var texture_zs = new THREE.DataTexture( general_config.data_volume_3D.data_zs, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length);
+	texture_zs.format = THREE.RedFormat;
+	texture_zs.type = THREE.FloatType;
+	texture_zs.unpackAlignment = 1;
+	
+	// Colormap textures
+	var cmtextures = {
+		blue_red_2: new THREE.TextureLoader().load( 'color/blue_red_2.png', render ),
+			rainbow: new THREE.TextureLoader().load( 'color/rainbow.png', render ),
+			orange_red: new THREE.TextureLoader().load( 'color/orange_red.png', render )
+	};
+	
+	var pointTexture = new THREE.TextureLoader().load( './images/disc.png', render )
+	
+	var limit_meso_array = [1.0,2.0,4.0,6.0,9.0,13.0,47.0,60.0,132.0,218.4,322.1,446.5,595.8,775.0,989.9,1247.9,1557.5,1929.0,2374.8,2909.8,3551.8,4251.8,4951.8,5651.8,6351.8,7051.8,7751.8,8451.8,9151.8,9851.8,10551.8,11251.8,11951.8,12651.8,13351.8,14051.8,14751.8,15451.8];	
+	
+	
     let uniforms= {
-        color: { value: new THREE.Color( 0xffffff ) },
-        pointTexture: { value: new THREE.TextureLoader().load( "../images/disc.png" ) },
+		u_data: { value: texture },
+        zs_data: { value: texture_zs},
+		u_cmdata: { value: cmtextures.blue_red_2 },
+		u_clim: { value: [general_config.temp_array[0],general_config.temp_array[1]] },
+		pointTexture: { value: pointTexture },
+		u_size: { value: [general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length] },
+		x_min:{type: "f", value: general_config.x_min},
+		x_max:{type: "f", value: general_config.x_max},
+		y_min:{type: "f", value: general_config.y_min},
+		y_max:{type: "f", value: general_config.y_max},
+		zs: {type: "f", value: 46.81231},
+		//zs: {type: "f", value: 35.0},
+		mesolimit: {value: limit_meso_array},
+		cst_X: {value: general_config.cst_X},
+		cst_Y: {value: general_config.cst_Y},
+		cst_Z: {value: general_config.cst_Z},
         regularSize: { value: general_config.regular_size },
-        u_time: { type: "f", value: 0 },
-        x_factor_min: { type: "f", value: general_config.x_min_factor },
-        x_factor_max: { type: "f", value: general_config.x_max_factor },
-        y_factor_min: { type: "f", value: general_config.y_min_factor },
-        y_factor_max: { type: "f", value: general_config.y_max_factor },
-        z_factor_min: { type: "f", value: general_config.z_min_factor },
-        z_factor_max: { type: "f", value: general_config.z_max_factor },
-        h_factor_min: { type: "f", value: general_config.h_min_factor },
-        h_factor_max: { type: "f", value: general_config.h_max_factor },
-        temp_factor_min: { type: "f", value: general_config.temp_min_factor },
-        temp_factor_max: { type: "f", value: general_config.temp_max_factor }
+        relativeSizeFactor : { value: general_config.relative_size_factor},
+		u_time: { type: "f", value: 0 },
+		x_factor_min: { type: "f", value: general_config.x_min_factor },
+		x_factor_max: { type: "f", value: general_config.x_max_factor },
+		y_factor_min: { type: "f", value: general_config.y_min_factor },
+		y_factor_max: { type: "f", value: general_config.y_max_factor },
+		z_factor_min: { type: "f", value: general_config.z_min_factor },
+		z_factor_max: { type: "f", value: general_config.z_max_factor },
+		h_factor_min: { type: "f", value: general_config.h_min_factor },
+		h_factor_max: { type: "f", value: general_config.h_max_factor },
+		temp_factor_min: { type: "f", value: general_config.temp_min_factor },
+		temp_factor_max: { type: "f", value: general_config.temp_max_factor }
     };
-    
+	
     if(general_config.is_animated == false){
         material = new THREE.ShaderMaterial( {
             uniforms,
-            vertexShader: document.getElementById( 'vertexshader_fix' ).textContent,
-            fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+            vertexShader: document.getElementById( 'vertexshader_fix_3D_points' ).textContent,
+            fragmentShader: document.getElementById( 'fragmentshader_3D_points' ).textContent,
             transparent: true
         } );
     } else if (general_config.is_animated == true){
         if(general_config.animation_parameter == 'temp'){
             material = new THREE.ShaderMaterial( {
                 uniforms,
-                vertexShader: document.getElementById( 'vertexshader_anim_temp' ).textContent,
-                fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+                vertexShader: document.getElementById( 'vertexshader_fix_3D_anim_temp' ).textContent,
+                fragmentShader: document.getElementById( 'fragmentshader_3D_points' ).textContent,
                 transparent: true
             } );
             
         } else if(general_config.animation_parameter == 'Z'){
             material = new THREE.ShaderMaterial( {
                 uniforms,
-                vertexShader: document.getElementById( 'vertexshader_anim_z' ).textContent,
-                fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+                vertexShader: document.getElementById( 'vertexshader_fix_3D_anim_z' ).textContent,
+                fragmentShader: document.getElementById( 'fragmentshader_3D_points' ).textContent,
                 transparent: true
             } );
             
@@ -49,8 +87,8 @@ export function activate_animation() {
          else if(general_config.animation_parameter == 'X'){
             material = new THREE.ShaderMaterial( {
                 uniforms,
-                vertexShader: document.getElementById( 'vertexshader_anim_x' ).textContent,
-                fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+                vertexShader: document.getElementById( 'vertexshader_fix_3D_anim_x' ).textContent,
+                fragmentShader: document.getElementById( 'fragmentshader_3D_points' ).textContent,
                 transparent: true
             } );
         
@@ -58,8 +96,8 @@ export function activate_animation() {
         } else if(general_config.animation_parameter == 'Y'){
             material = new THREE.ShaderMaterial( {
                 uniforms,
-                vertexShader: document.getElementById( 'vertexshader_anim_y' ).textContent,
-                fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+                vertexShader: document.getElementById( 'vertexshader_fix_3D_anim_y' ).textContent,
+                fragmentShader: document.getElementById( 'fragmentshader_3D_points' ).textContent,
                 transparent: true
             } );
         
@@ -394,6 +432,8 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
     var y_position_array = [];
     
     var h_position_array = [];
+	
+	var voxel_level_array = [];
     
     general_config.z_min = null;
     general_config.z_max = null;
@@ -648,6 +688,8 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                         size = parseInt(basic_size + basic_size*add_factor*(percentage_color-0.5)*2);
                     }
                 }
+				
+				
                                         
                 for(var p =0; p< particle_length; p++){
                     var pX = (Math.random()-0.5)*2 * (l_x/2) + x_o,
@@ -664,6 +706,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                     x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
                     y_position_array.push((pY - general_config.y_min)/(general_config.y_max - general_config.y_min));
                     h_position_array.push(((pZ-MesoNH_O_array[index_1].zs)-general_config.h_min)/(general_config.h_max - general_config.h_min));
+					voxel_level_array.push(id);
                 }
             }
         }
@@ -761,6 +804,8 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                         size = parseInt(basic_size + basic_size*add_factor*(percentage_color-0.5)*2);
                     }
                 }
+				
+				
                     
                 for(var p =0; p< particle_length; p++){
                     var pX = (Math.random()-0.5)*2 * (l_x/2) + x_o,
@@ -777,13 +822,13 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                     x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
                     y_position_array.push((pY - general_config.y_min)/(general_config.y_max - general_config.y_min));
                     h_position_array.push(((pZ-MesoNH_O_array[index_1].zs)-general_config.h_min)/(general_config.h_max - general_config.h_min));
+					voxel_level_array.push(parseInt(id)+5);
                 }
                 
             }
         }
     }	
            
-    
     var coord_array_32 = new Float32Array(coord_array);
     var colors_32 = new Float32Array(colors);  
     var sizes_32 = new Float32Array(sizes);
@@ -793,6 +838,8 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
     var x_position_array_32 = new Float32Array(x_position_array);
     var y_position_array_32 = new Float32Array(y_position_array);
     var h_position_array_32 = new Float32Array(h_position_array);
+	
+	var voxel_level_array_32 = new Float32Array(voxel_level_array);
     
     
     var bufferGeometry = new THREE.BufferGeometry();
@@ -806,6 +853,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
     bufferGeometry.setAttribute( 'x_position', new THREE.BufferAttribute(x_position_array_32,1));
     bufferGeometry.setAttribute( 'y_position', new THREE.BufferAttribute(y_position_array_32,1));
     bufferGeometry.setAttribute( 'h_position', new THREE.BufferAttribute(h_position_array_32,1));
+	bufferGeometry.setAttribute( 'voxel_level', new THREE.BufferAttribute(voxel_level_array_32,1));
                 
     let material = activate_animation()
     
@@ -833,6 +881,8 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
     var y_position_array = [];
     
     var h_position_array = [];
+	
+	var voxel_level_array = [];
     
     general_config.z_min = null;
     general_config.z_max = null;
@@ -1026,6 +1076,10 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     coord_array.push((x_u + l_x)*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
                     coord_array.push(-y_v*general_config.cst_Y);
+					
+					voxel_level_array.push(id);
+					voxel_level_array.push(id);
+					voxel_level_array.push(id);
                     
                     coord_array.push(x_u*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
@@ -1036,6 +1090,10 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     coord_array.push((x_u + l_x)*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
                     coord_array.push(-(y_v + l_y)*general_config.cst_Y);
+					
+					voxel_level_array.push(id);
+					voxel_level_array.push(id);
+					voxel_level_array.push(id);
                     
                     //down
                     coord_array.push(x_u*general_config.cst_X); 
@@ -1047,6 +1105,10 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     coord_array.push(x_u*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
                     coord_array.push(-y_v*general_config.cst_Y);
+					
+					voxel_level_array.push(id);
+					voxel_level_array.push(id);
+					voxel_level_array.push(id);
                     
                     coord_array.push(x_u*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
@@ -1057,6 +1119,10 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     coord_array.push((x_u + l_x)*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
                     coord_array.push(-y_v*general_config.cst_Y);
+					
+					voxel_level_array.push(id);
+					voxel_level_array.push(id);
+					voxel_level_array.push(id);
                     
                     
                     
@@ -1091,6 +1157,9 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
+					
+					
+					
                 } else {
                     general_config.temp_values.push(temp);
                 }
@@ -1135,6 +1204,10 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     coord_array.push((x_u + l_x)*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
                     coord_array.push(-y_v*general_config.cst_Y);
+					
+					voxel_level_array.push(parseInt(id)+5);
+					voxel_level_array.push(parseInt(id)+5);
+					voxel_level_array.push(parseInt(id)+5);
                     
                     coord_array.push(x_u*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
@@ -1145,6 +1218,10 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     coord_array.push((x_u + l_x)*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
                     coord_array.push(-(y_v + l_y)*general_config.cst_Y);
+					
+					voxel_level_array.push(parseInt(id)+5);
+					voxel_level_array.push(parseInt(id)+5);
+					voxel_level_array.push(parseInt(id)+5);
                     
                     //down
                     coord_array.push(x_u*general_config.cst_X); 
@@ -1156,6 +1233,10 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     coord_array.push(x_u*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
                     coord_array.push(-y_v*general_config.cst_Y);
+					
+					voxel_level_array.push(parseInt(id)+5);
+					voxel_level_array.push(parseInt(id)+5);
+					voxel_level_array.push(parseInt(id)+5);
                     
                     coord_array.push(x_u*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
@@ -1166,6 +1247,10 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     coord_array.push((x_u + l_x)*general_config.cst_X); 
                     coord_array.push(z_o*general_config.cst_Z);
                     coord_array.push(-y_v*general_config.cst_Y);
+					
+					voxel_level_array.push(parseInt(id)+5);
+					voxel_level_array.push(parseInt(id)+5);
+					voxel_level_array.push(parseInt(id)+5);
                     
                     
                     
@@ -1201,6 +1286,8 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
+					
+					
                 } else {
                     general_config.temp_values.push(temp);
                 }
@@ -1213,13 +1300,59 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
             
     var coord_array_32 = new Float32Array(coord_array);
     var colors_32 = new Float32Array(colors); 
-   
-        
-    var material = new THREE.MeshBasicMaterial({  opacity:general_config.transparency_factor, transparent: true,vertexColors: THREE.VertexColors  });
-    var bufferGeometry = new THREE.BufferGeometry();
+	var voxel_level_array_32 = new Float32Array(voxel_level_array);
+	
+	var bufferGeometry = new THREE.BufferGeometry();
     
     bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
     bufferGeometry.setAttribute( 'color', new THREE.BufferAttribute( colors_32, 3 ) );
+	bufferGeometry.setAttribute( 'voxel_level', new THREE.BufferAttribute(voxel_level_array_32,1));
+	
+	var texture = new THREE.DataTexture3D( general_config.data_volume_3D.data_temp, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length );
+	texture.format = THREE.RedFormat;
+	texture.type = THREE.FloatType;
+	texture.unpackAlignment = 1;
+	
+	var texture_zs = new THREE.DataTexture( general_config.data_volume_3D.data_zs, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length);
+	texture_zs.format = THREE.RedFormat;
+	texture_zs.type = THREE.FloatType;
+	texture_zs.unpackAlignment = 1;
+	
+	// Colormap textures
+	var cmtextures = {
+		blue_red_2: new THREE.TextureLoader().load( 'color/blue_red_2.png', render ),
+			rainbow: new THREE.TextureLoader().load( 'color/rainbow.png', render ),
+			orange_red: new THREE.TextureLoader().load( 'color/orange_red.png', render )
+	};
+	
+	var limit_meso_array = [1.0,2.0,4.0,6.0,9.0,13.0,47.0,60.0,132.0,218.4,322.1,446.5,595.8,775.0,989.9,1247.9,1557.5,1929.0,2374.8,2909.8,3551.8,4251.8,4951.8,5651.8,6351.8,7051.8,7751.8,8451.8,9151.8,9851.8,10551.8,11251.8,11951.8,12651.8,13351.8,14051.8,14751.8,15451.8];
+	
+	var material = new THREE.ShaderMaterial( {
+						side: THREE.DoubleSide,
+						uniforms: {
+							u_data: { value: texture },
+							zs_data: { value: texture_zs},
+							transparency_factor: { value: general_config.transparency_factor},
+							u_time: { type: "f", value: 0 },
+							u_cmdata: { value: cmtextures.blue_red_2 },
+							u_clim: { value: [temperature_scale[0],temperature_scale[1]] },
+							u_size: { value: [ general_config.data_volume_3D.x_length,  general_config.data_volume_3D.y_length,  general_config.data_volume_3D.z_length] },
+							x_min:{type: "f", value: general_config.x_min},
+							x_max:{type: "f", value: general_config.x_max},
+							y_min:{type: "f", value: general_config.y_min},
+							y_max:{type: "f", value: general_config.y_max},
+							zs: {type: "f", value: 46.81231},
+							//zs: {type: "f", value: 35.0},
+							mesolimit: {value: limit_meso_array},
+							cst_X: {value: general_config.cst_X},
+							cst_Y: {value: general_config.cst_Y},
+							cst_Z: {value: general_config.cst_Z}
+						},
+						vertexShader: document.getElementById( 'vertexshader_2D_plane' ).textContent,
+						fragmentShader: document.getElementById( 'fragmentshader_2D_plane' ).textContent
+					} );
+	
+	
     var mesh = new THREE.Mesh( bufferGeometry, material);
             
     //create_temp_histogram();	 <==== je déplace ds showPointsPlanes
@@ -1245,6 +1378,8 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
     var y_position_array = [];
     
     var h_position_array = [];
+	
+	var voxel_level_array = [];
     
     general_config.z_min = null;
     general_config.z_max = null;
@@ -1474,6 +1609,8 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                             
                 var number_points_offset_x = l_x/number_points;
                 var number_points_offset_y = l_y/number_points;
+				
+				
                 
                 for(var a=0; a<number_points; a++){
                     for(var b=0; b<number_points; b++){
@@ -1491,6 +1628,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                         x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
                         y_position_array.push((pY - general_config.y_min)/(general_config.y_max - general_config.y_min));
                         h_position_array.push(((pZ-MesoNH_O_array[index_1].zs)-general_config.h_min)/(general_config.h_max - general_config.h_min));
+						voxel_level_array.push(id);
                     }
                 }
                     
@@ -1569,6 +1707,8 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                             
                 var number_points_offset_x = l_x/number_points;
                 var number_points_offset_y = l_y/number_points;
+				
+				
                 
                 for(var a=0; a<number_points; a++){
                     for(var b=0; b<number_points; b++){
@@ -1586,6 +1726,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                         x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
                         y_position_array.push((pY - general_config.y_min)/(general_config.y_max - general_config.y_min));
                         h_position_array.push(((pZ-MesoNH_O_array[index_1].zs)-general_config.h_min)/(general_config.h_max - general_config.h_min));
+						voxel_level_array.push(parseInt(id)+5);
                     }
                 }
                                     
@@ -1602,6 +1743,8 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
     var x_position_array_32 = new Float32Array(x_position_array);
     var y_position_array_32 = new Float32Array(y_position_array);
     var h_position_array_32 = new Float32Array(h_position_array);
+	
+	var voxel_level_array_32 = new Float32Array(voxel_level_array);
                 
     
     var bufferGeometry = new THREE.BufferGeometry();
@@ -1615,6 +1758,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
     bufferGeometry.setAttribute( 'x_position', new THREE.BufferAttribute(x_position_array_32,1));
     bufferGeometry.setAttribute( 'y_position', new THREE.BufferAttribute(y_position_array_32,1));
     bufferGeometry.setAttribute( 'h_position', new THREE.BufferAttribute(h_position_array_32,1));
+	bufferGeometry.setAttribute( 'voxel_level', new THREE.BufferAttribute(voxel_level_array_32,1));
     
     let material = activate_animation()
     
@@ -1643,6 +1787,8 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
     var y_position_array = [];
     
     var h_position_array = [];
+	
+	var voxel_level_array = [];
     
     general_config.z_min = null;
     general_config.z_max = null;
@@ -1888,6 +2034,8 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                         size = parseInt(basic_size + basic_size*add_factor*(percentage_color-0.5)*2);
                     }
                 }
+				
+				
                     
                 var particle_length_XY = parseInt(relative_density*l_x*l_y);
                 
@@ -1927,6 +2075,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                             x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
                             y_position_array.push((pY - general_config.y_min)/(general_config.y_max - general_config.y_min));
                             h_position_array.push(((pZ-MesoNH_O_array[index_1].zs)-general_config.h_min)/(general_config.h_max - general_config.h_min));
+							voxel_level_array.push(id);
                         }
                     }
                 }
@@ -2023,6 +2172,8 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                         size = parseInt(basic_size + basic_size*add_factor*(percentage_color-0.5)*2);
                     }
                 }
+				
+				
                     
                 var particle_length_XY = parseInt(relative_density*l_x*l_y);
                 
@@ -2062,6 +2213,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                             x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
                             y_position_array.push((pY - general_config.y_min)/(general_config.y_max - general_config.y_min));
                             h_position_array.push(((pZ-MesoNH_O_array[index_1].zs)-general_config.h_min)/(general_config.h_max - general_config.h_min));
+							voxel_level_array.push(parseInt(id)+5);
                         }
                     }
                 }
@@ -2081,6 +2233,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
     var x_position_array_32 = new Float32Array(x_position_array);
     var y_position_array_32 = new Float32Array(y_position_array);
     var h_position_array_32 = new Float32Array(h_position_array);
+	var voxel_level_array_32 = new Float32Array(voxel_level_array);
             
     
     var bufferGeometry = new THREE.BufferGeometry();
@@ -2094,6 +2247,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
     bufferGeometry.setAttribute( 'x_position', new THREE.BufferAttribute(x_position_array_32,1));
     bufferGeometry.setAttribute( 'y_position', new THREE.BufferAttribute(y_position_array_32,1));
     bufferGeometry.setAttribute( 'h_position', new THREE.BufferAttribute(h_position_array_32,1));
+	bufferGeometry.setAttribute( 'voxel_level', new THREE.BufferAttribute(voxel_level_array_32,1));
         
     let material = activate_animation()
         
