@@ -274,7 +274,9 @@
 	
 	
 	
-  <script type="x-shader/x-vertex" id="vertexshader_fix">
+  <script type="x-shader/x-vertex" id="vertexshader_fix_3D_points">
+		precision highp float;
+		precision mediump sampler3D;
 		uniform float x_factor_min;
 		uniform float x_factor_max;
 		uniform float y_factor_min;
@@ -286,227 +288,782 @@
 		uniform float temp_factor_min;
 		uniform float temp_factor_max;
 		uniform float regularSize;
+		uniform float relativeSizeFactor;
+		uniform vec3 u_size;
+		uniform vec2 u_clim;
+		uniform sampler2D zs_data;
+		uniform sampler3D u_data;
+		uniform float x_min;
+		uniform float x_max;
+		uniform float y_min;
+		uniform float y_max;
+		uniform float mesolimit[38];
+		uniform float cst_X;
+		uniform float cst_Y;
+		uniform float cst_Z;
+		uniform float zs;
+
 		attribute float x_position;
 		attribute float y_position;
 		attribute float z_position;
 		attribute float h_position;
-		attribute float customsize;
 		attribute float customtransparency;
-		attribute float custompercentage;
-		attribute vec3 customColor;
-		varying vec4 vColor;
+		attribute float custompercentage; 
+		attribute float voxel_level;
+		varying vec3 v_position;
+		varying vec3 voxel_position;
+		varying float transparency;
+		varying float tempPercentage;
+
+		float sample1(vec3 texcoords) {
+			/* Sample float value from a 3D texture. Assumes intensity data. */
+			return texture(u_data, texcoords.xyz).r;
+		}
+
 		void main() {
+			v_position = position;
+
+			float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
+			float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+			float voxel_position_z = 0.0;
+			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
+			float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+			
+			if(voxel_level < 7.0){
+				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
+					voxel_position_z = 0.0;
+				} else {
+					for(int i=1; i< 7; i++){
+						if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+							float z_min = new_zs + mesolimit[i-1];
+							float z_max = new_zs + mesolimit[i];
+							voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+							break;
+						}				
+					}
+				}
+			} else {
+				if((new_zs+ mesolimit[7])*cst_Z > v_position[1]){
+						voxel_position_z = 6.0;
+					} else {
+						for(int i=8; i< 38; i++){
+							if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+								float z_min = new_zs + mesolimit[i-1];
+								float z_max = new_zs + mesolimit[i];
+								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+								break;
+							}				
+						}
+					}
+			}
+						
+			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
+	
+			float val = sample1(voxel_position/u_size);
+
+			if (val<u_clim[0] || val> u_clim[1]) {
+				tempPercentage = -1.0;
+			} else {
+				tempPercentage = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
+				if (tempPercentage < 0.0) {
+					tempPercentage = 0.0;
+				} else if (tempPercentage > 1.0) {
+					tempPercentage = 1.0;
+				}
+			}
+
+			float sizeShader;
+			float addFactor;
+			float basicSize = 10000.0;
+			if (tempPercentage == 0.5 || relativeSizeFactor == 1.0) {
+				sizeShader = basicSize;
+			} else if (relativeSizeFactor < 1.0) {
+				addFactor = 1.0-relativeSizeFactor;
+				sizeShader = (tempPercentage < 0.5) ? basicSize + (basicSize*addFactor*(0.5*tempPercentage)*2.0) : basicSize - (basicSize*addFactor*(0.5*tempPercentage)*2.0) ;
+			} else if (relativeSizeFactor > 1.0) {
+				addFactor = relativeSizeFactor - 1.0;
+				sizeShader = (tempPercentage < 0.5) ? basicSize - (basicSize*addFactor*(0.5*tempPercentage)*2.0) : basicSize + (basicSize*addFactor*(0.5*tempPercentage)*2.0) ;
+			}
+
 			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
 			if(custompercentage > temp_factor_min && custompercentage < temp_factor_max && x_position > x_factor_min && x_position < x_factor_max && y_position > y_factor_min && y_position < y_factor_max && z_position > z_factor_min && z_position < z_factor_max && h_position > h_factor_min && h_position < h_factor_max){				
-				gl_PointSize = regularSize*customsize * ( 1.0 / -mvPosition.z );
-				vColor = vec4( customColor, customtransparency );
+				gl_PointSize = regularSize* sizeShader * ( 1.0 / -mvPosition.z );
 			} else {
 				gl_PointSize = 0.0;
-				vColor = vec4( customColor, 0.0 );
 			}	
+			
+			transparency = customtransparency;
 			gl_Position = projectionMatrix * mvPosition;
+
+
+			
 		}
 	</script>
 	
-	<script type="x-shader/x-vertex" id="vertexshader_anim_temp">
-		uniform float regularSize;
-		uniform float x_factor_min;
-		uniform float x_factor_max;
-		uniform float y_factor_min;
-		uniform float y_factor_max;
-		uniform float z_factor_min;
-		uniform float z_factor_max;
-		uniform float h_factor_min;
-		uniform float h_factor_max;
-		uniform float temp_factor_min;
-		uniform float temp_factor_max;
-		uniform float u_time;
-		attribute float x_position;
-		attribute float y_position;
-		attribute float z_position;
-		attribute float h_position;
-		attribute float customsize;
-		attribute float customtransparency;
-		attribute vec3 customColor;
-		attribute float custompercentage;
-		uniform bool animated;
-		varying vec4 vColor;
-		void main() {
-			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-			if(custompercentage > temp_factor_min && custompercentage < temp_factor_max && x_position > x_factor_min && x_position < x_factor_max && y_position > y_factor_min && y_position < y_factor_max && z_position > z_factor_min && z_position < z_factor_max && h_position > h_factor_min && h_position < h_factor_max){
-					if(abs(sin(u_time + custompercentage)) > 0.9){
-						if(abs(sin(u_time + custompercentage)) > 0.95){
-							gl_PointSize = regularSize*customsize * ( 1.0 / -mvPosition.z );
-							vColor = vec4( customColor, customtransparency );
-						} else {
-							gl_PointSize = ((abs(sin(u_time + custompercentage)) - 0.9)/(0.95 - 0.9))*abs(sin(u_time + custompercentage))*regularSize*customsize * ( 1.0 / -mvPosition.z );
-							vColor = vec4( customColor, customtransparency );
-						}
-					} else {
-						gl_PointSize = 0.0;
-						vColor = vec4( customColor, 0.0 );
-					}
-				} else {
-						gl_PointSize = 0.0;
-						vColor = vec4( customColor, 0.0 );
-				}
-			gl_Position = projectionMatrix * mvPosition;
-		}
-	</script>
-	
-	<script type="x-shader/x-vertex" id="vertexshader_anim_z">
-		uniform float regularSize;
-		uniform float x_factor_min;
-		uniform float x_factor_max;
-		uniform float y_factor_min;
-		uniform float y_factor_max;
-		uniform float z_factor_min;
-		uniform float z_factor_max;
-		uniform float h_factor_min;
-		uniform float h_factor_max;
-		uniform float temp_factor_min;
-		uniform float temp_factor_max;
-		uniform float u_time;
-		attribute float x_position;
-		attribute float y_position;
-		attribute float z_position;
-		attribute float h_position;
-		attribute float custompercentage;
-		attribute float customsize;
-		attribute float customtransparency;
-		attribute vec3 customColor;
-		uniform bool animated;
-		varying vec4 vColor;
-		void main() {
-			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-			if(custompercentage > temp_factor_min && custompercentage < temp_factor_max && x_position > x_factor_min && x_position < x_factor_max && y_position > y_factor_min && y_position < y_factor_max && z_position > z_factor_min && z_position < z_factor_max && h_position > h_factor_min && h_position < h_factor_max){
-				if(abs(sin(u_time + 3.14159265359*z_position)) > 0.9){
-					if(abs(sin(u_time + 3.14159265359*z_position)) > 0.95){
-						gl_PointSize = regularSize*customsize * ( 1.0 / -mvPosition.z );
-						vColor = vec4( customColor, customtransparency );
-					} else {
-						gl_PointSize = ((abs(sin(u_time + 3.14159265359*z_position)) - 0.9)/(0.95 - 0.9))*abs(sin(u_time + 3.14159265359*z_position))*regularSize*customsize * ( 1.0 / -mvPosition.z );
-						vColor = vec4( customColor, customtransparency );
-					}
-				} else {
-					gl_PointSize = 0.0;
-					vColor = vec4( customColor, 0.0 );
-				}
-			} else {
-				gl_PointSize = 0.0;
-				vColor = vec4( customColor, 0.0 );
-			}
-			gl_Position = projectionMatrix * mvPosition;
-		}
-	</script>
-	
-	<script type="x-shader/x-vertex" id="vertexshader_anim_x">
-		uniform float regularSize;
-		uniform float x_factor_min;
-		uniform float x_factor_max;
-		uniform float y_factor_min;
-		uniform float y_factor_max;
-		uniform float z_factor_min;
-		uniform float z_factor_max;
-		uniform float h_factor_min;
-		uniform float h_factor_max;
-		uniform float temp_factor_min;
-		uniform float temp_factor_max;
-		uniform float u_time;		
-		attribute float x_position;
-		attribute float y_position;
-		attribute float z_position;
-		attribute float h_position;
-		attribute float custompercentage;
-		attribute float customsize;
-		attribute float customtransparency;
-		attribute vec3 customColor;
-		uniform bool animated;
-		varying vec4 vColor;
-		void main() {
-			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-			if(custompercentage > temp_factor_min && custompercentage < temp_factor_max && x_position > x_factor_min && x_position < x_factor_max && y_position > y_factor_min && y_position < y_factor_max && z_position > z_factor_min && z_position < z_factor_max && h_position > h_factor_min && h_position < h_factor_max){
-				if(abs(sin(u_time + 3.14159265359*x_position)) > 0.9){
-					if(abs(sin(u_time + 3.14159265359*x_position)) > 0.95){
-						gl_PointSize = regularSize*customsize * ( 1.0 / -mvPosition.z );
-						vColor = vec4( customColor, customtransparency );
-					} else {
-						gl_PointSize = ((abs(sin(u_time + 3.14159265359*x_position)) - 0.9)/(0.95 - 0.9))*abs(sin(u_time + 3.14159265359*x_position))*regularSize*customsize * ( 1.0 / -mvPosition.z );
-						vColor = vec4( customColor, customtransparency );
-					}
-				} else {
-					gl_PointSize = 0.0;
-					vColor = vec4( customColor, 0.0 );
-				}
-			} else {
-				gl_PointSize = 0.0;
-				vColor = vec4( customColor, 0.0 );
-			}
-			gl_Position = projectionMatrix * mvPosition;
-		}
-	</script>
-	
-	<script type="x-shader/x-vertex" id="vertexshader_anim_y">
-		uniform float regularSize;
-		uniform float x_factor_min;
-		uniform float x_factor_max;
-		uniform float y_factor_min;
-		uniform float y_factor_max;
-		uniform float z_factor_min;
-		uniform float z_factor_max;
-		uniform float h_factor_min;
-		uniform float h_factor_max;
-		uniform float temp_factor_min;
-		uniform float temp_factor_max;
-		uniform float u_time;
-		attribute float x_position;
-		attribute float y_position;
-		attribute float z_position;
-		attribute float h_position;
-		attribute float custompercentage;
-		attribute float customsize;
-		attribute float customtransparency;
-		attribute vec3 customColor;
-		uniform bool animated;
-		varying vec4 vColor;
-		void main() {
-			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-			if(custompercentage > temp_factor_min && custompercentage < temp_factor_max && x_position > x_factor_min && x_position < x_factor_max && y_position > y_factor_min && y_position < y_factor_max && z_position > z_factor_min && z_position < z_factor_max && h_position > h_factor_min && h_position < h_factor_max){
-				if(abs(sin(u_time + 3.14159265359*y_position)) > 0.9){
-					if(abs(sin(u_time + 3.14159265359*y_position)) > 0.95){
-						gl_PointSize = regularSize*customsize * ( 1.0 / -mvPosition.z );
-						vColor = vec4( customColor, customtransparency );
-					} else {
-						gl_PointSize = ((abs(sin(u_time + 3.14159265359*y_position)) - 0.9)/(0.95 - 0.9))*abs(sin(u_time + 3.14159265359*y_position))*regularSize*customsize * ( 1.0 / -mvPosition.z );
-						vColor = vec4( customColor, customtransparency );
-					}
-				} else {
-					gl_PointSize = 0.0;
-					vColor = vec4( customColor, 0.0 );
-				}
-			} else {
-				gl_PointSize = 0.0;
-				vColor = vec4( customColor, 0.0 );
-			}
-			gl_Position = projectionMatrix * mvPosition;
-		}
-	</script>
-	
-	<script type="x-shader/x-fragment" id="fragmentshader">
-		uniform vec3 color;
+	<script type="x-shader/x-fragment" id="fragmentshader_3D_points">
+		precision highp float;
+		precision mediump sampler3D;
+
+		uniform sampler2D u_cmdata;
 		uniform sampler2D pointTexture;
-		varying vec4 vColor;
-		void main() {	
-			gl_FragColor = vColor;
+		uniform vec3 u_size;
+		
+		varying vec3 voxel_position;
+				
+		varying float transparency;
+		varying float tempPercentage;
+		
+
+		void main() {
+						
+			//if(tempPercentage == -1.0){
+			//	gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+			//
+			//} else{
+			//	
+			//	gl_FragColor = texture2D(u_cmdata, vec2(tempPercentage, 0.5));
+			//	gl_FragColor = vec4(gl_FragColor[0],gl_FragColor[1],gl_FragColor[2],transparency);
+			//}
+						
+			float val = fract(float(int(voxel_position[2]))/(u_size[2]/7.0));
+			gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
+									
 			vec4 texture4 = texture2D( pointTexture, gl_PointCoord );
 			if(texture4.a < 0.8){
 				discard;
 			}			
 			gl_FragColor = gl_FragColor * texture4;
+				
 		}
 	</script>
 	
+	<script type="x-shader/x-vertex" id="vertexshader_fix_3D_anim_temp">
+		precision highp float;
+		precision mediump sampler3D;
+		uniform float x_factor_min;
+		uniform float x_factor_max;
+		uniform float y_factor_min;
+		uniform float y_factor_max;
+		uniform float z_factor_min;
+		uniform float z_factor_max;
+		uniform float h_factor_min;
+		uniform float h_factor_max;
+		uniform float temp_factor_min;
+		uniform float temp_factor_max;
+		uniform float regularSize;
+		uniform float relativeSizeFactor;
+		uniform vec3 u_size;
+		uniform vec2 u_clim;
+		uniform sampler2D zs_data;
+		uniform sampler3D u_data;
+		uniform float x_min;
+		uniform float x_max;
+		uniform float y_min;
+		uniform float y_max;
+		uniform float mesolimit[38];
+		uniform float cst_X;
+		uniform float cst_Y;
+		uniform float cst_Z;
+		uniform float zs;
+		uniform float u_time;
+		attribute float x_position;
+		attribute float y_position;
+		attribute float z_position;
+		attribute float h_position;
+		attribute float customtransparency;
+		attribute float custompercentage; 
+		attribute float voxel_level;
+		varying vec3 voxel_position;
+		varying vec3 v_position;
+		varying float transparency;
+		varying float tempPercentage;
+
+		float sample1(vec3 texcoords) {
+			/* Sample float value from a 3D texture. Assumes intensity data. */
+			return texture(u_data, texcoords.xyz).r;
+		}
+
+		void main() {
+			v_position = position;
+
+			float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
+			float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+			float voxel_position_z = 0.0;
+			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
+			float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+			if(voxel_level < 7.0){
+				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
+					voxel_position_z = 0.0;
+				} else {
+					for(int i=1; i< 7; i++){
+						if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+							float z_min = new_zs + mesolimit[i-1];
+							float z_max = new_zs + mesolimit[i];
+							voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+							break;
+						}				
+					}
+				}
+			} else {
+				if((new_zs+ mesolimit[7])*cst_Z > v_position[1]){
+						voxel_position_z = 6.0;
+					} else {
+						for(int i=8; i< 38; i++){
+							if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+								float z_min = new_zs + mesolimit[i-1];
+								float z_max = new_zs + mesolimit[i];
+								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+								break;
+							}				
+						}
+					}
+			}
+			
+			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
 	
+			float val = sample1(voxel_position/u_size);
+
+			if (val<u_clim[0] || val> u_clim[1]) {
+				tempPercentage = -1.0;
+			} else {
+				tempPercentage = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
+				if (tempPercentage < 0.0) {
+					tempPercentage = 0.0;
+				} else if (tempPercentage > 1.0) {
+					tempPercentage = 1.0;
+				}
+			}
+
+			float sizeShader;
+			float addFactor;
+			float basicSize = 10000.0;
+			if (tempPercentage == 0.5 || relativeSizeFactor == 1.0) {
+				sizeShader = basicSize;
+			} else if (relativeSizeFactor < 1.0) {
+				addFactor = 1.0-relativeSizeFactor;
+				sizeShader = (tempPercentage < 0.5) ? basicSize + (basicSize*addFactor*(0.5*tempPercentage)*2.0) : basicSize - (basicSize*addFactor*(0.5*tempPercentage)*2.0) ;
+			} else if (relativeSizeFactor > 1.0) {
+				addFactor = relativeSizeFactor - 1.0;
+				sizeShader = (tempPercentage < 0.5) ? basicSize - (basicSize*addFactor*(0.5*tempPercentage)*2.0) : basicSize + (basicSize*addFactor*(0.5*tempPercentage)*2.0) ;
+			}
+
+			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+			if(custompercentage > temp_factor_min && custompercentage < temp_factor_max && x_position > x_factor_min && x_position < x_factor_max && y_position > y_factor_min && y_position < y_factor_max && z_position > z_factor_min && z_position < z_factor_max && h_position > h_factor_min && h_position < h_factor_max){
+					if(abs(sin(u_time + custompercentage)) > 0.9){
+						if(abs(sin(u_time + custompercentage)) > 0.95){
+							gl_PointSize = regularSize*sizeShader * ( 1.0 / -mvPosition.z );
+						} else {
+							gl_PointSize = ((abs(sin(u_time + custompercentage)) - 0.9)/(0.95 - 0.9))*abs(sin(u_time + custompercentage))*regularSize*sizeShader * ( 1.0 / -mvPosition.z );
+						}
+					} else {
+						gl_PointSize = 0.0;
+					}
+				} else {
+						gl_PointSize = 0.0;
+				}
+			
+			transparency = customtransparency;
+			gl_Position = projectionMatrix * mvPosition;
+
+
+		}
+	</script>
+	
+	<script type="x-shader/x-vertex" id="vertexshader_fix_3D_anim_z">
+		precision highp float;
+		precision mediump sampler3D;
+		uniform float x_factor_min;
+		uniform float x_factor_max;
+		uniform float y_factor_min;
+		uniform float y_factor_max;
+		uniform float z_factor_min;
+		uniform float z_factor_max;
+		uniform float h_factor_min;
+		uniform float h_factor_max;
+		uniform float temp_factor_min;
+		uniform float temp_factor_max;
+		uniform float regularSize;
+		uniform float relativeSizeFactor;
+		uniform vec3 u_size;
+		uniform vec2 u_clim;
+		uniform sampler2D zs_data;
+		uniform sampler3D u_data;
+		uniform float x_min;
+		uniform float x_max;
+		uniform float y_min;
+		uniform float y_max;
+		uniform float mesolimit[38];
+		uniform float cst_X;
+		uniform float cst_Y;
+		uniform float cst_Z;
+		uniform float zs;
+		uniform float u_time;
+		attribute float x_position;
+		attribute float y_position;
+		attribute float z_position;
+		attribute float h_position;
+		attribute float customtransparency;
+		attribute float custompercentage; 
+		attribute float voxel_level;
+		varying vec3 voxel_position;
+		varying vec3 v_position;
+		varying float transparency;
+		varying float tempPercentage;
+
+		float sample1(vec3 texcoords) {
+			/* Sample float value from a 3D texture. Assumes intensity data. */
+			return texture(u_data, texcoords.xyz).r;
+		}
+
+		void main() {
+
+			v_position = position;
+			float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
+			float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+			float voxel_position_z = 0.0;
+			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
+			float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+			if(voxel_level < 7.0){
+				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
+					voxel_position_z = 0.0;
+				} else {
+					for(int i=1; i< 7; i++){
+						if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+							float z_min = new_zs + mesolimit[i-1];
+							float z_max = new_zs + mesolimit[i];
+							voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+							break;
+						}				
+					}
+				}
+			} else {
+				if((new_zs+ mesolimit[7])*cst_Z > v_position[1]){
+						voxel_position_z = 6.0;
+					} else {
+						for(int i=8; i< 38; i++){
+							if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+								float z_min = new_zs + mesolimit[i-1];
+								float z_max = new_zs + mesolimit[i];
+								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+								break;
+							}				
+						}
+					}
+			}
+			
+			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
+	
+			float val = sample1(voxel_position/u_size);
+
+			if (val<u_clim[0] || val> u_clim[1]) {
+				tempPercentage = -1.0;
+			} else {
+				tempPercentage = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
+				if (tempPercentage < 0.0) {
+					tempPercentage = 0.0;
+				} else if (tempPercentage > 1.0) {
+					tempPercentage = 1.0;
+				}
+			}
+
+			float sizeShader;
+			float addFactor;
+			float basicSize = 10000.0;
+			if (tempPercentage == 0.5 || relativeSizeFactor == 1.0) {
+				sizeShader = basicSize;
+			} else if (relativeSizeFactor < 1.0) {
+				addFactor = 1.0-relativeSizeFactor;
+				sizeShader = (tempPercentage < 0.5) ? basicSize + (basicSize*addFactor*(0.5*tempPercentage)*2.0) : basicSize - (basicSize*addFactor*(0.5*tempPercentage)*2.0) ;
+			} else if (relativeSizeFactor > 1.0) {
+				addFactor = relativeSizeFactor - 1.0;
+				sizeShader = (tempPercentage < 0.5) ? basicSize - (basicSize*addFactor*(0.5*tempPercentage)*2.0) : basicSize + (basicSize*addFactor*(0.5*tempPercentage)*2.0) ;
+			}
+			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+			if(custompercentage > temp_factor_min && custompercentage < temp_factor_max && x_position > x_factor_min && x_position < x_factor_max && y_position > y_factor_min && y_position < y_factor_max && z_position > z_factor_min && z_position < z_factor_max && h_position > h_factor_min && h_position < h_factor_max){
+				if(abs(sin(u_time + 3.14159265359*z_position)) > 0.9){
+					if(abs(sin(u_time + 3.14159265359*z_position)) > 0.95){
+						gl_PointSize = regularSize*sizeShader * ( 1.0 / -mvPosition.z );
+					} else {
+						gl_PointSize = ((abs(sin(u_time + 3.14159265359*z_position)) - 0.9)/(0.95 - 0.9))*abs(sin(u_time + 3.14159265359*z_position))*regularSize*sizeShader * ( 1.0 / -mvPosition.z );
+					}
+				} else {
+					gl_PointSize = 0.0;
+				}
+			} else {
+				gl_PointSize = 0.0;
+			}
+			
+			transparency = customtransparency;
+			gl_Position = projectionMatrix * mvPosition;
+		}
+	</script>
+	
+	<script type="x-shader/x-vertex" id="vertexshader_fix_3D_anim_x">
+		precision highp float;
+		precision mediump sampler3D;
+		uniform float x_factor_min;
+		uniform float x_factor_max;
+		uniform float y_factor_min;
+		uniform float y_factor_max;
+		uniform float z_factor_min;
+		uniform float z_factor_max;
+		uniform float h_factor_min;
+		uniform float h_factor_max;
+		uniform float temp_factor_min;
+		uniform float temp_factor_max;
+		uniform float regularSize;
+		uniform float relativeSizeFactor;
+		uniform vec3 u_size;
+		uniform vec2 u_clim;
+		uniform sampler2D zs_data;
+		uniform sampler3D u_data;
+		uniform float x_min;
+		uniform float x_max;
+		uniform float y_min;
+		uniform float y_max;
+		uniform float mesolimit[38];
+		uniform float cst_X;
+		uniform float cst_Y;
+		uniform float cst_Z;
+		uniform float zs;
+		uniform float u_time;
+		attribute float x_position;
+		attribute float y_position;
+		attribute float z_position;
+		attribute float h_position;
+		attribute float customtransparency;
+		attribute float custompercentage;
+		attribute float voxel_level;		
+		varying vec3 voxel_position;
+		varying vec3 v_position;
+		varying float transparency;
+		varying float tempPercentage;
+
+		float sample1(vec3 texcoords) {
+			/* Sample float value from a 3D texture. Assumes intensity data. */
+			return texture(u_data, texcoords.xyz).r;
+		}
+
+		void main() {
+			v_position = position;
+
+			float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
+			float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+			float voxel_position_z = 0.0;
+			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
+			float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+			if(voxel_level < 7.0){
+				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
+					voxel_position_z = 0.0;
+				} else {
+					for(int i=1; i< 7; i++){
+						if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+							float z_min = new_zs + mesolimit[i-1];
+							float z_max = new_zs + mesolimit[i];
+							voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+							break;
+						}				
+					}
+				}
+			} else {
+				if((new_zs+ mesolimit[7])*cst_Z > v_position[1]){
+						voxel_position_z = 6.0;
+					} else {
+						for(int i=8; i< 38; i++){
+							if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+								float z_min = new_zs + mesolimit[i-1];
+								float z_max = new_zs + mesolimit[i];
+								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+								break;
+							}				
+						}
+					}
+			}
+			
+			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
+	
+			float val = sample1(voxel_position/u_size);
+
+			if (val<u_clim[0] || val> u_clim[1]) {
+				tempPercentage = -1.0;
+			} else {
+				tempPercentage = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
+				if (tempPercentage < 0.0) {
+					tempPercentage = 0.0;
+				} else if (tempPercentage > 1.0) {
+					tempPercentage = 1.0;
+				}
+			}
+
+			float sizeShader;
+			float addFactor;
+			float basicSize = 10000.0;
+			if (tempPercentage == 0.5 || relativeSizeFactor == 1.0) {
+				sizeShader = basicSize;
+			} else if (relativeSizeFactor < 1.0) {
+				addFactor = 1.0-relativeSizeFactor;
+				sizeShader = (tempPercentage < 0.5) ? basicSize + (basicSize*addFactor*(0.5*tempPercentage)*2.0) : basicSize - (basicSize*addFactor*(0.5*tempPercentage)*2.0) ;
+			} else if (relativeSizeFactor > 1.0) {
+				addFactor = relativeSizeFactor - 1.0;
+				sizeShader = (tempPercentage < 0.5) ? basicSize - (basicSize*addFactor*(0.5*tempPercentage)*2.0) : basicSize + (basicSize*addFactor*(0.5*tempPercentage)*2.0) ;
+			}
+
+			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+			if(custompercentage > temp_factor_min && custompercentage < temp_factor_max && x_position > x_factor_min && x_position < x_factor_max && y_position > y_factor_min && y_position < y_factor_max && z_position > z_factor_min && z_position < z_factor_max && h_position > h_factor_min && h_position < h_factor_max){
+				if(abs(sin(u_time + 3.14159265359*x_position)) > 0.9){
+					if(abs(sin(u_time + 3.14159265359*x_position)) > 0.95){
+						gl_PointSize = regularSize*sizeShader * ( 1.0 / -mvPosition.z );
+					} else {
+						gl_PointSize = ((abs(sin(u_time + 3.14159265359*x_position)) - 0.9)/(0.95 - 0.9))*abs(sin(u_time + 3.14159265359*x_position))*regularSize*sizeShader * ( 1.0 / -mvPosition.z );
+					}
+				} else {
+					gl_PointSize = 0.0;
+				}
+			} else {
+				gl_PointSize = 0.0;
+			}
+			
+			transparency = customtransparency;
+			gl_Position = projectionMatrix * mvPosition;
+		}
+	</script>
+	
+	<script type="x-shader/x-vertex" id="vertexshader_fix_3D_anim_y">
+		precision highp float;
+		precision mediump sampler3D;
+		uniform float x_factor_min;
+		uniform float x_factor_max;
+		uniform float y_factor_min;
+		uniform float y_factor_max;
+		uniform float z_factor_min;
+		uniform float z_factor_max;
+		uniform float h_factor_min;
+		uniform float h_factor_max;
+		uniform float temp_factor_min;
+		uniform float temp_factor_max;
+		uniform float regularSize;
+		uniform float relativeSizeFactor;
+		uniform vec3 u_size;
+		uniform vec2 u_clim;
+		uniform sampler2D zs_data;
+		uniform sampler3D u_data;
+		uniform float x_min;
+		uniform float x_max;
+		uniform float y_min;
+		uniform float y_max;
+		uniform float mesolimit[38];
+		uniform float cst_X;
+		uniform float cst_Y;
+		uniform float cst_Z;
+		uniform float zs;
+		uniform float u_time;
+		attribute float x_position;
+		attribute float y_position;
+		attribute float z_position;
+		attribute float h_position;
+		attribute float customtransparency;
+		attribute float custompercentage; 
+		attribute float voxel_level;
+		varying vec3 voxel_position;
+		varying vec3 v_position;
+		varying float transparency;
+		varying float tempPercentage;
+
+		float sample1(vec3 texcoords) {
+			/* Sample float value from a 3D texture. Assumes intensity data. */
+			return texture(u_data, texcoords.xyz).r;
+		}
+
+		void main() {
+			v_position = position;
+
+			float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
+			float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+			float voxel_position_z = 0.0;
+			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
+			float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+			if(voxel_level < 7.0){
+				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
+					voxel_position_z = 0.0;
+				} else {
+					for(int i=1; i< 7; i++){
+						if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+							float z_min = new_zs + mesolimit[i-1];
+							float z_max = new_zs + mesolimit[i];
+							voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+							break;
+						}				
+					}
+				}
+			} else {
+				if((new_zs+ mesolimit[7])*cst_Z > v_position[1]){
+						voxel_position_z = 6.0;
+					} else {
+						for(int i=8; i< 38; i++){
+							if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+								float z_min = new_zs + mesolimit[i-1];
+								float z_max = new_zs + mesolimit[i];
+								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+								break;
+							}				
+						}
+					}
+			}
+			
+			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
+	
+			float val = sample1(voxel_position/u_size);
+
+			if (val<u_clim[0] || val> u_clim[1]) {
+				tempPercentage = -1.0;
+			} else {
+				tempPercentage = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
+				if (tempPercentage < 0.0) {
+					tempPercentage = 0.0;
+				} else if (tempPercentage > 1.0) {
+					tempPercentage = 1.0;
+				}
+			}
+
+			float sizeShader;
+			float addFactor;
+			float basicSize = 10000.0;
+			if (tempPercentage == 0.5 || relativeSizeFactor == 1.0) {
+				sizeShader = basicSize;
+			} else if (relativeSizeFactor < 1.0) {
+				addFactor = 1.0-relativeSizeFactor;
+				sizeShader = (tempPercentage < 0.5) ? basicSize + (basicSize*addFactor*(0.5*tempPercentage)*2.0) : basicSize - (basicSize*addFactor*(0.5*tempPercentage)*2.0) ;
+			} else if (relativeSizeFactor > 1.0) {
+				addFactor = relativeSizeFactor - 1.0;
+				sizeShader = (tempPercentage < 0.5) ? basicSize - (basicSize*addFactor*(0.5*tempPercentage)*2.0) : basicSize + (basicSize*addFactor*(0.5*tempPercentage)*2.0) ;
+			}
+
+			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+			if(custompercentage > temp_factor_min && custompercentage < temp_factor_max && x_position > x_factor_min && x_position < x_factor_max && y_position > y_factor_min && y_position < y_factor_max && z_position > z_factor_min && z_position < z_factor_max && h_position > h_factor_min && h_position < h_factor_max){
+				if(abs(sin(u_time + 3.14159265359*y_position)) > 0.9){
+					if(abs(sin(u_time + 3.14159265359*y_position)) > 0.95){
+						gl_PointSize = regularSize*sizeShader * ( 1.0 / -mvPosition.z );
+					} else {
+						gl_PointSize = ((abs(sin(u_time + 3.14159265359*y_position)) - 0.9)/(0.95 - 0.9))*abs(sin(u_time + 3.14159265359*y_position))*regularSize*sizeShader * ( 1.0 / -mvPosition.z );
+					}
+				} else {
+					gl_PointSize = 0.0;
+				}
+			} else {
+				gl_PointSize = 0.0;
+			}
+			
+			transparency = customtransparency;
+			gl_Position = projectionMatrix * mvPosition;
+		}
+	</script>
+	
+	<script type="x-shader/x-vertex" id="vertexshader_2D_plane">
+		varying vec3 v_position;
+		attribute float voxel_level;
+		
+		varying float voxel_point_level;
+		
+		void main() {
+		
+			voxel_point_level = voxel_level;
+		
+			vec4 position4 = modelMatrix * vec4(position, 1.);
+			v_position = position4.xyz;
+			gl_Position = projectionMatrix * viewMatrix * position4;
+		}
+	</script>
+	
+	<script type="x-shader/x-fragment" id="fragmentshader_2D_plane">
+		precision highp float;
+		precision mediump sampler3D;
+
+		varying vec3 v_position;
+		uniform vec3 u_size;
+		uniform vec2 u_clim;
+		uniform sampler3D u_data;
+		uniform sampler2D zs_data;
+		uniform sampler2D u_cmdata;
+		uniform sampler2D pointTexture;
+		
+		varying float voxel_point_level;
+		
+		uniform float x_min;
+		uniform float x_max;
+		uniform float y_min;
+		uniform float y_max;
+		uniform float mesolimit[38];
+		uniform float cst_X;
+		uniform float cst_Y;
+		uniform float cst_Z;
+		uniform float zs;
+		uniform float transparency_factor;
+		
+
+		float sample1(vec3 texcoords) {
+				/* Sample float value from a 3D texture. Assumes intensity data. */
+				return texture(u_data, texcoords.xyz).r;
+		}
+
+		void main() {
+		
+				float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
+				float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+				float voxel_position_z = 0.0;
+				vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
+				float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+				if(voxel_point_level < 7.0){
+					if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
+						voxel_position_z = 0.0;
+					} else {
+						for(int i=1; i< 7; i++){
+							if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+								float z_min = new_zs + mesolimit[i-1];
+								float z_max = new_zs + mesolimit[i];
+								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+								break;
+							}				
+						}
+					}
+				} else {
+					if((new_zs+ mesolimit[7])*cst_Z > v_position[1]){
+							voxel_position_z = 6.0;
+						} else {
+							for(int i=8; i< 38; i++){
+								if((new_zs + mesolimit[i])*cst_Z > v_position[1]){
+									float z_min = new_zs + mesolimit[i-1];
+									float z_max = new_zs + mesolimit[i];
+									voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
+									break;
+								}				
+							}
+						}
+				}
+				
+				vec3 voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
+		        
+				//float val = sample1(voxel_position/u_size);
+				//
+				//if(val<u_clim[0]){
+				//	gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+				//} else if(val>u_clim[1]){
+				//	gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+				//} else{
+				//	float new_val = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
+				//	gl_FragColor = texture2D(u_cmdata, vec2(new_val, 0.5));
+				//	//gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
+				//}
+				
+				float val = fract(float(int(voxel_position[2]))/(u_size[2]/7.0));
+				gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
+				
+				gl_FragColor= vec4(gl_FragColor[0],gl_FragColor[1],gl_FragColor[2],transparency_factor);
+				
+				
+		}
+	</script>
+	
+		
 	<script type="x-shader/x-vertex" id="vertexshader_3D_plane">
 		varying vec3 v_position;
 		
