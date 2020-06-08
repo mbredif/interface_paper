@@ -96,7 +96,7 @@ export function initialise() {
 
     //event sur le bouton avec les choix de données
     $('#load_data').on('click', loadChosenData);
-    $('#load_dataset').on('click', loadChosenDataSet);
+    $('#load_dataset').on('change', loadChosenDataSet);
 }
 
 export function sblValues() {

@@ -28,7 +28,7 @@ export function chargerParams(event) {
 		general_config.id_sbl_array_real_plane=results.id_sbl_array_real_plane;
 		general_config.type_points= results.type_points,
 		general_config.domain_min= results.domain_min,
-    	general_config.domain_max= results.domain_max,
+		general_config.domain_max= results.domain_max,
 		general_config.id_meso_array_roads=results.id_meso_array_roads;
 		general_config.id_sbl_array_roads= results.id_sbl_array_roads;
 		general_config.regular_size= results.regular_size;
@@ -155,7 +155,7 @@ export function chargerParams(event) {
 		let tempMin = general_config.temp_array[0]-273.15 ;
 		let tempMax = general_config.temp_array[1]-273.15;
 		let tempMinCalc = tempMin + ((tempMax - tempMin)*(value_0/100));
-      	let tempMaxCalc = tempMin + ((tempMax - tempMin)*(value_1/100));
+		let tempMaxCalc = tempMin + ((tempMax - tempMin)*(value_1/100));
 		$( "#temperatures-label" ).val( tempMinCalc.toFixed(2) + "°C - " + tempMaxCalc.toFixed(2) + "°C" );
 		// filter : Z control
 		$( "#z-slider-range" ).slider( "values", 0, general_config.z_min_factor*100 );
@@ -182,22 +182,22 @@ export function chargerParams(event) {
 		}
 		if (general_config.animation_parameter == 'X') {
 			$('#animation_type_x').prop("checked", true);
-        	$('#animation_type_y').prop("checked", false);
+			$('#animation_type_y').prop("checked", false);
 			$('#animation_type_z').prop("checked", false);
 			$('#animation_type_temp').prop("checked", false);
 		} else if (general_config.animation_parameter == 'Y') {
 			$('#animation_type_x').prop("checked", false);
-        	$('#animation_type_y').prop("checked", true);
+			$('#animation_type_y').prop("checked", true);
 			$('#animation_type_z').prop("checked", false);
 			$('#animation_type_temp').prop("checked", false);
 		} else if(general_config.animation_parameter == 'Z') {
 			$('#animation_type_x').prop("checked", false);
-        	$('#animation_type_y').prop("checked", false);
+			$('#animation_type_y').prop("checked", false);
 			$('#animation_type_z').prop("checked", true);
 			$('#animation_type_temp').prop("checked", false);
 		} else if(general_config.animation_parameter == 'temp') {
 			$('#animation_type_x').prop("checked", false);
-        	$('#animation_type_y').prop("checked", false);
+			$('#animation_type_y').prop("checked", false);
 			$('#animation_type_z').prop("checked", false);
 			$('#animation_type_temp').prop("checked", true);
 		}
@@ -228,44 +228,45 @@ export function chargerParams(event) {
 
 export function loadChosenDataSet() {
 	general_config.data_points_O_2 = [];
-  general_config.data_points_U_2 = [];
+	general_config.data_points_U_2 = [];
 	general_config.data_points_V_2 = [];
 
-	const dataset = $('#load_dataset').val();
+	var dataset = $('#load_dataset').val();
 
 	load_Data("O", "CSV/lambert_O_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_O_2}],	"#ff5733");
 	load_Data("U", "CSV/lambert_U_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_U_2}],	"#ff5733");
 	load_Data("V", "CSV/lambert_V_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_V_2}],	"#ff5733");
 
+	dataset = dataset.split("_simu")[0];
 	fetch("geojson/roads_" + dataset + ".geojson").then(r => r.json()).then(function( data ) {
-		data => general_config.data_road = data;
+		general_config.data_road = data;
 	});
 	fetch("geojson/buildings_" + dataset + ".geojson").then(r => r.json()).then(function( data ) {
 		general_config.data_build = data;
 		create_buildings(general_config.data_build,scene,$("#type_bati").val());
 	});
 
-			if (dataset.split("paris_beaubourg").length >1){
-				general_config.data_ni = 1;
-			general_config.data_nj = 1;
-		} else if (dataset.split("paris_centre").length >1){
-				general_config.data_ni = 9;
-			general_config.data_nj = 6;
-			}
-			$( "#type_bati" ).on( "change", function() {
-				create_buildings(general_config.data_build,scene,$("#type_bati").val());
-			});
+	if (dataset.split("paris_beaubourg").length >1){
+		general_config.data_ni = 1;
+		general_config.data_nj = 1;
+	} else if (dataset.split("paris_centre").length >1){
+		general_config.data_ni = 9;
+		general_config.data_nj = 6;
+	}
+	$( "#type_bati" ).on( "change", function() {
+		create_buildings(general_config.data_build,scene,$("#type_bati").val());
+	});
 
 
-			$('#data_loaded').html("Chargement réussi");
-			$('#data_block').hide();
-			//attend 1.5 seconde avant de fermer l'onglet
-			setTimeout(closeChoiceContainer, 800);
+	$('#data_loaded').html("Chargement réussi");
+	$('#data_block').hide();
+	//attend 1.5 seconde avant de fermer l'onglet
+	setTimeout(closeChoiceContainer, 800);
 }
 
 export function loadChosenData() {
 	general_config.data_points_O_2 = [];
-  general_config.data_points_U_2 = [];
+	general_config.data_points_U_2 = [];
 	general_config.data_points_V_2 = [];
 
 	let dataO = $('#data_o').val().split('fakepath\\')[1];
