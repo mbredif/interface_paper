@@ -397,3 +397,9 @@ button {
 	margin-top: 8px;
 	
 }
+
+.interface_labels{
+	font-weight: bold;
+	border-top: solid;
+	margin-top: 1px;
+}
