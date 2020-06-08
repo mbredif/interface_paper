@@ -1,5 +1,5 @@
 import {general_config} from './initialisation.js'
-import { recreate_scene } from './creative_functions.js';
+import { recreate_scene,change_buildings_transparency } from './creative_functions.js';
 
 
 // filter = TEMPERATURE SLIDER
@@ -280,6 +280,23 @@ $( function() {
     stop: function (e, ui) {
 
       recreate_scene()
+    }
+  });
+} );
+
+// buildings_transparency = buildings_transparency slider
+$( function() {
+  $( "#buildings_transparency_slider" ).slider({
+    
+    min: 0,
+    max: 100,
+    value: general_config.buildings_transparency*100 ,
+    slide: function (event, ui) {
+      general_config.buildings_transparency = ui.value/100;
+      $("#buildings_transparency_label").html("buildings_transparency: " + general_config.buildings_transparency);
+    },
+    stop: function (e, ui) {
+      change_buildings_transparency(general_config.buildings_transparency);
     }
   });
 } );
