@@ -651,14 +651,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                 
                 
                 general_config.temp_values.push(temp);
-                var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-                
-                var color_rgb = hexToRgb(color_hex)
-                
-                var color_r = color_rgb.r/255;
-                var color_g = color_rgb.g/255;
-                var color_b = color_rgb.b/255;
-                    
+                                    
                 var cell_volume = l_x*l_y*l_z;
                 
                 var relative_density;
@@ -721,7 +714,6 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                     coord_array.push(pX*general_config.cst_X);
                     coord_array.push(pZ*general_config.cst_Z);
                     coord_array.push(-pY*general_config.cst_Y);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
                     sizes.push(size);
                     transparency_factor_array.push(general_config.points_transparency);
                     custompercentagearray.push(percentage_color*2*Math.PI);
@@ -765,15 +757,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                 }
                                     
                 general_config.temp_values.push(temp);
-                var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-                                     
-                
-                var color_rgb = hexToRgb(color_hex);
-               
-                var color_r = color_rgb.r/255;
-                var color_g = color_rgb.g/255;
-                var color_b = color_rgb.b/255;
-                    
+                                   
                 var cell_volume = l_x*l_y*l_z;
                 
                 var relative_density;
@@ -837,7 +821,6 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                     coord_array.push(pX*general_config.cst_X);
                     coord_array.push(pZ*general_config.cst_Z);
                     coord_array.push(-pY*general_config.cst_Y);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
                     sizes.push(size);
                     transparency_factor_array.push(general_config.points_transparency);
                     custompercentagearray.push(percentage_color*2*Math.PI);
@@ -868,7 +851,6 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
     var bufferGeometry = new THREE.BufferGeometry();
     
     bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
-    bufferGeometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors_32, 3 ) );
     bufferGeometry.setAttribute( 'customsize', new THREE.BufferAttribute(sizes_32,1));
     bufferGeometry.setAttribute( 'customtransparency', new THREE.BufferAttribute(transparency_factor_32,1));
     bufferGeometry.setAttribute( 'custompercentage', new THREE.BufferAttribute(custompercentage_32,1));
@@ -1157,29 +1139,10 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     }
                     
                     general_config.temp_values.push(temp);
-                    var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-                            
                     
-                    var color_rgb = hexToRgb(color_hex)
-                    
-                    var color_r = color_rgb.r/255;
-                    var color_g = color_rgb.g/255;
-                    var color_b = color_rgb.b/255;
                     var transparency = general_config.transparency_factor;
                             
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                                                                                
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
+                   
 					
 					
 					
@@ -1285,31 +1248,11 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     }
                     
                     general_config.temp_values.push(temp);
-                    var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                     
-
-                    var color_rgb = hexToRgb(color_hex)
-                    
-                    var color_r = color_rgb.r/255;
-                    var color_g = color_rgb.g/255;
-                    var color_b = color_rgb.b/255;
                     var transparency = general_config.transparency_factor;
                     
                     
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                                                                                
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-                    colors.push(color_r);colors.push(color_g);colors.push(color_b);
-					
+                   					
 					
                 } else {
                     general_config.temp_values.push(temp);
@@ -1328,7 +1271,6 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
 	var bufferGeometry = new THREE.BufferGeometry();
     
     bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
-    bufferGeometry.setAttribute( 'color', new THREE.BufferAttribute( colors_32, 3 ) );
 	bufferGeometry.setAttribute( 'voxel_level', new THREE.BufferAttribute(voxel_level_array_32,1));
 	
 	var texture = new THREE.DataTexture3D( general_config.data_volume_3D.data_temp, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length );
@@ -1616,14 +1558,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                 }
                 
                 general_config.temp_values.push(temp);
-                var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                 
-
-                var color_rgb = hexToRgb(color_hex)
-                
-                var color_r = color_rgb.r/255;
-                var color_g = color_rgb.g/255;
-                var color_b = color_rgb.b/255;
                 
                                     
                 var size;
@@ -1664,7 +1599,6 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                         coord_array.push(pX*general_config.cst_X); 
                         coord_array.push(pZ*general_config.cst_Z);
                         coord_array.push(-pY*general_config.cst_Y);
-                        colors.push(color_r);colors.push(color_g);colors.push(color_b);
                         sizes.push(size);
                         transparency_factor_array.push(general_config.points_transparency);
                         custompercentagearray.push(percentage_color*2*Math.PI);
@@ -1715,13 +1649,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                 }
                 
                 general_config.temp_values.push(temp);
-                var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-                                         
-                var color_rgb = hexToRgb(color_hex)
-                
-                var color_r = color_rgb.r/255;
-                var color_g = color_rgb.g/255;
-                var color_b = color_rgb.b/255;
+               
                 
                                     
                 var size;
@@ -1762,7 +1690,6 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                         coord_array.push(pX*general_config.cst_X); 
                         coord_array.push(pZ*general_config.cst_Z);
                         coord_array.push(-pY*general_config.cst_Y);
-                        colors.push(color_r);colors.push(color_g);colors.push(color_b);
                         sizes.push(size);
                         transparency_factor_array.push(general_config.points_transparency);
                         custompercentagearray.push(percentage_color*2*Math.PI);
@@ -1794,7 +1721,6 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
     var bufferGeometry = new THREE.BufferGeometry();
     
     bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
-    bufferGeometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors_32, 3 ) );
     bufferGeometry.setAttribute( 'customsize', new THREE.BufferAttribute(sizes_32,1));
     bufferGeometry.setAttribute( 'customtransparency', new THREE.BufferAttribute(transparency_factor_32,1));
     bufferGeometry.setAttribute( 'custompercentage', new THREE.BufferAttribute(custompercentage_32,1));
@@ -2020,13 +1946,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                 }
                 
                 general_config.temp_values.push(temp);
-                var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                 
-                var color_rgb = hexToRgb(color_hex)
-                
-                var color_r = color_rgb.r/255;
-                var color_g = color_rgb.g/255;
-                var color_b = color_rgb.b/255;
                     
                 var cell_volume = l_x*l_y*l_z;
                 
@@ -2111,7 +2031,6 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                             coord_array.push(pX*general_config.cst_X);
                             coord_array.push(pZ*general_config.cst_Z);
                             coord_array.push(-pY*general_config.cst_Y);
-                            colors.push(color_r);colors.push(color_g);colors.push(color_b);
                             sizes.push(size);
                             transparency_factor_array.push(general_config.points_transparency);
                             custompercentagearray.push(percentage_color*2*Math.PI);
@@ -2156,14 +2075,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                 }
                 
                 general_config.temp_values.push(temp);
-                var color_hex = getHCLcolor(tab_temp, temp, percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
                                    
-                var color_rgb = hexToRgb(color_hex)
-                
-                var color_r = color_rgb.r/255;
-                var color_g = color_rgb.g/255;
-                var color_b = color_rgb.b/255;
-                    
                 var cell_volume = l_x*l_y*l_z;
                 
                 var relative_density;
@@ -2249,7 +2161,6 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                             coord_array.push(pX*general_config.cst_X);
                             coord_array.push(pZ*general_config.cst_Z);
                             coord_array.push(-pY*general_config.cst_Y);
-                            colors.push(color_r);colors.push(color_g);colors.push(color_b);
                             sizes.push(size);
                             transparency_factor_array.push(general_config.points_transparency);
                             custompercentagearray.push(percentage_color*2*Math.PI);
@@ -2283,7 +2194,6 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
     var bufferGeometry = new THREE.BufferGeometry();
     
     bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
-    bufferGeometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors_32, 3 ) );
     bufferGeometry.setAttribute( 'customsize', new THREE.BufferAttribute(sizes_32,1));
     bufferGeometry.setAttribute( 'customtransparency', new THREE.BufferAttribute(transparency_factor_32,1));
     bufferGeometry.setAttribute( 'custompercentage', new THREE.BufferAttribute(custompercentage_32,1));
