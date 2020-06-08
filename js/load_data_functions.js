@@ -233,9 +233,9 @@ export function loadChosenDataSet() {
 
 	const dataset = $('#load_dataset').val();
 
-	load_Data("O", "csv/lambert_O_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_O_2}],	"#ff5733");
-	load_Data("U", "csv/lambert_U_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_U_2}],	"#ff5733");
-	load_Data("V", "csv/lambert_V_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_V_2}],	"#ff5733");
+	load_Data("O", "CSV/lambert_O_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_O_2}],	"#ff5733");
+	load_Data("U", "CSV/lambert_U_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_U_2}],	"#ff5733");
+	load_Data("V", "CSV/lambert_V_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_V_2}],	"#ff5733");
 
 	fetch("geojson/roads_" + dataset + ".geojson").then(r => r.json()).then(function( data ) {
 		data => general_config.data_road = data;
