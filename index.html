@@ -98,33 +98,52 @@
 				</div>
 				<div id="graphic_control_label" class="general_control_container_div">Graphic</div>
 				<div id="graphic_control_container">
-					<div id="container_nuage_points">Type de points :</div>
-					<div id="h_control">
-						<div id="h_control_label">h_factor : 1</div>
-						<div id="h_control_slider">
-							<div class="slider" id="h_slider"></div>
-						</div>
-					</div>
-					<div id="temp_control">
-						diff_temp
-						<div id="temp_control_input">
-							<input type="text" id="temp_min_input" name="name" value="20">
-							<input type="text" id="temp_max_input" name="name" value="30">
-						</div>
-					</div>
-					<div id="color_control">
-						<div id="color_control_input" value ="">
-						</div>
-					</div>
-					<div id="color_class_control">
-						<select id="color_class_control_input">
-							<option value="effectifs_egaux" >Effectifs égaux</option>
-							<option value="ecarts_egaux" selected>Intervalles égaux</option>
+					<div class="interface_labels">Color</div>
+					<div id="color_data_control">
+						<select id="color_data_control_input">
+							<option value="level" selected>Level represented by color</option>
+							<option value="temp">Temperature represented by color</option>
 						</select>
-						<!--Liste déroulante du nbe de tableaux faite dynamiquement-->
+						<div id="color_temp_control">
+							<div id="temp_control">
+								diff_temp
+								<div id="temp_control_input">
+									<input type="text" id="temp_min_input" name="name" value="20">
+									<input type="text" id="temp_max_input" name="name" value="30">
+								</div>
+							</div>
+							<!--<div id="color_class_control">
+								<select id="color_class_control_input">
+									<option value="effectifs_egaux" >Effectifs égaux</option>
+									<option value="ecarts_egaux" selected>Intervalles égaux</option>
+								</select>
+							</div>-->
+							<div id="temp_histogram_content">
+							</div>
+						</div>
+						<div id="color_control">
+							<!--<div id="color_control_input" value ="">
+							</div>-->
+						</div>
 					</div>
-					<div id="temp_histogram_content">
+					<div class="interface_labels">2D Planes</div>
+					<div id="transparency_control">
+						<div id="transparency_control_label">transparency_factor: 1</div>
+						<div id="transparency_control_input">
+
+							<div class="slider" id="transparency_slider"></div>
+						</div>
 					</div>
+					<div class="interface_labels">point cloud</div>
+					<div id="container_nuage_points">Type de points :</div>
+					<div id="points_transparency_control">
+						<div id="points_transparency_control_label">points_transparency_factor: 1</div>
+						<div id="points_transparency_control_input">
+
+							<div class="slider" id="points_transparency_slider"></div>
+						</div>
+					</div>
+					<div class="interface_labels">3D point cloud</div>
 					<div id="size_control" class='mono_slider_container'>
 						<div id="size_control_label">Size: </div>
 						<input type="text" id="size_text_input" class ="mono_slider_input" name="name"/>
@@ -151,17 +170,18 @@
 							<div class="slider" id="relative_density_factor_slider"></div>
 						</div>
 					</div>
-					<div id="transparency_control">
-						<div id="transparency_control_label">transparency_factor: 1</div>
-						<div id="transparency_control_input">
-
-							<div class="slider" id="transparency_slider"></div>
-						</div>
-					</div>
+					<div class="interface_labels">2D point cloud</div>
 					<div id="number_of_points_real_plane">
 						<div id="number_of_points_real_plane_label">number_of_points_real_plane: 10</div>
 						<div id="number_of_points_real_plane_input">
 							<div class="slider" id="number_of_points_real_plane_slider"></div>
+						</div>
+					</div>
+					<div class="interface_labels">Buildings</div>
+					<div id="buildings_transparency">
+						<div id="buildings_transparency_label">buildings_transparency: 1</div>
+						<div id="buildings_transparency_input">
+							<div class="slider" id="buildings_transparency_slider"></div>
 						</div>
 					</div>
 					<div id="type_bati_div">
@@ -185,12 +205,13 @@
 					<option value="psc">pourcentage de "Pavillon Semi-Discontinu" dans l'USR</option>
 					</select>
 					</div>
-					<div id="buildings_transparency">
-						<div id="buildings_transparency_label">buildings_transparency: 1</div>
-						<div id="buildings_transparency_input">
-							<div class="slider" id="buildings_transparency_slider"></div>
+					
+					<!-- <div id="h_control">
+						<div id="h_control_label">h_factor : 1</div>
+						<div id="h_control_slider">
+							<div class="slider" id="h_slider"></div>
 						</div>
-					</div>
+					</div>-->
 				</div>
 				<div id="animation_control_label" class="general_control_container_div">Animation</div>
 				<div id="animation_control_container">
@@ -423,6 +444,7 @@
 		uniform sampler2D u_cmdata;
 		uniform sampler2D pointTexture;
 		uniform vec3 u_size;
+		uniform int active_color_control;
 
 		varying vec3 voxel_position;
 
@@ -432,22 +454,26 @@
 
 		void main() {
 
-			//if(tempPercentage == -1.0){
-			//	gl_FragColor = vec4(0.0,0.0,0.0,0.0);
-			//
-			//} else{
-			//
-			//	gl_FragColor = texture2D(u_cmdata, vec2(tempPercentage, 0.5));
-			//	gl_FragColor = vec4(gl_FragColor[0],gl_FragColor[1],gl_FragColor[2],transparency);
-			//}
-
-			float val = fract(float(int(voxel_position[2]))/(u_size[2]/7.0));
-			gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
+			if(active_color_control == 1){
+				if(tempPercentage == -1.0){
+				gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+			
+				} else{
+					gl_FragColor = texture2D(u_cmdata, vec2(tempPercentage, 0.5));
+				}
+			} else {
+			
+				float val = fract(float(int(voxel_position[2]))/(u_size[2]/7.0));
+				gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
+			
+			}
 
 			vec4 texture4 = texture2D( pointTexture, gl_PointCoord );
 			if(texture4.a < 0.8){
 				discard;
 			}
+			
+			gl_FragColor = vec4(gl_FragColor[0],gl_FragColor[1],gl_FragColor[2],transparency);
 			gl_FragColor = gl_FragColor * texture4;
 
 		}
@@ -1014,6 +1040,8 @@
 		uniform float cst_Z;
 		uniform float zs;
 		uniform float transparency_factor;
+		
+		uniform int active_color_control;
 
 
 		float sample1(vec3 texcoords) {
@@ -1060,21 +1088,21 @@
 
 				vec3 voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
 
-				//float val = sample1(voxel_position/u_size);
-				//
-				//if(val<u_clim[0]){
-				//	gl_FragColor = vec4(0.0,0.0,0.0,0.0);
-				//} else if(val>u_clim[1]){
-				//	gl_FragColor = vec4(0.0,0.0,0.0,0.0);
-				//} else{
-				//	float new_val = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
-				//	gl_FragColor = texture2D(u_cmdata, vec2(new_val, 0.5));
-				//	//gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
-				//}
-
-				float val = fract(float(int(voxel_position[2]))/(u_size[2]/7.0));
-				gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
-
+				if(active_color_control == 1){
+					float val = sample1(voxel_position/u_size);
+					if(val<u_clim[0]){
+						gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+					} else if(val>u_clim[1]){
+						gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+					} else{
+						float new_val = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
+						gl_FragColor = texture2D(u_cmdata, vec2(new_val, 0.5));
+					}
+				} else {
+					float val = fract(float(int(voxel_position[2]))/(u_size[2]/7.0));
+					gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
+				}
+				
 				gl_FragColor= vec4(gl_FragColor[0],gl_FragColor[1],gl_FragColor[2],transparency_factor);
 
 
@@ -1191,6 +1219,7 @@
 		uniform float cst_Y;
 		uniform float cst_Z;
 		uniform float zs;
+		uniform int active_color_control;
 
 		varying vec3 Normal;
 
@@ -1248,15 +1277,26 @@
 
 				vec3 voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
 
-				//float val = sample1(voxel_position/u_size);
-
-				float val = fract(float(int(voxel_position_z))/(u_size[2]/7.0));
+				
 
 				if(sbl_meso_level[int(voxel_position_z)] == false){
 					discard;
 				} else {
+					float val = 0.0;
+					if(active_color_control == 1){
+						float firstval = sample1(voxel_position/u_size);
+							if(firstval<u_clim[0]){
+								discard;
+							} else if(firstval>u_clim[1]){
+								discard;
+							} else{
+								val = (firstval - u_clim[0])/(u_clim[1] - u_clim[0]);
+							}
 
-				gl_FragColor= texture2D(u_cmdata, vec2(val, 0.5));
+					} else {
+						val = fract(float(int(voxel_position_z))/(u_size[2]/7.0));
+					}
+
 
 				vec4 point_color_4 = texture2D(u_cmdata, vec2(val, 0.5));
 				vec3 point_color_3 = vec3(point_color_4[0],point_color_4[1],point_color_4[2]);
@@ -1278,20 +1318,6 @@
 				vec3 color = color_1+color_2+color_3+color_4;
 
 				gl_FragColor = vec4(color[0],color[1],color[2],1.0);
-
-				//int intpart = (int)voxel_position_z;
-				//double decpart = voxel_position_z - intpart;
-				//
-				//gl_FragColor = vec4(decpart,0.0,0.0,1.0);
-
-				//	if(val<u_clim[0]){
-				//		discard;
-				//	} else if(val>u_clim[1]){
-				//		discard;
-				//	} else{
-				//		float new_val = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
-				//		gl_FragColor = texture2D(u_cmdata, vec2(new_val, 0.5));
-				//	}
 
 
 
