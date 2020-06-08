@@ -246,10 +246,10 @@ export function loadChosenDataSet() {
 		create_buildings(general_config.data_build,scene,$("#type_bati").val());
 	});
 
-	if (dataset.split("paris_beaubourg").length >1){
+	if ($( "#load_dataset option:selected" ).text() == "Beaubourg" || $( "#load_dataset option:selected" ).text() == "Beaubourg Simu"){
 		general_config.data_ni = 1;
 		general_config.data_nj = 1;
-	} else if (dataset.split("paris_centre").length >1){
+	} else if ($( "#load_dataset option:selected" ).text() == "Centre"){
 		general_config.data_ni = 9;
 		general_config.data_nj = 6;
 	}
@@ -367,7 +367,7 @@ function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
 				if(isNaN(d.ZS)) {
 					zs_var = -999;
 				} else {
-					zs_var =  parseFloat(d.ZS) -10;
+					zs_var =  parseFloat(d.ZS);
 				}
 
 				var tht_2_var = null,
