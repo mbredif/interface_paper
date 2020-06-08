@@ -247,6 +247,23 @@ $( function() {
   });
 } );
 
+$( function() {
+  $( "#points_transparency_slider" ).slider({
+    
+    min: 0,
+    max: 100,
+    value: general_config.points_transparency * 100,
+    slide: function (event, ui) {
+      general_config.points_transparency = ui.value/100;
+      $("#points_transparency_control_label").html("points_transparency_factor: " + general_config.points_transparency);
+    },
+    stop: function (e, ui) {
+
+      recreate_scene()
+    }
+  });
+} );
+
 // graphic = number of points real plane slider
 $( function() {
   $( "#number_of_points_real_plane_slider" ).slider({
