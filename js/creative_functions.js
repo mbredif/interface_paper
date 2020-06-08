@@ -56,7 +56,8 @@ export function activate_animation() {
 		h_factor_min: { type: "f", value: general_config.h_min_factor },
 		h_factor_max: { type: "f", value: general_config.h_max_factor },
 		temp_factor_min: { type: "f", value: general_config.temp_min_factor },
-		temp_factor_max: { type: "f", value: general_config.temp_max_factor }
+		temp_factor_max: { type: "f", value: general_config.temp_max_factor },
+		active_color_control: {value: general_config.active_color_control}
     };
 	
     if(general_config.is_animated == false){
@@ -308,6 +309,7 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 				cst_X: {value: general_config.cst_X},
 				cst_Y: {value: general_config.cst_Y},
 				cst_Z: {value: general_config.cst_Z},
+				active_color_control: {value: general_config.active_color_control},
 				transparent: true
 			},
 			vertexShader: document.getElementById( 'vertexshader_3D_plane' ).textContent,
@@ -417,6 +419,7 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 				cst_X: {value: general_config.cst_X},
 				cst_Y: {value: general_config.cst_Y},
 				cst_Z: {value: general_config.cst_Z},
+				active_color_control: {value: general_config.active_color_control},
 				transparent: true
 			},
 			vertexShader: document.getElementById( 'vertexshader_3D_plane' ).textContent,
@@ -720,7 +723,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                     coord_array.push(-pY*general_config.cst_Y);
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
                     sizes.push(size);
-                    transparency_factor_array.push(general_config.transparency_factor);
+                    transparency_factor_array.push(general_config.points_transparency);
                     custompercentagearray.push(percentage_color*2*Math.PI);
                     z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
                     x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
@@ -836,7 +839,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                     coord_array.push(-pY*general_config.cst_Y);
                     colors.push(color_r);colors.push(color_g);colors.push(color_b);
                     sizes.push(size);
-                    transparency_factor_array.push(general_config.transparency_factor);
+                    transparency_factor_array.push(general_config.points_transparency);
                     custompercentagearray.push(percentage_color*2*Math.PI);
                     z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
                     x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
@@ -1378,7 +1381,8 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
 							mesolimit: {value: limit_meso_array},
 							cst_X: {value: general_config.cst_X},
 							cst_Y: {value: general_config.cst_Y},
-							cst_Z: {value: general_config.cst_Z}
+							cst_Z: {value: general_config.cst_Z},
+							active_color_control: {value: general_config.active_color_control}
 						},
 						vertexShader: document.getElementById( 'vertexshader_2D_plane' ).textContent,
 						fragmentShader: document.getElementById( 'fragmentshader_2D_plane' ).textContent
@@ -1662,7 +1666,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                         coord_array.push(-pY*general_config.cst_Y);
                         colors.push(color_r);colors.push(color_g);colors.push(color_b);
                         sizes.push(size);
-                        transparency_factor_array.push(general_config.transparency_factor);
+                        transparency_factor_array.push(general_config.points_transparency);
                         custompercentagearray.push(percentage_color*2*Math.PI);
                         z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
                         x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
@@ -1760,7 +1764,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                         coord_array.push(-pY*general_config.cst_Y);
                         colors.push(color_r);colors.push(color_g);colors.push(color_b);
                         sizes.push(size);
-                        transparency_factor_array.push(general_config.transparency_factor);
+                        transparency_factor_array.push(general_config.points_transparency);
                         custompercentagearray.push(percentage_color*2*Math.PI);
                         z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
                         x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
@@ -2109,7 +2113,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                             coord_array.push(-pY*general_config.cst_Y);
                             colors.push(color_r);colors.push(color_g);colors.push(color_b);
                             sizes.push(size);
-                            transparency_factor_array.push(general_config.transparency_factor);
+                            transparency_factor_array.push(general_config.points_transparency);
                             custompercentagearray.push(percentage_color*2*Math.PI);
                             z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
                             x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
@@ -2247,7 +2251,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                             coord_array.push(-pY*general_config.cst_Y);
                             colors.push(color_r);colors.push(color_g);colors.push(color_b);
                             sizes.push(size);
-                            transparency_factor_array.push(general_config.transparency_factor);
+                            transparency_factor_array.push(general_config.points_transparency);
                             custompercentagearray.push(percentage_color*2*Math.PI);
                             z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
                             x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
