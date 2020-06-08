@@ -1,11 +1,11 @@
 <!doctype html>
-<!-- Pour lancer serveur python : aller dans anaconda prompt, cd ...le bon dossier, python -m http.server 
+<!-- Pour lancer serveur python : aller dans anaconda prompt, cd ...le bon dossier, python -m http.server
 	et ensuite aller sur localhost:8000 -->
 <html>
-  <head>
-    <title>Interface visualisation</title>
-    <meta charset="utf-8">
-  
+	<head>
+		<title>Interface visualisation</title>
+		<meta charset="utf-8">
+
 	<!--<script src="js/three.js"></script>-->
 	<!--<script type="module" src="js/three.module.js"></script>-->
 	<script src="js/earcut.js"></script>
@@ -13,7 +13,7 @@
 	<!--
 		ANCIENNE VERSION DE D3 JS ?
 		<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	
+
 	-->
 	<script src="https://d3js.org/d3.v4.js"></script>
 	<script src="js/jquery.js" charset="utf-8"></script>
@@ -34,12 +34,12 @@
 	<!--<script src="js/color_functions.js" charset="utf-8"></script> -->
 	<!--<script src="js/buildings_functions.js" charset="utf-8"></script> -->
 	<!--<script src="js/2D_vertical_planes_functions.js" charset="utf-8"></script> -->
-    
-	<link  href="css/main_2.css" rel="stylesheet"/>
-	
-  </head>
+
+	<link	href="css/main_2.css" rel="stylesheet"/>
+
+	</head>
 <body>
-  	<div id='main'>	
+		<div id='main'>
 		<span id="open_menu">
 			<svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" >
 			<path d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z" fill="#fff"></path></svg>
@@ -73,6 +73,11 @@
 						<input type="file" id="data_build" accept=".geojson">
 					</div>
 					<div id="load_data_container">
+						<select id="load_dataset">
+							<option value="paris_beaubourg">Beaubourg</option>
+							<option value="paris_beaubourg_simu">Beaubourg Simu</option>
+							<option value="paris_centre">Centre</option>
+						</select>
 						<button id ="load_data"> Load data </button>
 					</div>
 					<div id ="data_loaded"></div>
@@ -80,8 +85,8 @@
 				<div id="data_control_label" class="general_control_container_div">Data</div>
 				<div id="data_control_container">
 					<div class="data_control_container_inside">
-						
-						<div  id="point_control_container_sub" class="control_container_sub">
+
+						<div	id="point_control_container_sub" class="control_container_sub">
 							<div id="SBL_values" class="values_header">SBL</div>
 							<div id="Meso_values" class="values_header">Meso_NH</div>
 						</div>
@@ -89,7 +94,7 @@
 						<div id="values_selection_meso"></div>
 						<div id="data_block"></div>
 					</div>
-				</div>	
+				</div>
 				<div id="graphic_control_label" class="general_control_container_div">Graphic</div>
 				<div id="graphic_control_container">
 					<div id="container_nuage_points">Type de points :</div>
@@ -123,19 +128,19 @@
 						<div id="size_control_label">Size: </div>
 						<input type="text" id="size_text_input" class ="mono_slider_input" name="name"/>
 						<div class="slider mono_slider" id="size_slider"></div>
-						
+
 					</div>
 					<div id="relative_size_control">
 						<div id="relative_size_factor_control_label">relative_size_factor: 0</div>
 						<div id="relative_size_control_input">
-							
+
 							<div class="slider" id="relative_size_factor_size_slider"></div>
 						</div>
 					</div>
 					<div id="density_control" class='mono_slider_container'>
 						<div id="density_control_label">general density: </div>
 						<div id="gnl_density">
-							<input type="text" id="density_text_input" class ="mono_slider_input" name="name"/>							
+							<input type="text" id="density_text_input" class ="mono_slider_input" name="name"/>
 							<div class="slider mono_slider" id="density_slider"></div>
 						</div>
 					</div>
@@ -148,7 +153,7 @@
 					<div id="transparency_control">
 						<div id="transparency_control_label">transparency_factor: 1</div>
 						<div id="transparency_control_input">
-							
+
 							<div class="slider" id="transparency_slider"></div>
 						</div>
 					</div>
@@ -203,7 +208,7 @@
 					<input type="radio" id="animation_type_x"
 					name="x" value="x" class="animation_type_checkbox">
 					<label for="animation_type_x">x</label>
-					
+
 					<input type="radio" id="animation_type_y"
 					name="y" value="y" class="animation_type_checkbox">
 					<label for="animation_type_y">y</label>
@@ -220,7 +225,7 @@
 							<label for="temperatures">Temperatures :</label>
 							<input type="text" id="temperatures-label" readonly style="border:0; color:#361bd3; font-weight:bold;">
 						</p>
-						
+
 						<div id="temp-slider-range"></div>
 
 					</div>
@@ -229,7 +234,7 @@
 							<label for="z-slider">Z control :</label>
 							<input type="text" id="z-slider-label" readonly style="border:0; color:#361bd3; font-weight:bold;">
 						</p>
-						
+
 						<div id="z-slider-range"></div>
 
 					</div>
@@ -238,7 +243,7 @@
 							<label for="h-slider">H control :</label>
 							<input type="text" id="h-slider-label" readonly style="border:0; color:#361bd3; font-weight:bold;">
 						</p>
-						
+
 						<div id="h-slider-range"></div>
 
 					</div>
@@ -247,7 +252,7 @@
 							<label for="x-slider">X control :</label>
 							<input type="text" id="x-slider-label" readonly style="border:0; color:#361bd3; font-weight:bold;">
 						</p>
-						
+
 						<div id="x-slider-range"></div>
 
 					</div>
@@ -256,7 +261,7 @@
 							<label for="y-slider">Y control :</label>
 							<input type="text" id="y-slider-label" readonly style="border:0; color:#361bd3; font-weight:bold;">
 						</p>
-						
+
 						<div id="y-slider-range"></div>
 
 					</div>
@@ -275,16 +280,16 @@
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 	</div>
-	
+
 	<!-- Div liste couleur position absolute-->
 	<div id='color_list_absolute'></div>
-	
-	
-	
-  <script type="x-shader/x-vertex" id="vertexshader_fix_3D_points">
+
+
+
+	<script type="x-shader/x-vertex" id="vertexshader_fix_3D_points">
 		precision highp float;
 		precision mediump sampler3D;
 		uniform float x_factor_min;
@@ -318,7 +323,7 @@
 		attribute float z_position;
 		attribute float h_position;
 		attribute float customtransparency;
-		attribute float custompercentage; 
+		attribute float custompercentage;
 		attribute float voxel_level;
 		varying vec3 v_position;
 		varying vec3 voxel_position;
@@ -338,7 +343,7 @@
 			float voxel_position_z = 0.0;
 			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
 			float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
-			
+
 			if(voxel_level < 7.0){
 				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
 					voxel_position_z = 0.0;
@@ -349,7 +354,7 @@
 							float z_max = new_zs + mesolimit[i];
 							voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 							break;
-						}				
+						}
 					}
 				}
 			} else {
@@ -362,13 +367,13 @@
 								float z_max = new_zs + mesolimit[i];
 								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 								break;
-							}				
+							}
 						}
 					}
 			}
-						
-			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
-	
+
+			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
+
 			float val = sample1(voxel_position/u_size);
 
 			if (val<u_clim[0] || val> u_clim[1]) {
@@ -396,20 +401,20 @@
 			}
 
 			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-			if(custompercentage > temp_factor_min && custompercentage < temp_factor_max && x_position > x_factor_min && x_position < x_factor_max && y_position > y_factor_min && y_position < y_factor_max && z_position > z_factor_min && z_position < z_factor_max && h_position > h_factor_min && h_position < h_factor_max){				
+			if(custompercentage > temp_factor_min && custompercentage < temp_factor_max && x_position > x_factor_min && x_position < x_factor_max && y_position > y_factor_min && y_position < y_factor_max && z_position > z_factor_min && z_position < z_factor_max && h_position > h_factor_min && h_position < h_factor_max){
 				gl_PointSize = regularSize* sizeShader * ( 1.0 / -mvPosition.z );
 			} else {
 				gl_PointSize = 0.0;
-			}	
-			
+			}
+
 			transparency = customtransparency;
 			gl_Position = projectionMatrix * mvPosition;
 
 
-			
+
 		}
 	</script>
-	
+
 	<script type="x-shader/x-fragment" id="fragmentshader_3D_points">
 		precision highp float;
 		precision mediump sampler3D;
@@ -417,36 +422,36 @@
 		uniform sampler2D u_cmdata;
 		uniform sampler2D pointTexture;
 		uniform vec3 u_size;
-		
+
 		varying vec3 voxel_position;
-				
+
 		varying float transparency;
 		varying float tempPercentage;
-		
+
 
 		void main() {
-						
+
 			//if(tempPercentage == -1.0){
 			//	gl_FragColor = vec4(0.0,0.0,0.0,0.0);
 			//
 			//} else{
-			//	
+			//
 			//	gl_FragColor = texture2D(u_cmdata, vec2(tempPercentage, 0.5));
 			//	gl_FragColor = vec4(gl_FragColor[0],gl_FragColor[1],gl_FragColor[2],transparency);
 			//}
-						
+
 			float val = fract(float(int(voxel_position[2]))/(u_size[2]/7.0));
 			gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
-									
+
 			vec4 texture4 = texture2D( pointTexture, gl_PointCoord );
 			if(texture4.a < 0.8){
 				discard;
-			}			
+			}
 			gl_FragColor = gl_FragColor * texture4;
-				
+
 		}
 	</script>
-	
+
 	<script type="x-shader/x-vertex" id="vertexshader_fix_3D_anim_temp">
 		precision highp float;
 		precision mediump sampler3D;
@@ -481,7 +486,7 @@
 		attribute float z_position;
 		attribute float h_position;
 		attribute float customtransparency;
-		attribute float custompercentage; 
+		attribute float custompercentage;
 		attribute float voxel_level;
 		varying vec3 voxel_position;
 		varying vec3 v_position;
@@ -511,7 +516,7 @@
 							float z_max = new_zs + mesolimit[i];
 							voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 							break;
-						}				
+						}
 					}
 				}
 			} else {
@@ -524,13 +529,13 @@
 								float z_max = new_zs + mesolimit[i];
 								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 								break;
-							}				
+							}
 						}
 					}
 			}
-			
-			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
-	
+
+			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
+
 			float val = sample1(voxel_position/u_size);
 
 			if (val<u_clim[0] || val> u_clim[1]) {
@@ -571,14 +576,14 @@
 				} else {
 						gl_PointSize = 0.0;
 				}
-			
+
 			transparency = customtransparency;
 			gl_Position = projectionMatrix * mvPosition;
 
 
 		}
 	</script>
-	
+
 	<script type="x-shader/x-vertex" id="vertexshader_fix_3D_anim_z">
 		precision highp float;
 		precision mediump sampler3D;
@@ -613,7 +618,7 @@
 		attribute float z_position;
 		attribute float h_position;
 		attribute float customtransparency;
-		attribute float custompercentage; 
+		attribute float custompercentage;
 		attribute float voxel_level;
 		varying vec3 voxel_position;
 		varying vec3 v_position;
@@ -643,7 +648,7 @@
 							float z_max = new_zs + mesolimit[i];
 							voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 							break;
-						}				
+						}
 					}
 				}
 			} else {
@@ -656,13 +661,13 @@
 								float z_max = new_zs + mesolimit[i];
 								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 								break;
-							}				
+							}
 						}
 					}
 			}
-			
-			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
-	
+
+			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
+
 			float val = sample1(voxel_position/u_size);
 
 			if (val<u_clim[0] || val> u_clim[1]) {
@@ -702,12 +707,12 @@
 			} else {
 				gl_PointSize = 0.0;
 			}
-			
+
 			transparency = customtransparency;
 			gl_Position = projectionMatrix * mvPosition;
 		}
 	</script>
-	
+
 	<script type="x-shader/x-vertex" id="vertexshader_fix_3D_anim_x">
 		precision highp float;
 		precision mediump sampler3D;
@@ -743,7 +748,7 @@
 		attribute float h_position;
 		attribute float customtransparency;
 		attribute float custompercentage;
-		attribute float voxel_level;		
+		attribute float voxel_level;
 		varying vec3 voxel_position;
 		varying vec3 v_position;
 		varying float transparency;
@@ -772,7 +777,7 @@
 							float z_max = new_zs + mesolimit[i];
 							voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 							break;
-						}				
+						}
 					}
 				}
 			} else {
@@ -785,13 +790,13 @@
 								float z_max = new_zs + mesolimit[i];
 								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 								break;
-							}				
+							}
 						}
 					}
 			}
-			
-			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
-	
+
+			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
+
 			float val = sample1(voxel_position/u_size);
 
 			if (val<u_clim[0] || val> u_clim[1]) {
@@ -832,12 +837,12 @@
 			} else {
 				gl_PointSize = 0.0;
 			}
-			
+
 			transparency = customtransparency;
 			gl_Position = projectionMatrix * mvPosition;
 		}
 	</script>
-	
+
 	<script type="x-shader/x-vertex" id="vertexshader_fix_3D_anim_y">
 		precision highp float;
 		precision mediump sampler3D;
@@ -872,7 +877,7 @@
 		attribute float z_position;
 		attribute float h_position;
 		attribute float customtransparency;
-		attribute float custompercentage; 
+		attribute float custompercentage;
 		attribute float voxel_level;
 		varying vec3 voxel_position;
 		varying vec3 v_position;
@@ -902,7 +907,7 @@
 							float z_max = new_zs + mesolimit[i];
 							voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 							break;
-						}				
+						}
 					}
 				}
 			} else {
@@ -915,13 +920,13 @@
 								float z_max = new_zs + mesolimit[i];
 								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 								break;
-							}				
+							}
 						}
 					}
 			}
-			
-			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
-	
+
+			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
+
 			float val = sample1(voxel_position/u_size);
 
 			if (val<u_clim[0] || val> u_clim[1]) {
@@ -962,28 +967,28 @@
 			} else {
 				gl_PointSize = 0.0;
 			}
-			
+
 			transparency = customtransparency;
 			gl_Position = projectionMatrix * mvPosition;
 		}
 	</script>
-	
+
 	<script type="x-shader/x-vertex" id="vertexshader_2D_plane">
 		varying vec3 v_position;
 		attribute float voxel_level;
-		
+
 		varying float voxel_point_level;
-		
+
 		void main() {
-		
+
 			voxel_point_level = voxel_level;
-		
+
 			vec4 position4 = modelMatrix * vec4(position, 1.);
 			v_position = position4.xyz;
 			gl_Position = projectionMatrix * viewMatrix * position4;
 		}
 	</script>
-	
+
 	<script type="x-shader/x-fragment" id="fragmentshader_2D_plane">
 		precision highp float;
 		precision mediump sampler3D;
@@ -995,9 +1000,9 @@
 		uniform sampler2D zs_data;
 		uniform sampler2D u_cmdata;
 		uniform sampler2D pointTexture;
-		
+
 		varying float voxel_point_level;
-		
+
 		uniform float x_min;
 		uniform float x_max;
 		uniform float y_min;
@@ -1008,7 +1013,7 @@
 		uniform float cst_Z;
 		uniform float zs;
 		uniform float transparency_factor;
-		
+
 
 		float sample1(vec3 texcoords) {
 				/* Sample float value from a 3D texture. Assumes intensity data. */
@@ -1016,14 +1021,14 @@
 		}
 
 		void main() {
-		
+
 				float voxel_position_x = ((v_position[0]/cst_X) - x_min)/(x_max - x_min)*u_size[0];
 				float voxel_position_y = u_size[1]-(-(v_position[2]/cst_Y) - y_min)/(y_max - y_min)*u_size[1];
 				float voxel_position_z = 0.0;
 				vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
-				
+
 				float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
-				
+
 				if(voxel_point_level < 7.0){
 					if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
 						voxel_position_z = 0.0;
@@ -1034,7 +1039,7 @@
 								float z_max = new_zs + mesolimit[i];
 								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 								break;
-							}				
+							}
 						}
 					}
 				} else {
@@ -1047,13 +1052,13 @@
 									float z_max = new_zs + mesolimit[i];
 									voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 									break;
-								}				
+								}
 							}
 						}
 				}
-				
-				vec3 voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
-		        
+
+				vec3 voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
+
 				//float val = sample1(voxel_position/u_size);
 				//
 				//if(val<u_clim[0]){
@@ -1065,44 +1070,44 @@
 				//	gl_FragColor = texture2D(u_cmdata, vec2(new_val, 0.5));
 				//	//gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
 				//}
-				
+
 				float val = fract(float(int(voxel_position[2]))/(u_size[2]/7.0));
 				gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
-				
+
 				gl_FragColor= vec4(gl_FragColor[0],gl_FragColor[1],gl_FragColor[2],transparency_factor);
-				
-				
-				
-				
+
+
+
+
 		}
 	</script>
-	
+
 	<script type="x-shader/x-vertex" id="vertexshader_buildings">
-		
+
 		attribute vec3 color;
 		attribute vec3 customNormal;
 		varying vec3 v_position;
 		varying vec3 v_color;
 		varying vec3 Normal;
-				
-		void main() {		
+
+		void main() {
 			vec4 position4 = modelMatrix * vec4(position, 1.);
 			v_position = position4.xyz;
 			v_color = color;
 			Normal = customNormal;
-			
+
 			gl_Position = projectionMatrix * viewMatrix * position4;
-			
+
 		}
 	</script>
-	
+
 	<script type="x-shader/x-fragment" id="fragmentshader_buildings">
 		precision highp float;
-			
+
 		varying vec3 v_position;
 		varying vec3 v_color;
 		varying vec3 Normal;
-		
+
 		uniform vec3 light_position_1;
 		uniform vec3 light_color_1;
 		uniform vec3 light_position_2;
@@ -1113,12 +1118,12 @@
 		uniform vec3 light_color_4;
 		uniform vec3 light_position_5;
 		uniform vec3 light_color_5;
-		
-		
+
+
 		uniform float transparency;
-		
+
 		void main() {
-					
+
 			vec3 l_1 = normalize(light_position_1 - v_position);
 			vec3 l_2 = normalize(light_position_2 - v_position);
 			vec3 l_3 = normalize(light_position_3 - v_position);
@@ -1130,19 +1135,19 @@
 			vec3 color_3 = v_color * light_color_3 * max(0.0,dot(Normal,l_3));
 			vec3 color_4 = v_color * light_color_4 * max(0.0,dot(Normal,l_4));
 			vec3 color_5 = v_color * light_color_5 * max(0.0,dot(Normal,l_5));
-			
+
 			vec3 new_color = color_1+color_2+color_3+color_4+color_5;
-			
+
 			gl_FragColor= vec4(new_color[0],new_color[1],new_color[2],transparency);
 		}
 	</script>
-	
-		
+
+
 	<script type="x-shader/x-vertex" id="vertexshader_3D_plane">
 		varying vec3 v_position;
 		attribute vec3 customNormal;
 		varying vec3 Normal;
-		
+
 		void main() {
 			vec4 position4 = modelMatrix * vec4(position, 1.);
 			v_position = position4.xyz;
@@ -1150,7 +1155,7 @@
 			gl_Position = projectionMatrix * viewMatrix * position4;
 		}
 	</script>
-	
+
 	<script type="x-shader/x-fragment" id="fragmentshader_3D_plane">
 		precision highp float;
 		precision mediump sampler3D;
@@ -1161,7 +1166,7 @@
 		uniform sampler3D u_data;
 		uniform sampler2D zs_data;
 		uniform sampler2D u_cmdata;
-		
+
 		uniform vec3 light_position_1;
 		uniform vec3 light_color_1;
 		uniform vec3 light_position_2;
@@ -1172,7 +1177,7 @@
 		uniform vec3 light_color_4;
 		uniform vec3 light_position_5;
 		uniform vec3 light_color_5;
-				
+
 		uniform float x_min;
 		uniform float x_max;
 		uniform float y_min;
@@ -1185,9 +1190,9 @@
 		uniform float cst_Y;
 		uniform float cst_Z;
 		uniform float zs;
-		
+
 		varying vec3 Normal;
-		
+
 		uniform bool sbl_meso_level[37];
 
 		float sample1(vec3 texcoords) {
@@ -1196,15 +1201,15 @@
 		}
 
 		void main() {
-		
+
 		//gl_FragColor = vec4(1.0,0.0,0.0,1.0);
-		
+
 				float voxel_position_x = ((v_position[0]/cst_X) - x_min)/(x_max - x_min)*u_size[0];
 				float voxel_position_y = u_size[1]-(-(v_position[2]/cst_Y) - y_min)/(y_max - y_min)*u_size[1];
 				float voxel_position_z = 0.0;
 				vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
 				float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
-				
+
 				if(type_model < 0.5 ){
 					if((new_zs+ meso_limit[0])*cst_Z > v_position[1]){
 						discard;
@@ -1217,7 +1222,7 @@
 								float z_max = new_zs + meso_limit[i];
 								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 								break;
-							}				
+							}
 						}
 					}
 				} else {
@@ -1235,49 +1240,49 @@
 								float z_max = new_zs + meso_limit[i];
 								voxel_position_z = (v_position[1] - z_min*cst_Z)/(z_max*cst_Z - z_min*cst_Z) + float(i) - 1.0;
 								break;
-							}				
+							}
 						}
 					}
 				}
-				
-				vec3 voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z); 
-						
+
+				vec3 voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
+
 				//float val = sample1(voxel_position/u_size);
-				
+
 				float val = fract(float(int(voxel_position_z))/(u_size[2]/7.0));
-				
+
 				if(sbl_meso_level[int(voxel_position_z)] == false){
 					discard;
 				} else {
-				
+
 				gl_FragColor= texture2D(u_cmdata, vec2(val, 0.5));
-				
+
 				vec4 point_color_4 = texture2D(u_cmdata, vec2(val, 0.5));
 				vec3 point_color_3 = vec3(point_color_4[0],point_color_4[1],point_color_4[2]);
-				
+
 				vec3 l_1 = normalize(light_position_1 - v_position);
 				vec3 l_2 = normalize(light_position_2 - v_position);
 				vec3 l_3 = normalize(light_position_3 - v_position);
 				vec3 l_4 = normalize(light_position_4 - v_position);
 				//vec3 l_5 = normalize(light_position_5 - v_position);
-                
+
 				vec3 color_1 = point_color_3 * light_color_1 * max(0.0,dot(Normal,l_1));
 				vec3 color_2 = point_color_3 * light_color_2 * max(0.0,dot(Normal,l_2));
 				vec3 color_3 = point_color_3 * light_color_3 * max(0.0,dot(Normal,l_3));
 				vec3 color_4 = point_color_3 * light_color_4 * max(0.0,dot(Normal,l_4));
 				//vec3 color_5 = point_color_3 * light_color_5 * max(0.0,dot(Normal,l_5));
-				
+
 				//vec3 color = color_1+color_2+color_3+color_4+color_5;
-				
+
 				vec3 color = color_1+color_2+color_3+color_4;
-				
+
 				gl_FragColor = vec4(color[0],color[1],color[2],1.0);
-				
+
 				//int intpart = (int)voxel_position_z;
 				//double decpart = voxel_position_z - intpart;
 				//
 				//gl_FragColor = vec4(decpart,0.0,0.0,1.0);
-	            
+
 				//	if(val<u_clim[0]){
 				//		discard;
 				//	} else if(val>u_clim[1]){
@@ -1286,18 +1291,18 @@
 				//		float new_val = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
 				//		gl_FragColor = texture2D(u_cmdata, vec2(new_val, 0.5));
 				//	}
-				
-				
-				
+
+
+
 				}
-				
-					
-				
-				
+
+
+
+
 		}
 	</script>
 	<script type="module">
-		
+
 		import { init} from './js/initialisation.js'
 		import { render } from './js/creative_functions.js'
 		import { initialise } from './js/menu.js'
@@ -1306,11 +1311,11 @@
 		init();
 		render();
 		initialise();
-	
+
 	</script>
-	
-	
-	
-	
+
+
+
+
 </body>
 </html>

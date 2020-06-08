@@ -1,9 +1,9 @@
 import { handleCreationPoints, handleCreationPlane,handleCreationVerticalPlane} from './showPointsPlanes.js'
-import { loadChosenData, chargerParams} from './load_data_functions.js';
+import { loadChosenData, loadChosenDataSet, chargerParams} from './load_data_functions.js';
 import {general_config, camera} from './initialisation.js'
 
 
-export function initialise() { 
+export function initialise() {
     let hide_menu = document.getElementById("hide_menu");
     let open_menu = document.getElementById("open_menu")
 
@@ -11,11 +11,11 @@ export function initialise() {
     function hideMenu() {
         document.getElementById("menu_container").style.width = "0";
         hide_menu.style.display = "none";
-        
+
         setTimeout(() => {open_menu.style.display= "initial"}, 1000)
     }
 
-    
+
     open_menu.addEventListener('click', openMenu)
     function openMenu(){
         document.getElementById("menu_container").style.width = "40%";
@@ -39,37 +39,37 @@ export function initialise() {
     document.getElementById("choose_data_label").addEventListener('click', showChoice)
     function showChoice() {
         let choiceContainer = document.getElementById("choose_data_container");
-        (choiceContainer.style.height == "0em") ? 
+        (choiceContainer.style.height == "0em") ?
         choiceContainer.style.height = "18em" : choiceContainer.style.height="0em";
     }
 
     document.getElementById("graphic_control_label").addEventListener('click', showGraphic)
     function showGraphic() {
         let graphicContainer = document.getElementById("graphic_control_container");
-        (graphicContainer.style.height=="0em") ? 
+        (graphicContainer.style.height=="0em") ?
         graphicContainer.style.height="37em": graphicContainer.style.height="0em";
-        
+
     }
 
     document.getElementById("animation_control_label").addEventListener('click', showAnimation)
     function showAnimation() {
         let animationContainer = document.getElementById("animation_control_container");
-        (animationContainer.style.height == "0em") ? 
+        (animationContainer.style.height == "0em") ?
          animationContainer.style.height = "8em": animationContainer.style.height="0em";
     }
 
     document.getElementById("filter_control_label").addEventListener('click', showFilter)
     function showFilter() {
         let filterContainer = document.getElementById("filter_control_container");
-        (filterContainer.style.height == "0em") ? 
+        (filterContainer.style.height == "0em") ?
         filterContainer.style.height = "30em" : filterContainer.style.height="0em";
-        
+
     }
 
     document.getElementById("choose_params_label").addEventListener('click', showParams)
     function showParams() {
         let paramsContainer = document.getElementById("choose_params_container");
-        (paramsContainer.style.height == "0em") ? 
+        (paramsContainer.style.height == "0em") ?
         paramsContainer.style.height = "10em" : paramsContainer.style.height="0em";
     }
 
@@ -81,7 +81,7 @@ export function initialise() {
         valuesSelectionMeso.style.display="none";
         document.getElementById("data_control_container").style.height = "12em";
     }
-    
+
 
     document.getElementById('Meso_values').addEventListener('click', OpenMesoValues)
 
@@ -92,10 +92,11 @@ export function initialise() {
         valuesSelectionMeso.style.display="block";
         document.getElementById("data_control_container").style.height = "30em";
     }
-   
-    
+
+
     //event sur le bouton avec les choix de données
     $('#load_data').on('click', loadChosenData);
+    $('#load_dataset').on('change', loadChosenDataSet);
 }
 
 export function sblValues() {
@@ -113,7 +114,7 @@ export function sblValues() {
         ckbx.type='checkbox'
         ckbx.className="data_ckbx_real_plane ckbx_sbl_planes";
         ckbx.id="SBL_"+i;
-        
+
         ckbx.addEventListener('click', () => handleCreationPlane(ckbx.id))
 
         let inputContainer3D= document.createElement('div');
@@ -123,9 +124,9 @@ export function sblValues() {
         ckbx2.type='checkbox'
         ckbx2.className="nuage_points ckbx_sbl_points";
         ckbx2.id="SBL_"+i;
-		
+
 		ckbx2.addEventListener('click', () => handleCreationPoints(ckbx2.id))
-		
+
 		let inputContainer2Dvert= document.createElement('div');
         inputContainer2Dvert.innerHTML = "Plans verticaux"
         inputContainer2Dvert.className="input_data_container_2"
@@ -135,23 +136,23 @@ export function sblValues() {
         ckbx3.id="SBL_"+i;
 
 		ckbx3.addEventListener('click', () => handleCreationVerticalPlane(ckbx3.id));
-        
+
         inputContainer2D.append(ckbx);
         inputContainer3D.append(ckbx2);
 		inputContainer2Dvert.append(ckbx3);
         value.append(inputContainer2D, inputContainer3D,inputContainer2Dvert);
 
         valuesSelectionSbl.append(value);
-        
-    
+
+
     }
-    
+
 }
 
 export function mesoValues() {
 
     let valuesSelectionMeso = document.getElementById('values_selection_meso');
-   
+
     for(let i = 2; i < 33; ++i) {
         let value = document.createElement('div');
         value.innerHTML = 'Meso '+i+ ' : ';
@@ -169,7 +170,7 @@ export function mesoValues() {
         ckbx.id="Meso_"+i;
 
         ckbx.addEventListener('click', () => handleCreationPlane(ckbx.id))
-        
+
         let inputContainer3D= document.createElement('div');
         inputContainer3D.innerHTML = "Nuage de points"
         inputContainer3D.className="input_data_container_2"
@@ -178,7 +179,7 @@ export function mesoValues() {
         ckbx2.className="nuage_points ckbx_meso_points";
         ckbx2.id="Meso_"+i;
         ckbx2.addEventListener('click', () => handleCreationPoints(ckbx2.id))
-		
+
 		let inputContainer2Dvert= document.createElement('div');
         inputContainer2Dvert.innerHTML = "Plans verticaux"
         inputContainer2Dvert.className="input_data_container_2"
@@ -188,12 +189,12 @@ export function mesoValues() {
         ckbx3.id="Meso_"+i;
 
 		ckbx3.addEventListener('click', () => handleCreationVerticalPlane(ckbx3.id));
-        
+
         inputContainer2D.append(ckbx);
         inputContainer3D.append(ckbx2);
 		inputContainer2Dvert.append(ckbx3);
         value.append(inputContainer2D, inputContainer3D,inputContainer2Dvert);
-		
+
         valuesSelectionMeso.append(value);
     }
 
@@ -203,8 +204,8 @@ export function mesoValues() {
 $('#button_file').on("click", sauvegarder)
 function sauvegarder() {
 
-    general_config.camera_x = camera.position.x; 
-    general_config.camera_y = camera.position.y; 
+    general_config.camera_x = camera.position.x;
+    general_config.camera_y = camera.position.y;
     general_config.camera_z = camera.position.z;
     let config_to_save = nouvelObjet();
     let intitule=  $('#button_file_text').val()
@@ -216,10 +217,10 @@ function sauvegarder() {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    
+
 }
 
-$('#button_load_file').on("change", chargerParams) 
+$('#button_load_file').on("change", chargerParams)
 
 function nouvelObjet() {
     let newObj={}
@@ -254,7 +255,7 @@ function nouvelObjet() {
     newObj.y_max= general_config.y_max;
     newObj.is_animated= general_config.is_animated;
     newObj.animation_parameter=general_config.animation_parameter;
-    newObj.animation_speed_factor= general_config.animation_speed_factor;	
+    newObj.animation_speed_factor= general_config.animation_speed_factor;
     newObj.number_of_points_real_plane= general_config.number_of_points_real_plane;
     newObj.temp_min_factor= general_config.temp_min_factor;
     newObj.temp_max_factor= general_config.temp_max_factor;
