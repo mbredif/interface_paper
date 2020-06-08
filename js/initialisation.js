@@ -2,7 +2,7 @@ import * as THREE from './three.module.js';
 import {sblValues, mesoValues} from './menu.js'
 import {OrbitControls} from './OrbitControls.js';
 import { create_random_points_cloud, create_temp_histogram, create_2D_points_cloud,
-create_regular_points_cloud, create_data_texture, import_road_geojson, import_geojson, recreate_scene, activate_animation, activate_animation_second_part} from './creative_functions.js'
+create_regular_points_cloud, create_data_texture, recreate_scene, activate_animation, activate_animation_second_part} from './creative_functions.js'
 import {chosenColor, numberInArray} from './color_function.js'
 
 
@@ -98,9 +98,11 @@ export var general_config = {
     "data_url":null,
     "url_data_road":null,
     "url_data_bat":null,
-    "grid_bat":null,
+    "data_build":null,
 	"grid_vertical2D":null,
-	"data_road":null
+	"data_road":null,
+	"grid_building":null,
+	"buildings_transparency":1
 }	
 
 export function init(){
@@ -235,49 +237,35 @@ export function init(){
     
     scene = new THREE.Scene();
     
+	scene.background = new THREE.Color('black');
+	
     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
     controls = new OrbitControls( camera, renderer.domElement );
     camera.position.set( general_config.camera_x, general_config.camera_y, general_config.camera_z );
     controls.update();
 
     var light = new THREE.PointLight( 0xffffff, 1, 0 );
-    light.position.set(1000,1000,2000);
+    light.position.set(-6500,6000,1000);
     scene.add( light );
     
     var light2 = new THREE.PointLight( 0xffffff, 1, 0 );
-    light2.position.set(-1000,1000,-3000);
+    light2.position.set(-6500,-7500,1000);
     scene.add( light2 );
+	
+	var light3 = new THREE.PointLight( 0xffffff, 1, 0 );
+    light3.position.set(7500,6000,1000);
+    scene.add( light3 );
+    
+    var light4 = new THREE.PointLight( 0xffffff, 1, 0 );
+    light4.position.set(7500,-7500,1000);
+    scene.add( light4 );
+	
+	//var light5 = new THREE.PointLight( 0xffffff, 1, 0 );
+    //light5.position.set(-1000,1000,0);
+    //scene.add( light5 );
     
     var axesHelper = new THREE.AxesHelper( 100 );
     scene.add( axesHelper );
-
-    general_config.data_url = "_paris_beaubourg.csv";
-    general_config.url_data_road = "./geojson/paris_beaubourg_roads_points.geojson";
-    general_config.url_data_bat = "./geojson/paris_beaubourg_mapuce.geojson";
-    //Détermine le nbe de cellules meso nh
-    general_config.data_ni = 1;
-    general_config.data_nj = 1;
- 
-
-    general_config.grid_bat = null;
-    general_config.grid_bat = new THREE.Object3D();	
-    
-    $.getJSON(general_config.url_data_bat, function( data ) {    
-        import_geojson(data,general_config.grid_bat,scene,$("#type_bati").val());
-    });
-
-
-    
-    $( "#type_bati" ).on( "change", function() {
-        if(general_config.grid_bat == null){
-        } else {
-            scene.remove(general_config.grid_bat);
-        }
-        general_config.grid_bat = new THREE.Object3D();
-        $.getJSON( general_config.url_data_bat, function( data ) {
-        import_geojson(data,general_config.grid_bat,scene,$("#type_bati").val());
-    });
-    });
     
     general_config.h_factor = 1;
     general_config.temp_array = [293.15,303.15];
@@ -376,32 +364,6 @@ export function init(){
     });
     
 
-    
-    $(".data_ckbx_roads").on( "click", function() {
-        general_config.id_meso_array_roads = [];
-        general_config.id_sbl_array_roads = [];
-        var ckbx_length_real_plane = $(".data_ckbx_roads").length;
-        for(var c=0; c<ckbx_length_real_plane;c++){
-            if($(".data_ckbx_roads")[c].checked == true){
-                if($(".data_ckbx_roads")[c].id.split("_")[0] == "SBL"){
-                    general_config.id_sbl_array_roads.push(parseInt($(".data_ckbx_roads")[c].id.split("_")[1]));
-                } else if($(".data_ckbx_roads")[c].id.split("_")[0] == "Meso"){
-                    general_config.id_meso_array_roads.push(parseInt($(".data_ckbx_roads")[c].id.split("_")[1]));
-                }				
-            }
-        }
-        
-        if(general_config.grid_road == null){
-            } else {
-                scene.remove(general_config.grid_road);
-            }
-            general_config.grid_road = new THREE.Object3D();	
-        $.getJSON( general_config.url_data_road, function( data ) {
-            //import_geojson(data,general_config.grid_bat,scene,$('type_bati').val;);
-            import_road_geojson(data,general_config.grid_road,scene);
-        });
-        
-    }); 
 
     
     
