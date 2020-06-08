@@ -215,8 +215,8 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		var features_normal_array = [];
 
 		
-		var h_min = HCanopy_w[0];
-		var h_max = HCanopy_w[HCanopy_w.length - 1] + (HCanopy[HCanopy.length - 1] - HCanopy_w[HCanopy_w.length - 1])*2;
+		var h_min = HCanopy_w[0] - 30;
+		var h_max = HCanopy_w[HCanopy_w.length - 1] + (HCanopy[HCanopy.length - 1] - HCanopy_w[HCanopy_w.length - 1])*2 + 30;
 						
 		for(var a =0; a< road_summit_data.features.length - 1; a++){
 			var feature_1 = road_summit_data.features[a];
@@ -256,7 +256,7 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		var feature_bufferGeometry = new THREE.BufferGeometry();
 
 		feature_bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( feature_coord_array_32, 3 ) );
-		feature_bufferGeometry.setAttribute( 'normal', new THREE.BufferAttribute( feature_normal_32, 3 ) );
+		feature_bufferGeometry.setAttribute( 'customNormal', new THREE.BufferAttribute( feature_normal_32, 3 ) );
 								
 		var texture = new THREE.DataTexture3D( general_config.data_volume_3D.data_temp, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length );
 		texture.format = THREE.RedFormat;
@@ -276,12 +276,22 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		};
 
 		var limit_meso_array = [1.0,2.0,4.0,6.0,9.0,13.0,47.0,60.0,132.0,218.4,322.1,446.5,595.8,775.0,989.9,1247.9,1557.5,1929.0,2374.8,2909.8,3551.8,4251.8,4951.8,5651.8,6351.8,7051.8,7751.8,8451.8,9151.8,9851.8,10551.8,11251.8,11951.8,12651.8,13351.8,14051.8,14751.8,15451.8];	
-
 		
-
+		
+		
 		var road_material = new THREE.ShaderMaterial( {
 			side: THREE.DoubleSide,
 			uniforms: {
+				light_position_1: { value: scene.children[0].position },
+				light_color_1: { value: scene.children[0].color },
+				light_position_2: { value: scene.children[1].position },
+				light_color_2: { value: scene.children[1].color },
+				light_position_3: { value: scene.children[2].position },
+				light_color_3: { value: scene.children[2].color },
+				light_position_4: { value: scene.children[3].position },
+				light_color_4: { value: scene.children[3].color },
+				//light_position_5: { value: scene.children[4].position },
+				//light_color_5: { value: scene.children[4].color },
 				u_data: { value: texture },
 				zs_data: { value: texture_zs},
 				u_cmdata: { value: cmtextures.blue_red_2 },
@@ -315,8 +325,8 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		var features_points_array = [];
 		var features_normal_array = [];
 		
-		var h_min = THAT_W[1];
-		var h_max = THAT_W[THAT_W.length - 1] + (THAT[THAT.length - 1] - THAT_W[THAT_W.length - 1])*2;
+		var h_min = THAT_W[1] - 30;
+		var h_max = THAT_W[THAT_W.length - 1] + (THAT[THAT.length - 1] - THAT_W[THAT_W.length - 1])*2 + 30;
 			
 		for(var a =0; a< road_summit_data.features.length - 1; a++){
 			var feature_1 = road_summit_data.features[a];
@@ -356,7 +366,7 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		var feature_bufferGeometry = new THREE.BufferGeometry();
 
 		feature_bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( feature_coord_array_32, 3 ) );
-		feature_bufferGeometry.setAttribute( 'normal', new THREE.BufferAttribute( feature_normal_32, 3 ) );
+		feature_bufferGeometry.setAttribute( 'customNormal', new THREE.BufferAttribute( feature_normal_32, 3 ) );
 								
 		var texture = new THREE.DataTexture3D( general_config.data_volume_3D.data_temp, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length );
 		texture.format = THREE.RedFormat;
@@ -381,6 +391,16 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		var road_material = new THREE.ShaderMaterial( {
 			side: THREE.DoubleSide,
 			uniforms: {
+				light_position_1: { value: scene.children[0].position },
+				light_color_1: { value: scene.children[0].color },
+				light_position_2: { value: scene.children[1].position },
+				light_color_2: { value: scene.children[1].color },
+				light_position_3: { value: scene.children[2].position },
+				light_color_3: { value: scene.children[2].color },
+				light_position_4: { value: scene.children[3].position },
+				light_color_4: { value: scene.children[3].color },
+				//light_position_5: { value: scene.children[4].position },
+				//light_color_5: { value: scene.children[4].color },
 				u_data: { value: texture },
 				zs_data: { value: texture_zs},
 				u_cmdata: { value: cmtextures.blue_red_2 },
@@ -1327,9 +1347,21 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
 	
 	var limit_meso_array = [1.0,2.0,4.0,6.0,9.0,13.0,47.0,60.0,132.0,218.4,322.1,446.5,595.8,775.0,989.9,1247.9,1557.5,1929.0,2374.8,2909.8,3551.8,4251.8,4951.8,5651.8,6351.8,7051.8,7751.8,8451.8,9151.8,9851.8,10551.8,11251.8,11951.8,12651.8,13351.8,14051.8,14751.8,15451.8];
 	
+	
 	var material = new THREE.ShaderMaterial( {
 						side: THREE.DoubleSide,
+						transparent:true,
 						uniforms: {
+							light_position_1: { value: scene.children[0].position },
+							light_color_1: { value: scene.children[0].color },
+							light_position_2: { value: scene.children[1].position },
+							light_color_2: { value: scene.children[1].color },
+							//light_position_3: { value: scene.children[2].position },
+							//light_color_3: { value: scene.children[2].color },
+							//light_position_4: { value: scene.children[3].position },
+							//light_color_4: { value: scene.children[3].color },
+							//light_position_5: { value: scene.children[4].position },
+							//light_color_5: { value: scene.children[4].color },
 							u_data: { value: texture },
 							zs_data: { value: texture_zs},
 							transparency_factor: { value: general_config.transparency_factor},
@@ -1354,7 +1386,15 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
 	
 	
     var mesh = new THREE.Mesh( bufferGeometry, material);
-            
+   
+	console.log(general_config.x_min * general_config.cst_X);
+	console.log(-(general_config.y_min * general_config.cst_Y));
+	console.log(general_config.z_min * general_config.cst_Z);
+	console.log(general_config.x_max * general_config.cst_X);
+	console.log(-(general_config.y_max * general_config.cst_Y));
+	console.log(general_config.z_max * general_config.cst_Z);
+	
+   
     //create_temp_histogram();	 <==== je déplace ds showPointsPlanes
             
     grid.add(mesh);
@@ -2315,17 +2355,25 @@ export function mix(start, end, percent) {
     return start + ((percent) * (end - start));
 }
 
-export function import_road_geojson(geojson_file,grid,scene,nature_type) {
-	
-};
 
-export function import_geojson(geojson_file,grid,scene,nature_type) {
 
-var features_points_array = [];
-var features_color_array = [];
-var features_normal_array = [];
-  for(var a =0; a< geojson_file.features.length; a++){
-        var feature = geojson_file.features[a];
+export function create_buildings(data,scene,nature_type) {
+
+if(general_config.grid_building == null){
+			} else {
+				scene.remove(general_config.grid_building);
+			}
+			general_config.grid_building = new THREE.Object3D();
+
+var buildings_features_points_array = [];
+var buildings_features_color_array = [];
+var buildings_features_normal_array = [];
+
+var ground_features_points_array = [];
+var ground_features_color_array = [];
+var ground_features_normal_array = [];
+  for(var a =0; a< data.features.length; a++){
+        var feature = data.features[a];
         
         var polygon_coordinate = [];
         
@@ -2384,6 +2432,8 @@ var features_normal_array = [];
                 building_color = return_building_color(null,'autre');
                 break;
         }
+		
+		//building_color = {r:150/255,g:170/255,b:200/255};
         
         
         for(var j =0; j< feature.geometry.coordinates[0][0].length; j++){
@@ -2398,13 +2448,13 @@ var features_normal_array = [];
             polygon_coordinate.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);
             polygon_coordinate.push((feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
             
-            features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-            features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-            features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
             
-            features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-            features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-            features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
             
             var N_X = - (feature.properties.altitude_t*general_config.cst_Z-feature.properties.altitude_s*general_config.cst_Z)*((feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
             var N_Y = (feature.properties.altitude_t*general_config.cst_Z-feature.properties.altitude_s*general_config.cst_Z)*((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X-(feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);
@@ -2412,59 +2462,148 @@ var features_normal_array = [];
             var normal_vector = new THREE.Vector2( N_X, N_Y );
             normal_vector.normalize();
             
-            features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
-            features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
-            features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
-            features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
-            features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
-            features_normal_array.push(normal_vector.x);features_normal_array.push(0);features_normal_array.push(normal_vector.y);
+            buildings_features_normal_array.push(normal_vector.x);buildings_features_normal_array.push(0);buildings_features_normal_array.push(normal_vector.y);
+            buildings_features_normal_array.push(normal_vector.x);buildings_features_normal_array.push(0);buildings_features_normal_array.push(normal_vector.y);
+            buildings_features_normal_array.push(normal_vector.x);buildings_features_normal_array.push(0);buildings_features_normal_array.push(normal_vector.y);
+            buildings_features_normal_array.push(normal_vector.x);buildings_features_normal_array.push(0);buildings_features_normal_array.push(normal_vector.y);
+            buildings_features_normal_array.push(normal_vector.x);buildings_features_normal_array.push(0);buildings_features_normal_array.push(normal_vector.y);
+            buildings_features_normal_array.push(normal_vector.x);buildings_features_normal_array.push(0);buildings_features_normal_array.push(normal_vector.y);
                                             
-            features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-            features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-            features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-            features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-            features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-            features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
+            buildings_features_color_array.push(building_color.r);buildings_features_color_array.push(building_color.g);buildings_features_color_array.push(building_color.b);
+            buildings_features_color_array.push(building_color.r);buildings_features_color_array.push(building_color.g);buildings_features_color_array.push(building_color.b);
+            buildings_features_color_array.push(building_color.r);buildings_features_color_array.push(building_color.g);buildings_features_color_array.push(building_color.b);
+            buildings_features_color_array.push(building_color.r);buildings_features_color_array.push(building_color.g);buildings_features_color_array.push(building_color.b);
+            buildings_features_color_array.push(building_color.r);buildings_features_color_array.push(building_color.g);buildings_features_color_array.push(building_color.b);
+            buildings_features_color_array.push(building_color.r);buildings_features_color_array.push(building_color.g);buildings_features_color_array.push(building_color.b);
         }
         
         var polygon_triangulate = earcut(polygon_coordinate,null,2);
         for(var t=0; t<polygon_triangulate.length; t++){
-            features_points_array.push(polygon_coordinate[polygon_triangulate[t]*2]);
-            features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);
-            features_points_array.push(-polygon_coordinate[polygon_triangulate[t]*2 + 1]);
+            buildings_features_points_array.push(polygon_coordinate[polygon_triangulate[t]*2]);
+            buildings_features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);
+            buildings_features_points_array.push(-polygon_coordinate[polygon_triangulate[t]*2 + 1]);
             
-            features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-            features_normal_array.push(0);features_normal_array.push(1);features_normal_array.push(0);
+            buildings_features_color_array.push(building_color.r);buildings_features_color_array.push(building_color.g);buildings_features_color_array.push(building_color.b);
+            buildings_features_normal_array.push(0);buildings_features_normal_array.push(1);buildings_features_normal_array.push(0);
         }
         for(var t=0; t<polygon_triangulate.length; t++){
-            features_points_array.push(polygon_coordinate[polygon_triangulate[t]*2]);
-            features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);
-            features_points_array.push(-polygon_coordinate[polygon_triangulate[t]*2 + 1]);
+            ground_features_points_array.push(polygon_coordinate[polygon_triangulate[t]*2]);
+            ground_features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);
+            ground_features_points_array.push(-polygon_coordinate[polygon_triangulate[t]*2 + 1]);
             
-            features_color_array.push(building_color.r);features_color_array.push(building_color.g);features_color_array.push(building_color.b);
-            features_normal_array.push(0);features_normal_array.push(1);features_normal_array.push(0);
+            ground_features_color_array.push(building_color.r);ground_features_color_array.push(building_color.g);ground_features_color_array.push(building_color.b);
+            ground_features_normal_array.push(0);ground_features_normal_array.push(1);ground_features_normal_array.push(0);
         }
         
         
   }
-  var feature_coord_array_32 = new Float32Array(features_points_array);
-    var feature_colors_32 = new Float32Array(features_color_array);
-    var feature_normal_32 = new Float32Array(features_normal_array);		
-        
-    var feature_material = new THREE.MeshPhongMaterial( { vertexColors: THREE.VertexColors, emissive: 0x072534, side: THREE.DoubleSide, flatShading: true } );
-    var feature_bufferGeometry = new THREE.BufferGeometry();
-    
-    feature_bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( feature_coord_array_32, 3 ) );
-    feature_bufferGeometry.setAttribute( 'normal', new THREE.BufferAttribute( feature_normal_32, 3 ) );
-    feature_bufferGeometry.setAttribute( 'color', new THREE.BufferAttribute( feature_colors_32, 3 ) );
-    var feature_mesh = new THREE.Mesh( feature_bufferGeometry, feature_material);
-    
-    
-        
-    grid.add(feature_mesh);
-    scene.add(grid);
-    
+  var buildings_feature_coord_array_32 = new Float32Array(buildings_features_points_array);
+    var buildings_feature_colors_32 = new Float32Array(buildings_features_color_array);
+    var buildings_feature_normal_32 = new Float32Array(buildings_features_normal_array);
 
+ var ground_feature_coord_array_32 = new Float32Array(ground_features_points_array);
+    var ground_feature_colors_32 = new Float32Array(ground_features_color_array);
+    var ground_feature_normal_32 = new Float32Array(ground_features_normal_array);	
+       
+	
+    var buildings_feature_material = new THREE.ShaderMaterial( {
+						side: THREE.DoubleSide,
+						uniforms: {
+							light_position_1: { value: scene.children[0].position },
+							light_color_1: { value: scene.children[0].color },
+							light_position_2: { value: scene.children[1].position },
+							light_color_2: { value: scene.children[1].color },
+							light_position_3: { value: scene.children[2].position },
+							light_color_3: { value: scene.children[2].color },
+							light_position_4: { value: scene.children[3].position },
+							light_color_4: { value: scene.children[3].color },
+							//light_position_5: { value: scene.children[4].position },
+							//light_color_5: { value: scene.children[4].color },
+							transparency: { value: general_config.buildings_transparency }
+						},
+						vertexShader: document.getElementById( 'vertexshader_buildings' ).textContent,
+						fragmentShader: document.getElementById( 'fragmentshader_buildings' ).textContent,
+						// blending: THREE.AdditiveBlending,
+						//depthTest: false,
+						transparent: true
+					} );
+    var buildings_feature_bufferGeometry = new THREE.BufferGeometry();
+	
+	
+	var ground_feature_material = new THREE.ShaderMaterial( {
+						side: THREE.DoubleSide,
+						uniforms: {
+							light_position_1: { value: scene.children[0].position },
+							light_color_1: { value: scene.children[0].color },
+							light_position_2: { value: scene.children[1].position },
+							light_color_2: { value: scene.children[1].color },
+							light_position_3: { value: scene.children[2].position },
+							light_color_3: { value: scene.children[2].color },
+							light_position_4: { value: scene.children[3].position },
+							light_color_4: { value: scene.children[3].color },
+							//light_position_5: { value: scene.children[4].position },
+							//light_color_5: { value: scene.children[4].color },
+							transparency: { type: "f", value: 1.0 }
+						},
+						vertexShader: document.getElementById( 'vertexshader_buildings' ).textContent,
+						fragmentShader: document.getElementById( 'fragmentshader_buildings' ).textContent,
+						// blending: THREE.AdditiveBlending,
+						//depthTest: false,
+						transparent: false
+					} );
+	
+	//var buildings_feature_material = new THREE.MeshPhongMaterial( {
+	//	color: new THREE.Color( building_color.r, building_color.g, building_color.b ),
+	//	opacity: general_config.buildings_transparency,
+	//	transparent: true,
+	//	side: THREE.DoubleSide,
+	//	} );
+	//
+	//var ground_feature_material = new THREE.MeshPhongMaterial( {
+	//	color: new THREE.Color( building_color.r, building_color.g, building_color.b ),
+	//	opacity: 1,
+	//	transparent: true,
+	//	side: THREE.DoubleSide,
+	//	} );
+	
+	//var buildings_feature_material =new THREE.MeshPhongMaterial( {
+	//	color: building_color,
+	//	opacity: general_config.buildings_transparency,
+	//	transparent: true
+	//});
+	//
+	//var ground_feature_material = new THREE.MeshPhongMaterial( {
+	//	color: building_color,
+	//	opacity: 1.0,
+	//	transparent: false
+	//})
+	
+	
+    var buildings_feature_bufferGeometry = new THREE.BufferGeometry();
+    
+    buildings_feature_bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( buildings_feature_coord_array_32, 3 ) );
+    buildings_feature_bufferGeometry.setAttribute( 'customNormal', new THREE.BufferAttribute( buildings_feature_normal_32, 3 ) );
+    buildings_feature_bufferGeometry.setAttribute( 'color', new THREE.BufferAttribute( buildings_feature_colors_32, 3 ) );
+    var buildings_feature_mesh = new THREE.Mesh( buildings_feature_bufferGeometry, buildings_feature_material);
+	
+	var ground_feature_bufferGeometry = new THREE.BufferGeometry();
+    
+    ground_feature_bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( ground_feature_coord_array_32, 3 ) );
+    ground_feature_bufferGeometry.setAttribute( 'customNormal', new THREE.BufferAttribute( ground_feature_normal_32, 3 ) );
+    ground_feature_bufferGeometry.setAttribute( 'color', new THREE.BufferAttribute( ground_feature_colors_32, 3 ) );
+    var ground_feature_mesh = new THREE.Mesh( ground_feature_bufferGeometry, ground_feature_material);
+    
+    
+      general_config.grid_building.add(ground_feature_mesh);  
+    general_config.grid_building.add(buildings_feature_mesh);
+	
+    scene.add(general_config.grid_building);
+
+}
+
+export function change_buildings_transparency(transparency){
+	general_config.grid_building.children[1].material.uniforms.transparency = {type: "f", value: transparency};
+	//general_config.grid_building.children[1].material.opacity = transparency;
 }
 
 export function return_building_color(type,nature_type){
