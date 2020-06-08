@@ -7,14 +7,14 @@ export function chargerParams(event) {
 	scene.remove(general_config.grid);
 	scene.remove(general_config.grid_plane);
 	let file = event.target.files[0]
-	
+
 	let reader = new FileReader();
 
-	
+
 	reader.readAsText(file)
 	reader.onload = function(e) {
 		let results = JSON.parse(e.target.result)
-		
+
 		general_config.camera_x = results.camera_x;
 		general_config.camera_y = results.camera_y;
 		general_config.camera_z = results.camera_z;
@@ -46,7 +46,7 @@ export function chargerParams(event) {
 		general_config.y_max= results.y_max;
 		general_config.is_animated= results.is_animated;
 		general_config.animation_parameter=results.animation_parameter;
-		general_config.animation_speed_factor= results.animation_speed_factor;	
+		general_config.animation_speed_factor= results.animation_speed_factor;
 		general_config.number_of_points_real_plane= results.number_of_points_real_plane;
 		general_config.temp_min_factor= results.temp_min_factor;
 		general_config.temp_max_factor= results.temp_max_factor;
@@ -69,17 +69,17 @@ export function chargerParams(event) {
 		general_config.data_road = results.data_road;
 		general_config.id_sbl_array_vertical_plane = results.id_sbl_array_vertical_plane;
 		general_config.id_meso_array_vertical_plane = results.id_meso_array_vertical_plane;
-		
-		
+
+
 		//Position et angle de la camera
-		camera.position.set( general_config.camera_x, general_config.camera_y, general_config.camera_z );		
+		camera.position.set( general_config.camera_x, general_config.camera_y, general_config.camera_z );
 		// pour les points : cocher cxbx
 		let meso_ckbx_pts = document.querySelectorAll('.ckbx_meso_points');
 		let sbl_ckbx_pts = document.querySelectorAll('.ckbx_sbl_points');
 		general_config.id_meso_array.forEach(value => {
 			meso_ckbx_pts[value-2].checked = true;
 		})
-		
+
 		general_config.id_sbl_array.forEach(value => {
 			sbl_ckbx_pts[value-1].checked = true;
 		})
@@ -112,7 +112,7 @@ export function chargerParams(event) {
 			datackbx[2].checked = true;
 		}
 		// active hcl
-		$("#active_HCL").html($(`#HCL_${general_config.active_HCL_id}`).html());	
+		$("#active_HCL").html($(`#HCL_${general_config.active_HCL_id}`).html());
 		// size
 		$("#size_text_input").val(general_config.regular_size.toFixed(2));
 		$( "#size_slider" ).slider('value', general_config.regular_size*150);
@@ -173,7 +173,7 @@ export function chargerParams(event) {
 		$( "#y-slider-range" ).slider( "values", 0, general_config.y_min_factor*100 );
 		$( "#y-slider-range" ).slider( "values", 1, general_config.y_max_factor*100 );
 		$( "#y-slider-label" ).val( parseInt(general_config.y_min_factor*100)  + " - " + parseInt(general_config.y_max_factor*100) );
-		
+
 		// Animation
 		if (general_config.is_animated == true) {
 			$("#animation_ckbx")[0].checked = true;
@@ -222,50 +222,88 @@ export function chargerParams(event) {
 		$('#temp_max_input').val(""+temperatureMaxi.toFixed(2));
 
 	} ;
-	
+
+}
+
+
+export function loadChosenDataSet() {
+	general_config.data_points_O_2 = [];
+  general_config.data_points_U_2 = [];
+	general_config.data_points_V_2 = [];
+
+	const dataset = $('#load_dataset').val();
+
+	load_Data("O", "csv/lambert_O_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_O_2}],	"#ff5733");
+	load_Data("U", "csv/lambert_U_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_U_2}],	"#ff5733");
+	load_Data("V", "csv/lambert_V_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_V_2}],	"#ff5733");
+
+	fetch("geojson/roads_" + dataset + ".geojson").then(r => r.json()).then(function( data ) {
+		data => general_config.data_road = data;
+	});
+	fetch("geojson/buildings_" + dataset + ".geojson").then(r => r.json()).then(function( data ) {
+		general_config.data_build = data;
+		create_buildings(general_config.data_build,scene,$("#type_bati").val());
+	});
+
+			if (dataset.split("paris_beaubourg").length >1){
+				general_config.data_ni = 1;
+			general_config.data_nj = 1;
+		} else if (dataset.split("paris_centre").length >1){
+				general_config.data_ni = 9;
+			general_config.data_nj = 6;
+			}
+			$( "#type_bati" ).on( "change", function() {
+				create_buildings(general_config.data_build,scene,$("#type_bati").val());
+			});
+
+
+			$('#data_loaded').html("Chargement réussi");
+			$('#data_block').hide();
+			//attend 1.5 seconde avant de fermer l'onglet
+			setTimeout(closeChoiceContainer, 800);
 }
 
 export function loadChosenData() {
 	general_config.data_points_O_2 = [];
-    general_config.data_points_U_2 = [];
+  general_config.data_points_U_2 = [];
 	general_config.data_points_V_2 = [];
-	
+
 	let dataO = $('#data_o').val().split('fakepath\\')[1];
 	let dataU = $('#data_u').val().split('fakepath\\')[1];
 	let dataV = $('#data_v').val().split('fakepath\\')[1];
 	let data_road = $('#data_road').val().split('fakepath\\')[1];
 	let data_build = $('#data_build').val().split('fakepath\\')[1];
-	
-	
-	
+
+
+
 	//dataO = "lambert_O_paris_centre.csv";
 	//	dataU = "lambert_U_paris_centre.csv";
 	//	dataV = "lambert_V_paris_centre.csv";
 	//	data_road = "paris_centre_roads_vertex.geojson";
 	//	data_build = "paris_centre_2_with_mapuce_V2.geojson";
-	
-	
+
+
 	// a adapter quand on aura les fichiers meso NH
 	if (dataO.split("O")[1] !== dataU.split("U")[1] || dataO.split("O")[1] !== dataV.split("V")[1] ||
 	dataV.split("V")[1] !== dataU.split("U")[1]) {
 		$('#data_loaded').html(`Problème dans les données choisies : <div> Data O : ${dataO}, </div> <div> Data U : ${dataU}, </div>
 		<div> Data V : ${dataV} </div>`);
-	} 
+	}
 	else {
-		
+
 		load_Data("O",
-		"./CSV/"+ dataO, 
-		[{'level':2, 'data':general_config.data_points_O_2}], 
+		"./CSV/"+ dataO,
+		[{'level':2, 'data':general_config.data_points_O_2}],
 		"#ff5733");
 		load_Data("U",
-		"./CSV/"+ dataU, 
-		[{'level':2, 'data':general_config.data_points_U_2}], 
+		"./CSV/"+ dataU,
+		[{'level':2, 'data':general_config.data_points_U_2}],
 		"#ff5733");
 		load_Data("V",
-		"./CSV/"+ dataV, 
-		[{'level':2, 'data':general_config.data_points_V_2}], 
+		"./CSV/"+ dataV,
+		[{'level':2, 'data':general_config.data_points_V_2}],
 		"#ff5733");
-		
+
 		$.getJSON( "./geojson/"+ data_road, function( data ) {
 			general_config.data_road = data;
 		});
@@ -273,8 +311,8 @@ export function loadChosenData() {
 			general_config.data_build = data;
 			create_buildings(general_config.data_build,scene,$("#type_bati").val());
 		});
-		
-		
+
+
 		if (dataO.split("paris_beaubourg").length >1){
 			general_config.data_ni = 1;
 		general_config.data_nj = 1;
@@ -282,23 +320,19 @@ export function loadChosenData() {
 			general_config.data_ni = 9;
 		general_config.data_nj = 6;
 		}
-		
-		
-	 
-		
-		
+
 		$( "#type_bati" ).on( "change", function() {
 			create_buildings(general_config.data_build,scene,$("#type_bati").val());
 		});
-		
-		
+
+
 		$('#data_loaded').html("Chargement réussi");
 		$('#data_block').hide()
 		//attend 1.5 seconde avant de fermer l'onglet
 		setTimeout(closeChoiceContainer, 800);
-		
+
 	}
-	
+
 }
 
 function closeChoiceContainer() {
@@ -308,17 +342,17 @@ function closeChoiceContainer() {
 }
 
 function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
-			
+
 	var data = d3.csv(data_url, function (d) {
-		var temp_max = 0; 
+		var temp_max = 0;
 		var temp_min = 0;
 		d.forEach(function (d,i) {
 			for(var o = 0; o< data_Meso_NH_to_load_list.length; o++){
-				
+
 				var data_x,
 				data_y;
 				var zs_var;
-				
+
 				if(isNaN(d.X)) {
 					data_x = 0;
 				} else {
@@ -328,13 +362,13 @@ function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
 					data_y = 0;
 				} else {
 					data_y =  parseFloat(d.Y);
-				}					
+				}
 				if(isNaN(d.ZS)) {
 					zs_var = -999;
 				} else {
 					zs_var =  parseFloat(d.ZS) -10;
 				}
-				
+
 				var tht_2_var = null,
 				tht_3_var = null,
 				tht_4_var = null,
@@ -366,23 +400,23 @@ function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
 				tht_30_var = null,
 				tht_31_var = null,
 				tht_32_var = null;
-				
+
 				var TEB_1_var = null,
 				TEB_2_var = null,
 				TEB_3_var = null,
 				TEB_4_var = null,
 				TEB_5_var = null,
 				TEB_6_var = null;
-				
+
 				if(type_point == "O"){
 					tht_2_var = d.THT_2;
-					tht_3_var = d.THT_3; 
-					tht_4_var = d.THT_4; 
-					tht_5_var = d.THT_5; 
-					tht_6_var = d.THT_6; 
-					tht_7_var = d.THT_7; 
-					tht_8_var = d.THT_8; 
-					tht_9_var = d.THT_9; 
+					tht_3_var = d.THT_3;
+					tht_4_var = d.THT_4;
+					tht_5_var = d.THT_5;
+					tht_6_var = d.THT_6;
+					tht_7_var = d.THT_7;
+					tht_8_var = d.THT_8;
+					tht_9_var = d.THT_9;
 					tht_10_var = d.THT_10;
 					tht_11_var = d.THT_11;
 					tht_12_var = d.THT_12;
@@ -412,27 +446,27 @@ function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
 					TEB_4_var = d.TEB_T4;
 					TEB_5_var = d.TEB_T5;
 					TEB_6_var = d.TEB_T6;
-					
+
 					temp_min = TEB_6_var;
 					temp_max = TEB_6_var;
-					
+
 					if(tht_2_var < temp_min){temp_min = tht_2_var;};if(tht_3_var < temp_min){temp_min = tht_3_var;};if(tht_4_var < temp_min){temp_min = tht_4_var;};if(tht_5_var < temp_min){temp_min = tht_5_var;};if(tht_6_var < temp_min){temp_min = tht_6_var;};if(tht_7_var < temp_min){temp_min = tht_7_var;};if(tht_8_var < temp_min){temp_min = tht_8_var;};if(tht_9_var < temp_min){temp_min = tht_9_var;};if(tht_10_var < temp_min){temp_min = tht_10_var;};if(tht_11_var < temp_min){temp_min = tht_11_var;};if(tht_12_var < temp_min){temp_min = tht_12_var;};if(tht_13_var < temp_min){temp_min = tht_13_var;};if(tht_14_var < temp_min){temp_min = tht_14_var;};if(tht_15_var < temp_min){temp_min = tht_15_var;};if(tht_16_var < temp_min){temp_min = tht_16_var;};if(tht_17_var < temp_min){temp_min = tht_17_var;};if(tht_18_var < temp_min){temp_min = tht_18_var;};if(tht_19_var < temp_min){temp_min = tht_19_var;};if(tht_20_var < temp_min){temp_min = tht_20_var;};if(tht_21_var < temp_min){temp_min = tht_21_var;};if(tht_22_var < temp_min){temp_min = tht_22_var;};if(tht_23_var < temp_min){temp_min = tht_23_var;};if(tht_24_var < temp_min){temp_min = tht_24_var;};if(tht_25_var < temp_min){temp_min = tht_25_var;};if(tht_26_var < temp_min){temp_min = tht_26_var;};if(tht_27_var < temp_min){temp_min = tht_27_var;};if(tht_28_var < temp_min){temp_min = tht_28_var;};if(tht_29_var < temp_min){temp_min = tht_29_var;};if(tht_30_var < temp_min){temp_min = tht_30_var;};if(tht_31_var < temp_min){temp_min = tht_31_var;};if(tht_32_var < temp_min){temp_min = tht_32_var;};if(TEB_1_var < temp_min){temp_min = TEB_1_var;};if(TEB_2_var < temp_min){temp_min = TEB_2_var;};if(TEB_3_var < temp_min){temp_min = TEB_3_var;};if(TEB_4_var < temp_min){temp_min = TEB_4_var;};if(TEB_5_var < temp_min){temp_min = TEB_5_var;};if(TEB_6_var < temp_min){temp_min = TEB_6_var;};
-					
+
 					if(tht_2_var > temp_max){temp_max = tht_2_var;};if(tht_3_var > temp_max){temp_max = tht_3_var;};if(tht_4_var > temp_max){temp_max = tht_4_var;};if(tht_5_var > temp_max){temp_max = tht_5_var;};if(tht_6_var > temp_max){temp_max = tht_6_var;};if(tht_7_var > temp_max){temp_max = tht_7_var;};if(tht_8_var > temp_max){temp_max = tht_8_var;};if(tht_9_var > temp_max){temp_max = tht_9_var;};if(tht_10_var > temp_max){temp_max = tht_10_var;};if(tht_11_var > temp_max){temp_max = tht_11_var;};if(tht_12_var > temp_max){temp_max = tht_12_var;};if(tht_13_var > temp_max){temp_max = tht_13_var;};if(tht_14_var > temp_max){temp_max = tht_14_var;};if(tht_15_var > temp_max){temp_max = tht_15_var;};if(tht_16_var > temp_max){temp_max = tht_16_var;};if(tht_17_var > temp_max){temp_max = tht_17_var;};if(tht_18_var > temp_max){temp_max = tht_18_var;};if(tht_19_var > temp_max){temp_max = tht_19_var;};if(tht_20_var > temp_max){temp_max = tht_20_var;};if(tht_21_var > temp_max){temp_max = tht_21_var;};if(tht_22_var > temp_max){temp_max = tht_22_var;};if(tht_23_var > temp_max){temp_max = tht_23_var;};if(tht_24_var > temp_max){temp_max = tht_24_var;};if(tht_25_var > temp_max){temp_max = tht_25_var;};if(tht_26_var > temp_max){temp_max = tht_26_var;};if(tht_27_var > temp_max){temp_max = tht_27_var;};if(tht_28_var > temp_max){temp_max = tht_28_var;};if(tht_29_var > temp_max){temp_max = tht_29_var;};if(tht_30_var > temp_max){temp_max = tht_30_var;};if(tht_31_var > temp_max){temp_max = tht_31_var;};if(tht_32_var > temp_max){temp_max = tht_32_var;};if(TEB_1_var > temp_max){temp_max = TEB_1_var;};if(TEB_2_var > temp_max){temp_max = TEB_2_var;};if(TEB_3_var > temp_max){temp_max = TEB_3_var;};if(TEB_4_var > temp_max){temp_max = TEB_4_var;};if(TEB_5_var > temp_max){temp_max = TEB_5_var;};if(TEB_6_var > temp_max){temp_max = TEB_6_var;};
 				}
-				
+
 				data_Meso_NH_to_load_list[o].data.push({
 					x: data_x,
 					y: data_y,
 					tht_2: tht_2_var,
-					tht_3: tht_2_var, 
-					tht_4: tht_3_var, 
-					tht_5: tht_4_var, 
-					tht_6: tht_5_var, 
-					tht_7: tht_6_var, 
-					tht_8: tht_7_var, 
-					tht_9: tht_8_var, 
-					tht_9: tht_9_var, 
+					tht_3: tht_2_var,
+					tht_4: tht_3_var,
+					tht_5: tht_4_var,
+					tht_6: tht_5_var,
+					tht_7: tht_6_var,
+					tht_8: tht_7_var,
+					tht_9: tht_8_var,
+					tht_9: tht_9_var,
 					tht_10: tht_10_var,
 					tht_11: tht_11_var,
 					tht_12: tht_12_var,
@@ -465,15 +499,14 @@ function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
 					zs: zs_var
 				})
 			}
-			
-			
+
+
 		})
-		
+
 		if(type_point == "O"){
 			general_config.data_volume_3D = create_data_texture(general_config.data_points_O_2, general_config.data_ni, general_config.data_nj, 31 + 6,temp_min,temp_max);
 		}
-		
+
 		return data_Meso_NH_to_load_list
 	});
 }
-
