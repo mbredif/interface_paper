@@ -68,6 +68,10 @@
 						<label for="data_road">Choose a road data :</label>
 						<input type="file" id="data_road" accept=".geojson">
 					</div>
+					<div class="choice_container">
+						<label for="data_build">Choose a building data :</label>
+						<input type="file" id="data_build" accept=".geojson">
+					</div>
 					<div id="load_data_container">
 						<button id ="load_data"> Load data </button>
 					</div>
@@ -174,6 +178,12 @@
 					<option value="pd">pourcentage de "Pavillon Discontinu" dans l'USR</option>
 					<option value="psc">pourcentage de "Pavillon Semi-Discontinu" dans l'USR</option>
 					</select>
+					</div>
+					<div id="buildings_transparency">
+						<div id="buildings_transparency_label">buildings_transparency: 1</div>
+						<div id="buildings_transparency_input">
+							<div class="slider" id="buildings_transparency_slider"></div>
+						</div>
 					</div>
 				</div>
 				<div id="animation_control_label" class="general_control_container_div">Animation</div>
@@ -323,11 +333,11 @@
 		void main() {
 			v_position = position;
 
-			float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
-			float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+			float voxel_position_x = ((v_position[0]/cst_X) - x_min)/(x_max - x_min)*u_size[0];
+			float voxel_position_y = u_size[1]-(-(v_position[2]/cst_Y) - y_min)/(y_max - y_min)*u_size[1];
 			float voxel_position_z = 0.0;
 			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
-			float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+			float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
 			
 			if(voxel_level < 7.0){
 				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
@@ -486,11 +496,11 @@
 		void main() {
 			v_position = position;
 
-			float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
-			float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+			float voxel_position_x = ((v_position[0]/cst_X) - x_min)/(x_max - x_min)*u_size[0];
+			float voxel_position_y = u_size[1]-(-(v_position[2]/cst_Y) - y_min)/(y_max - y_min)*u_size[1];
 			float voxel_position_z = 0.0;
 			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
-			float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+			float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
 			if(voxel_level < 7.0){
 				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
 					voxel_position_z = 0.0;
@@ -618,11 +628,11 @@
 		void main() {
 
 			v_position = position;
-			float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
-			float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+			float voxel_position_x = ((v_position[0]/cst_X) - x_min)/(x_max - x_min)*u_size[0];
+			float voxel_position_y = u_size[1]-(-(v_position[2]/cst_Y) - y_min)/(y_max - y_min)*u_size[1];
 			float voxel_position_z = 0.0;
 			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
-			float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+			float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
 			if(voxel_level < 7.0){
 				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
 					voxel_position_z = 0.0;
@@ -747,11 +757,11 @@
 		void main() {
 			v_position = position;
 
-			float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
-			float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+			float voxel_position_x = ((v_position[0]/cst_X) - x_min)/(x_max - x_min)*u_size[0];
+			float voxel_position_y = u_size[1]-(-(v_position[2]/cst_Y) - y_min)/(y_max - y_min)*u_size[1];
 			float voxel_position_z = 0.0;
 			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
-			float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+			float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
 			if(voxel_level < 7.0){
 				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
 					voxel_position_z = 0.0;
@@ -877,11 +887,11 @@
 		void main() {
 			v_position = position;
 
-			float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
-			float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+			float voxel_position_x = ((v_position[0]/cst_X) - x_min)/(x_max - x_min)*u_size[0];
+			float voxel_position_y = u_size[1]-(-(v_position[2]/cst_Y) - y_min)/(y_max - y_min)*u_size[1];
 			float voxel_position_z = 0.0;
 			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
-			float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+			float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
 			if(voxel_level < 7.0){
 				if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
 					voxel_position_z = 0.0;
@@ -1007,11 +1017,13 @@
 
 		void main() {
 		
-				float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
-				float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+				float voxel_position_x = ((v_position[0]/cst_X) - x_min)/(x_max - x_min)*u_size[0];
+				float voxel_position_y = u_size[1]-(-(v_position[2]/cst_Y) - y_min)/(y_max - y_min)*u_size[1];
 				float voxel_position_z = 0.0;
 				vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
-				float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+				
+				float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
+				
 				if(voxel_point_level < 7.0){
 					if((new_zs+ mesolimit[0])*cst_Z > v_position[1]){
 						voxel_position_z = 0.0;
@@ -1060,16 +1072,81 @@
 				gl_FragColor= vec4(gl_FragColor[0],gl_FragColor[1],gl_FragColor[2],transparency_factor);
 				
 				
+				
+				
+		}
+	</script>
+	
+	<script type="x-shader/x-vertex" id="vertexshader_buildings">
+		
+		attribute vec3 color;
+		attribute vec3 customNormal;
+		varying vec3 v_position;
+		varying vec3 v_color;
+		varying vec3 Normal;
+				
+		void main() {		
+			vec4 position4 = modelMatrix * vec4(position, 1.);
+			v_position = position4.xyz;
+			v_color = color;
+			Normal = customNormal;
+			
+			gl_Position = projectionMatrix * viewMatrix * position4;
+			
+		}
+	</script>
+	
+	<script type="x-shader/x-fragment" id="fragmentshader_buildings">
+		precision highp float;
+			
+		varying vec3 v_position;
+		varying vec3 v_color;
+		varying vec3 Normal;
+		
+		uniform vec3 light_position_1;
+		uniform vec3 light_color_1;
+		uniform vec3 light_position_2;
+		uniform vec3 light_color_2;
+		uniform vec3 light_position_3;
+		uniform vec3 light_color_3;
+		uniform vec3 light_position_4;
+		uniform vec3 light_color_4;
+		uniform vec3 light_position_5;
+		uniform vec3 light_color_5;
+		
+		
+		uniform float transparency;
+		
+		void main() {
+					
+			vec3 l_1 = normalize(light_position_1 - v_position);
+			vec3 l_2 = normalize(light_position_2 - v_position);
+			vec3 l_3 = normalize(light_position_3 - v_position);
+			vec3 l_4 = normalize(light_position_4 - v_position);
+			vec3 l_5 = normalize(light_position_5 - v_position);
+
+			vec3 color_1 = v_color * light_color_1 * max(0.0,dot(Normal,l_1));
+			vec3 color_2 = v_color * light_color_2 * max(0.0,dot(Normal,l_2));
+			vec3 color_3 = v_color * light_color_3 * max(0.0,dot(Normal,l_3));
+			vec3 color_4 = v_color * light_color_4 * max(0.0,dot(Normal,l_4));
+			vec3 color_5 = v_color * light_color_5 * max(0.0,dot(Normal,l_5));
+			
+			vec3 new_color = color_1+color_2+color_3+color_4+color_5;
+			
+			gl_FragColor= vec4(new_color[0],new_color[1],new_color[2],transparency);
 		}
 	</script>
 	
 		
 	<script type="x-shader/x-vertex" id="vertexshader_3D_plane">
 		varying vec3 v_position;
+		attribute vec3 customNormal;
+		varying vec3 Normal;
 		
 		void main() {
 			vec4 position4 = modelMatrix * vec4(position, 1.);
 			v_position = position4.xyz;
+			Normal = customNormal;
 			gl_Position = projectionMatrix * viewMatrix * position4;
 		}
 	</script>
@@ -1084,6 +1161,17 @@
 		uniform sampler3D u_data;
 		uniform sampler2D zs_data;
 		uniform sampler2D u_cmdata;
+		
+		uniform vec3 light_position_1;
+		uniform vec3 light_color_1;
+		uniform vec3 light_position_2;
+		uniform vec3 light_color_2;
+		uniform vec3 light_position_3;
+		uniform vec3 light_color_3;
+		uniform vec3 light_position_4;
+		uniform vec3 light_color_4;
+		uniform vec3 light_position_5;
+		uniform vec3 light_color_5;
 				
 		uniform float x_min;
 		uniform float x_max;
@@ -1098,6 +1186,8 @@
 		uniform float cst_Z;
 		uniform float zs;
 		
+		varying vec3 Normal;
+		
 		uniform bool sbl_meso_level[37];
 
 		float sample1(vec3 texcoords) {
@@ -1107,14 +1197,18 @@
 
 		void main() {
 		
-				float voxel_position_x = (v_position[0] - x_min)/(x_max - x_min)*u_size[0];
-				float voxel_position_y = -(v_position[2] - y_min)/(y_max - y_min)*u_size[2];
+		//gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+		
+				float voxel_position_x = ((v_position[0]/cst_X) - x_min)/(x_max - x_min)*u_size[0];
+				float voxel_position_y = u_size[1]-(-(v_position[2]/cst_Y) - y_min)/(y_max - y_min)*u_size[1];
 				float voxel_position_z = 0.0;
 				vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
-				float new_zs = texture(zs_data, (voxel_xy/vec2(u_size[0],u_size[2])).xy).r;
+				float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
 				
 				if(type_model < 0.5 ){
 					if((new_zs+ meso_limit[0])*cst_Z > v_position[1]){
+						discard;
+					} else if((new_zs+ meso_limit[6])*cst_Z < v_position[1]){
 						discard;
 					} else {
 						for(int i=1; i< 7; i++){
@@ -1156,13 +1250,34 @@
 					discard;
 				} else {
 				
-				gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
+				gl_FragColor= texture2D(u_cmdata, vec2(val, 0.5));
+				
+				vec4 point_color_4 = texture2D(u_cmdata, vec2(val, 0.5));
+				vec3 point_color_3 = vec3(point_color_4[0],point_color_4[1],point_color_4[2]);
+				
+				vec3 l_1 = normalize(light_position_1 - v_position);
+				vec3 l_2 = normalize(light_position_2 - v_position);
+				vec3 l_3 = normalize(light_position_3 - v_position);
+				vec3 l_4 = normalize(light_position_4 - v_position);
+				//vec3 l_5 = normalize(light_position_5 - v_position);
+                
+				vec3 color_1 = point_color_3 * light_color_1 * max(0.0,dot(Normal,l_1));
+				vec3 color_2 = point_color_3 * light_color_2 * max(0.0,dot(Normal,l_2));
+				vec3 color_3 = point_color_3 * light_color_3 * max(0.0,dot(Normal,l_3));
+				vec3 color_4 = point_color_3 * light_color_4 * max(0.0,dot(Normal,l_4));
+				//vec3 color_5 = point_color_3 * light_color_5 * max(0.0,dot(Normal,l_5));
+				
+				//vec3 color = color_1+color_2+color_3+color_4+color_5;
+				
+				vec3 color = color_1+color_2+color_3+color_4;
+				
+				gl_FragColor = vec4(color[0],color[1],color[2],1.0);
 				
 				//int intpart = (int)voxel_position_z;
 				//double decpart = voxel_position_z - intpart;
 				//
 				//gl_FragColor = vec4(decpart,0.0,0.0,1.0);
-	
+	            
 				//	if(val<u_clim[0]){
 				//		discard;
 				//	} else if(val>u_clim[1]){
@@ -1171,6 +1286,9 @@
 				//		float new_val = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
 				//		gl_FragColor = texture2D(u_cmdata, vec2(new_val, 0.5));
 				//	}
+				
+				
+				
 				}
 				
 					
