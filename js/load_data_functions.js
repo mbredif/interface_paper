@@ -1,5 +1,5 @@
 import { general_config, scene, camera } from './initialisation.js';
-import { create_data_texture, recreate_scene, create_temp_histogram } from './creative_functions.js'
+import { create_data_texture, recreate_scene, create_temp_histogram,create_buildings } from './creative_functions.js'
 import { numberInArray } from './color_function.js';
 
 
@@ -230,63 +230,75 @@ export function loadChosenData() {
     general_config.data_points_U_2 = [];
 	general_config.data_points_V_2 = [];
 	
-	//let dataO = $('#data_o').val().split('fakepath\\')[1];
-	//let dataU = $('#data_u').val().split('fakepath\\')[1];
-	//let dataV = $('#data_v').val().split('fakepath\\')[1];
-	//let data_road = $('#data_road').val().split('fakepath\\')[1];
-	//// a adapter quand on aura les fichiers meso NH
-	//if (dataO.split("O")[1] !== dataU.split("U")[1] || dataO.split("O")[1] !== dataV.split("V")[1] ||
-	//dataV.split("V")[1] !== dataU.split("U")[1]) {
-	//	$('#data_loaded').html(`Problème dans les données choisies : <div> Data O : ${dataO}, </div> <div> Data U : ${dataU}, </div>
-	//	<div> Data V : ${dataV} </div>`);
-	//} 
-	//else {
-	//	load_Data("O",
-	//	"./CSV/"+ dataO, 
-	//	[{'level':2, 'data':general_config.data_points_O_2}], 
-	//	"#ff5733");
-	//	load_Data("U",
-	//	"./CSV/"+ dataU, 
-	//	[{'level':2, 'data':general_config.data_points_U_2}], 
-	//	"#ff5733");
-	//	load_Data("V",
-	//	"./CSV/"+ dataV, 
-	//	[{'level':2, 'data':general_config.data_points_V_2}], 
-	//	"#ff5733");
-	//	
-	//	$.getJSON( "./geojson/"+ data_road, function( data ) {
-	//		general_config.data_road = data;
-	//	});
-	//	
-	//	
-	//	$('#data_loaded').html("Chargement réussi");
-	//	$('#data_block').hide()
-	//	//attend 1.5 seconde avant de fermer l'onglet
-	//	setTimeout(closeChoiceContainer, 800);
-	//	
-	//}
+	let dataO = $('#data_o').val().split('fakepath\\')[1];
+	let dataU = $('#data_u').val().split('fakepath\\')[1];
+	let dataV = $('#data_v').val().split('fakepath\\')[1];
+	let data_road = $('#data_road').val().split('fakepath\\')[1];
+	let data_build = $('#data_build').val().split('fakepath\\')[1];
 	
-	load_Data("O",
-		"./CSV/"+ "lambert_O_paris_beaubourg.csv", 
+	
+	
+	//dataO = "lambert_O_paris_centre.csv";
+	//	dataU = "lambert_U_paris_centre.csv";
+	//	dataV = "lambert_V_paris_centre.csv";
+	//	data_road = "paris_centre_roads_vertex.geojson";
+	//	data_build = "paris_centre_2_with_mapuce_V2.geojson";
+	
+	
+	// a adapter quand on aura les fichiers meso NH
+	if (dataO.split("O")[1] !== dataU.split("U")[1] || dataO.split("O")[1] !== dataV.split("V")[1] ||
+	dataV.split("V")[1] !== dataU.split("U")[1]) {
+		$('#data_loaded').html(`Problème dans les données choisies : <div> Data O : ${dataO}, </div> <div> Data U : ${dataU}, </div>
+		<div> Data V : ${dataV} </div>`);
+	} 
+	else {
+		
+		load_Data("O",
+		"./CSV/"+ dataO, 
 		[{'level':2, 'data':general_config.data_points_O_2}], 
 		"#ff5733");
 		load_Data("U",
-		"./CSV/"+ "lambert_U_paris_beaubourg.csv", 
+		"./CSV/"+ dataU, 
 		[{'level':2, 'data':general_config.data_points_U_2}], 
 		"#ff5733");
 		load_Data("V",
-		"./CSV/"+ "lambert_V_paris_beaubourg.csv", 
+		"./CSV/"+ dataV, 
 		[{'level':2, 'data':general_config.data_points_V_2}], 
 		"#ff5733");
 		
-		$.getJSON( "./geojson/"+ "new_beaubourg_roads_vertex.geojson", function( data ) {
+		$.getJSON( "./geojson/"+ data_road, function( data ) {
 			general_config.data_road = data;
 		});
+		$.getJSON( "./geojson/"+ data_build, function( data ) {
+			general_config.data_build = data;
+			create_buildings(general_config.data_build,scene,$("#type_bati").val());
+		});
+		
+		
+		if (dataO.split("paris_beaubourg").length >1){
+			general_config.data_ni = 1;
+		general_config.data_nj = 1;
+		} else if (dataO.split("paris_centre").length >1){
+			general_config.data_ni = 9;
+		general_config.data_nj = 6;
+		}
+		
+		
+	 
+		
+		
+		$( "#type_bati" ).on( "change", function() {
+			create_buildings(general_config.data_build,scene,$("#type_bati").val());
+		});
+		
 		
 		$('#data_loaded').html("Chargement réussi");
 		$('#data_block').hide()
 		//attend 1.5 seconde avant de fermer l'onglet
 		setTimeout(closeChoiceContainer, 800);
+		
+	}
+	
 }
 
 function closeChoiceContainer() {
@@ -320,7 +332,7 @@ function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
 				if(isNaN(d.ZS)) {
 					zs_var = -999;
 				} else {
-					zs_var =  parseFloat(d.ZS);
+					zs_var =  parseFloat(d.ZS) -10;
 				}
 				
 				var tht_2_var = null,
