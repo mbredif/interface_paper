@@ -74,7 +74,7 @@ export var general_config = {
 	"HCanopy":[1.5,3,5, 7.5, 11, 30],
     "HCanopy_w":[1,2,4,6,9,13],
     "HCL_color_scales": [
-        {'name':'sequential_red_sotr','scale':['#FADDC3','#F9C29C','#F6A173','#F17B51','#EA4C3B']},
+        {'name':'blue_red_2','scale':['#FADDC3','#F9C29C','#F6A173','#F17B51','#EA4C3B']},
         {'name':'sequential_red_2_sotr','scale':['#FDF5EB','#FFD3A7','#FE945C','#DD3B24','#88002D']},
         {'name':'sequential_blue_sotr','scale':['#4A6FE3','#9DA8E2','#E2E2E2','#E495A5','#D33F6A']},
         {'name':'HCL_white_purple_1_sotr','scale':['#ECE6C9','#CBE4BB','#A8D8B3','#84CCAD','#5FC1A8','#5AC1A9','#14BAAC','#00B5CB','#1895C8','#647DBD','#8567AC','#9652A0','#A9328E']},
@@ -102,7 +102,9 @@ export var general_config = {
 	"grid_vertical2D":null,
 	"data_road":null,
 	"grid_building":null,
-	"buildings_transparency":1
+	"buildings_transparency":1,
+	"points_transparency":1,
+	"active_color_control":"level"
 }	
 
 export function init(){
@@ -152,6 +154,17 @@ export function init(){
         recreate_scene();
     })
     // fin couleur
+	
+	$("#color_data_control_input").on('change', function() {
+		if($("#color_data_control_input").val() == "temp"){
+			 general_config.active_color_control = 1;
+			$("#color_temp_control").show();
+		} else {
+			general_config.active_color_control = 0;
+			$("#color_temp_control").hide();
+		}
+        recreate_scene();
+    })
     
     //faire apparaitre le tableau pour choisir son type de points dans 'graphic'
     function differentPoints() {
