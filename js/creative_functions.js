@@ -11,14 +11,14 @@ export function activate_animation() {
 	texture.unpackAlignment = 1;
 	
 	var texture_limit_teb = new THREE.DataTexture3D( general_config.data_volume_3D.limit_teb, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 7.0 );
-	texture.format = THREE.RedFormat;
-	texture.type = THREE.FloatType;
-	texture.unpackAlignment = 1;
+	texture_limit_teb.format = THREE.RedFormat;
+	texture_limit_teb.type = THREE.FloatType;
+	texture_limit_teb.unpackAlignment = 1;
 		
 	var texture_limit_meso = new THREE.DataTexture3D( general_config.data_volume_3D.limit_meso, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 33.0 );
-	texture.format = THREE.RedFormat;
-	texture.type = THREE.FloatType;
-	texture.unpackAlignment = 1;
+	texture_limit_meso.format = THREE.RedFormat;
+	texture_limit_meso.type = THREE.FloatType;
+	texture_limit_meso.unpackAlignment = 1;
 	
 	var texture_zs = new THREE.DataTexture( general_config.data_volume_3D.data_zs, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length);
 	texture_zs.format = THREE.RedFormat;
@@ -230,6 +230,8 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		
 		var h_min = general_config.data_volume_3D.z_min_teb;
 		var h_max = general_config.data_volume_3D.z_max_teb;
+		
+		console.log(h_min,h_max);
 						
 		for(var a =0; a< road_summit_data.features.length - 1; a++){
 			var feature_1 = road_summit_data.features[a];
@@ -238,16 +240,16 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 			if(feature_2.properties.id_road != feature_1.properties.id_road){
 				continue;
 			} else {							
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
 				
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
 				
-				var N_X = - ((feature_2.properties.MNT + h_min)*general_config.cst_Z-(feature_1.properties.MNT + h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				var N_Y = ((feature_2.properties.MNT + h_min)*general_config.cst_Z-(feature_1.properties.MNT + h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X-(feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);
+				var N_X = - ((h_min)*general_config.cst_Z-(h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				var N_Y = ((h_min)*general_config.cst_Z-(h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X-(feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);
 				
 				var normal_vector = new THREE.Vector2( N_X, N_Y );
 				normal_vector.normalize();
@@ -280,6 +282,16 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		texture_zs.format = THREE.RedFormat;
 		texture_zs.type = THREE.FloatType;
 		texture_zs.unpackAlignment = 1;
+		
+		var texture_limit_teb = new THREE.DataTexture3D( general_config.data_volume_3D.limit_teb, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 7.0 );
+		texture_limit_teb.format = THREE.RedFormat;
+		texture_limit_teb.type = THREE.FloatType;
+		texture_limit_teb.unpackAlignment = 1;
+			
+		var texture_limit_meso = new THREE.DataTexture3D( general_config.data_volume_3D.limit_meso, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 33.0 );
+		texture_limit_meso.format = THREE.RedFormat;
+		texture_limit_meso.type = THREE.FloatType;
+		texture_limit_meso.unpackAlignment = 1;
 
 		// Colormap textures
 		var cmtextures = {
@@ -307,6 +319,8 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 				//light_color_5: { value: scene.children[4].color },
 				u_data: { value: texture },
 				zs_data: { value: texture_zs},
+				meso_limit: {value: texture_limit_meso},
+				teb_limit: {value: texture_limit_teb},
 				u_cmdata: { value: cmtextures.blue_red_2 },
 				u_clim: { value: [general_config.temp_array[0],general_config.temp_array[1]] },
 				u_size: { value: [general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length] },
@@ -316,7 +330,6 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 				y_max:{type: "f", value: 1227.0260000005364},
 				zs: {type: "f", value: 46.81231},
 				type_model: {type: "f", value: 0.0},
-				meso_limit: {value: limit_meso_array},
 				sbl_meso_level: {value: sbl_meso_level},
 				cst_X: {value: general_config.cst_X},
 				cst_Y: {value: general_config.cst_Y},
@@ -349,16 +362,16 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 			if(feature_2.properties.id_road != feature_1.properties.id_road){
 				continue;
 			} else {							
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
 				
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
 				
-				var N_X = - ((feature_2.properties.MNT + h_min)*general_config.cst_Z-(feature_1.properties.MNT + h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				var N_Y = ((feature_2.properties.MNT + h_min)*general_config.cst_Z-(feature_1.properties.MNT + h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X-(feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);
+				var N_X = - ((h_min)*general_config.cst_Z-(h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				var N_Y = ((h_min)*general_config.cst_Z-(h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X-(feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);
 				
 				var normal_vector = new THREE.Vector2( N_X, N_Y );
 				normal_vector.normalize();
@@ -392,6 +405,16 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		texture_zs.format = THREE.RedFormat;
 		texture_zs.type = THREE.FloatType;
 		texture_zs.unpackAlignment = 1;
+		
+		var texture_limit_teb = new THREE.DataTexture3D( general_config.data_volume_3D.limit_teb, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 7.0 );
+		texture_limit_teb.format = THREE.RedFormat;
+		texture_limit_teb.type = THREE.FloatType;
+		texture_limit_teb.unpackAlignment = 1;
+			
+		var texture_limit_meso = new THREE.DataTexture3D( general_config.data_volume_3D.limit_meso, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 33.0 );
+		texture_limit_meso.format = THREE.RedFormat;
+		texture_limit_meso.type = THREE.FloatType;
+		texture_limit_meso.unpackAlignment = 1;
 
 		// Colormap textures
 		var cmtextures = {
@@ -414,6 +437,8 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 				light_color_3: { value: scene.children[2].color },
 				light_position_4: { value: scene.children[3].position },
 				light_color_4: { value: scene.children[3].color },
+				meso_limit: {value: texture_limit_meso},
+				teb_limit: {value: texture_limit_teb},
 				//light_position_5: { value: scene.children[4].position },
 				//light_color_5: { value: scene.children[4].color },
 				u_data: { value: texture },
@@ -427,7 +452,6 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 				y_max:{type: "f", value: 1227.0260000005364},
 				zs: {type: "f", value: 46.81231},
 				type_model: {type: "f", value: 1.0},
-				meso_limit: {value: limit_meso_array},
 				sbl_meso_level: {value: sbl_meso_level},
 				cst_X: {value: general_config.cst_X},
 				cst_Y: {value: general_config.cst_Y},
@@ -1363,14 +1387,14 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
 	texture.unpackAlignment = 1;
 	
 	var texture_limit_meso = new THREE.DataTexture3D( general_config.data_volume_3D.limit_meso, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 33.0 );
-	texture.format = THREE.RedFormat;
-	texture.type = THREE.FloatType;
-	texture.unpackAlignment = 1;
+	texture_limit_meso.format = THREE.RedFormat;
+	texture_limit_meso.type = THREE.FloatType;
+	texture_limit_meso.unpackAlignment = 1;
 	
 	var texture_limit_teb = new THREE.DataTexture3D( general_config.data_volume_3D.limit_teb, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 7.0 );
-	texture.format = THREE.RedFormat;
-	texture.type = THREE.FloatType;
-	texture.unpackAlignment = 1;
+	texture_limit_teb.format = THREE.RedFormat;
+	texture_limit_teb.type = THREE.FloatType;
+	texture_limit_teb.unpackAlignment = 1;
 	
 	
 	var texture_zs = new THREE.DataTexture( general_config.data_volume_3D.data_zs, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length);
