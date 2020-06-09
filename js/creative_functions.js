@@ -10,6 +10,16 @@ export function activate_animation() {
 	texture.type = THREE.FloatType;
 	texture.unpackAlignment = 1;
 	
+	var texture_limit_teb = new THREE.DataTexture3D( general_config.data_volume_3D.limit_teb, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 7.0 );
+	texture_limit_teb.format = THREE.RedFormat;
+	texture_limit_teb.type = THREE.FloatType;
+	texture_limit_teb.unpackAlignment = 1;
+		
+	var texture_limit_meso = new THREE.DataTexture3D( general_config.data_volume_3D.limit_meso, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 33.0 );
+	texture_limit_meso.format = THREE.RedFormat;
+	texture_limit_meso.type = THREE.FloatType;
+	texture_limit_meso.unpackAlignment = 1;
+	
 	var texture_zs = new THREE.DataTexture( general_config.data_volume_3D.data_zs, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length);
 	texture_zs.format = THREE.RedFormat;
 	texture_zs.type = THREE.FloatType;
@@ -31,6 +41,8 @@ export function activate_animation() {
 		u_data: { value: texture },
         zs_data: { value: texture_zs},
 		u_cmdata: { value: cmtextures.blue_red_2 },
+		meso_limit: {value: texture_limit_meso},
+		teb_limit: {value: texture_limit_teb},
 		u_clim: { value: [general_config.temp_array[0],general_config.temp_array[1]] },
 		pointTexture: { value: pointTexture },
 		u_size: { value: [general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length] },
@@ -40,7 +52,7 @@ export function activate_animation() {
 		y_max:{type: "f", value: general_config.y_max},
 		zs: {type: "f", value: 46.81231},
 		//zs: {type: "f", value: 35.0},
-		mesolimit: {value: limit_meso_array},
+		//mesolimit: {value: limit_meso_array},
 		cst_X: {value: general_config.cst_X},
 		cst_Y: {value: general_config.cst_Y},
 		cst_Z: {value: general_config.cst_Z},
@@ -216,8 +228,10 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		var features_normal_array = [];
 
 		
-		var h_min = HCanopy_w[0] - 30;
-		var h_max = HCanopy_w[HCanopy_w.length - 1] + (HCanopy[HCanopy.length - 1] - HCanopy_w[HCanopy_w.length - 1])*2 + 30;
+		var h_min = general_config.data_volume_3D.z_min_teb;
+		var h_max = general_config.data_volume_3D.z_max_teb;
+		
+		console.log(h_min,h_max);
 						
 		for(var a =0; a< road_summit_data.features.length - 1; a++){
 			var feature_1 = road_summit_data.features[a];
@@ -226,16 +240,16 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 			if(feature_2.properties.id_road != feature_1.properties.id_road){
 				continue;
 			} else {							
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
 				
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
 				
-				var N_X = - ((feature_2.properties.MNT + h_min)*general_config.cst_Z-(feature_1.properties.MNT + h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				var N_Y = ((feature_2.properties.MNT + h_min)*general_config.cst_Z-(feature_1.properties.MNT + h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X-(feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);
+				var N_X = - ((h_min)*general_config.cst_Z-(h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				var N_Y = ((h_min)*general_config.cst_Z-(h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X-(feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);
 				
 				var normal_vector = new THREE.Vector2( N_X, N_Y );
 				normal_vector.normalize();
@@ -268,6 +282,16 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		texture_zs.format = THREE.RedFormat;
 		texture_zs.type = THREE.FloatType;
 		texture_zs.unpackAlignment = 1;
+		
+		var texture_limit_teb = new THREE.DataTexture3D( general_config.data_volume_3D.limit_teb, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 7.0 );
+		texture_limit_teb.format = THREE.RedFormat;
+		texture_limit_teb.type = THREE.FloatType;
+		texture_limit_teb.unpackAlignment = 1;
+			
+		var texture_limit_meso = new THREE.DataTexture3D( general_config.data_volume_3D.limit_meso, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 33.0 );
+		texture_limit_meso.format = THREE.RedFormat;
+		texture_limit_meso.type = THREE.FloatType;
+		texture_limit_meso.unpackAlignment = 1;
 
 		// Colormap textures
 		var cmtextures = {
@@ -295,6 +319,8 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 				//light_color_5: { value: scene.children[4].color },
 				u_data: { value: texture },
 				zs_data: { value: texture_zs},
+				meso_limit: {value: texture_limit_meso},
+				teb_limit: {value: texture_limit_teb},
 				u_cmdata: { value: cmtextures.blue_red_2 },
 				u_clim: { value: [general_config.temp_array[0],general_config.temp_array[1]] },
 				u_size: { value: [general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length] },
@@ -304,7 +330,6 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 				y_max:{type: "f", value: 1227.0260000005364},
 				zs: {type: "f", value: 46.81231},
 				type_model: {type: "f", value: 0.0},
-				meso_limit: {value: limit_meso_array},
 				sbl_meso_level: {value: sbl_meso_level},
 				cst_X: {value: general_config.cst_X},
 				cst_Y: {value: general_config.cst_Y},
@@ -327,8 +352,8 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		var features_points_array = [];
 		var features_normal_array = [];
 		
-		var h_min = THAT_W[1] - 30;
-		var h_max = THAT_W[THAT_W.length - 1] + (THAT[THAT.length - 1] - THAT_W[THAT_W.length - 1])*2 + 30;
+		var h_min = general_config.data_volume_3D.z_min_meso;
+		var h_max = general_config.data_volume_3D.z_max_meso;
 			
 		for(var a =0; a< road_summit_data.features.length - 1; a++){
 			var feature_1 = road_summit_data.features[a];
@@ -337,16 +362,16 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 			if(feature_2.properties.id_road != feature_1.properties.id_road){
 				continue;
 			} else {							
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
 				
-				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_1.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_min)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((feature_2.properties.MNT + h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_min)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				features_points_array.push((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);features_points_array.push((h_max)*general_config.cst_Z);features_points_array.push(-(feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
 				
-				var N_X = - ((feature_2.properties.MNT + h_min)*general_config.cst_Z-(feature_1.properties.MNT + h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-				var N_Y = ((feature_2.properties.MNT + h_min)*general_config.cst_Z-(feature_1.properties.MNT + h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X-(feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);
+				var N_X = - ((h_min)*general_config.cst_Z-(h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature_1.geometry.coordinates[1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+				var N_Y = ((h_min)*general_config.cst_Z-(h_max)*general_config.cst_Z)*((feature_2.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X-(feature_1.geometry.coordinates[0]-general_config.Coord_X_paris)*general_config.cst_X);
 				
 				var normal_vector = new THREE.Vector2( N_X, N_Y );
 				normal_vector.normalize();
@@ -374,11 +399,22 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		texture.format = THREE.RedFormat;
 		texture.type = THREE.FloatType;
 		texture.unpackAlignment = 1;
+		
 
 		var texture_zs = new THREE.DataTexture( general_config.data_volume_3D.data_zs, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length);
 		texture_zs.format = THREE.RedFormat;
 		texture_zs.type = THREE.FloatType;
 		texture_zs.unpackAlignment = 1;
+		
+		var texture_limit_teb = new THREE.DataTexture3D( general_config.data_volume_3D.limit_teb, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 7.0 );
+		texture_limit_teb.format = THREE.RedFormat;
+		texture_limit_teb.type = THREE.FloatType;
+		texture_limit_teb.unpackAlignment = 1;
+			
+		var texture_limit_meso = new THREE.DataTexture3D( general_config.data_volume_3D.limit_meso, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 33.0 );
+		texture_limit_meso.format = THREE.RedFormat;
+		texture_limit_meso.type = THREE.FloatType;
+		texture_limit_meso.unpackAlignment = 1;
 
 		// Colormap textures
 		var cmtextures = {
@@ -401,6 +437,8 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 				light_color_3: { value: scene.children[2].color },
 				light_position_4: { value: scene.children[3].position },
 				light_color_4: { value: scene.children[3].color },
+				meso_limit: {value: texture_limit_meso},
+				teb_limit: {value: texture_limit_teb},
 				//light_position_5: { value: scene.children[4].position },
 				//light_color_5: { value: scene.children[4].color },
 				u_data: { value: texture },
@@ -414,7 +452,6 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 				y_max:{type: "f", value: 1227.0260000005364},
 				zs: {type: "f", value: 46.81231},
 				type_model: {type: "f", value: 1.0},
-				meso_limit: {value: limit_meso_array},
 				sbl_meso_level: {value: sbl_meso_level},
 				cst_X: {value: general_config.cst_X},
 				cst_Y: {value: general_config.cst_Y},
@@ -475,8 +512,12 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
 
                 var id = id_sbl_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
-                var h = HCanopy[id - 1];
-                var h_w = HCanopy_w[id - 1];
+				
+				
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + id*ni*nj;					
+                var h = general_config.data_volume_3D['limit_teb'][index_sup_1] - MesoNH_O_array[index_1].zs + (general_config.data_volume_3D['limit_teb'][index_sup_2] - general_config.data_volume_3D['limit_teb'][index_sup_1])/2;
+                var h_w = general_config.data_volume_3D['limit_teb'][index_sup_1]  - MesoNH_O_array[index_1].zs;
 				
                 // pour 'effectifs egaux', tableau temporaire
                 tab_temp.push(temp);
@@ -540,7 +581,6 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
             }
         }
     }	
-    
 
     for(var m=0; m<id_meso_array.length; m++){
         for(var j=0; j<nj; j++){
@@ -549,8 +589,12 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                 
                 var id = id_meso_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
-                var h = THAT[id - 1];
-                var h_w = THAT_W[id - 1];
+				
+				
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + (id)*ni*nj;	
+				var h = general_config.data_volume_3D['limit_meso'][index_sup_1] + (general_config.data_volume_3D['limit_meso'][index_sup_2] - general_config.data_volume_3D['limit_meso'][index_sup_1])/2 - MesoNH_O_array[index_1].zs;
+                var h_w = general_config.data_volume_3D['limit_meso'][index_sup_1] - MesoNH_O_array[index_1].zs;
 				
                  // pour 'effectifs egaux', tableau temporaire
                  tab_temp.push(temp);
@@ -622,14 +666,18 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
     });*/
     tab_temp.sort((a,b) => a-b)
 
+	
     for(var m=0; m<id_sbl_array.length; m++){
         for(var j=0; j<nj; j++){
             for(var i=0; i<ni; i++){
                 var index_1 = j*ni + i;
                 var id = id_sbl_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
-                var h = HCanopy[id - 1];
-                var h_w = HCanopy_w[id - 1];                
+				
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + id*ni*nj;					
+                var h = general_config.data_volume_3D['limit_teb'][index_sup_1] - MesoNH_O_array[index_1].zs + (general_config.data_volume_3D['limit_teb'][index_sup_2] - general_config.data_volume_3D['limit_teb'][index_sup_1])/2;
+                var h_w = general_config.data_volume_3D['limit_teb'][index_sup_1]  - MesoNH_O_array[index_1].zs; 
                 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
@@ -651,7 +699,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                 
                 
                 general_config.temp_values.push(temp);
-                                    
+
                 var cell_volume = l_x*l_y*l_z;
                 
                 var relative_density;
@@ -714,6 +762,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                     coord_array.push(pX*general_config.cst_X);
                     coord_array.push(pZ*general_config.cst_Z);
                     coord_array.push(-pY*general_config.cst_Y);
+
                     sizes.push(size);
                     transparency_factor_array.push(general_config.points_transparency);
                     custompercentagearray.push(percentage_color*2*Math.PI);
@@ -735,8 +784,11 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                 
                 var id = id_meso_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
-                var h = THAT[id - 1];
-                var h_w = THAT_W[id - 1];
+                
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + (id-0)*ni*nj;	
+				var h = general_config.data_volume_3D['limit_meso'][index_sup_1] + (general_config.data_volume_3D['limit_meso'][index_sup_2] - general_config.data_volume_3D['limit_meso'][index_sup_1])/2 - MesoNH_O_array[index_1].zs;
+                var h_w = general_config.data_volume_3D['limit_meso'][index_sup_1] - MesoNH_O_array[index_1].zs;
                                                 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
@@ -757,7 +809,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                 }
                                     
                 general_config.temp_values.push(temp);
-                                   
+
                 var cell_volume = l_x*l_y*l_z;
                 
                 var relative_density;
@@ -821,6 +873,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
                     coord_array.push(pX*general_config.cst_X);
                     coord_array.push(pZ*general_config.cst_Z);
                     coord_array.push(-pY*general_config.cst_Y);
+
                     sizes.push(size);
                     transparency_factor_array.push(general_config.points_transparency);
                     custompercentagearray.push(percentage_color*2*Math.PI);
@@ -851,6 +904,7 @@ export function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_
     var bufferGeometry = new THREE.BufferGeometry();
     
     bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
+
     bufferGeometry.setAttribute( 'customsize', new THREE.BufferAttribute(sizes_32,1));
     bufferGeometry.setAttribute( 'customtransparency', new THREE.BufferAttribute(transparency_factor_32,1));
     bufferGeometry.setAttribute( 'custompercentage', new THREE.BufferAttribute(custompercentage_32,1));
@@ -906,8 +960,11 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
 
                 var id = id_sbl_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
-                var h = HCanopy[id - 1];
-                var h_w = HCanopy_w[id - 1];
+                
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + id*ni*nj;					
+                var h = general_config.data_volume_3D['limit_teb'][index_sup_1] - MesoNH_O_array[index_1].zs + (general_config.data_volume_3D['limit_teb'][index_sup_2] - general_config.data_volume_3D['limit_teb'][index_sup_1])/2;
+                var h_w = general_config.data_volume_3D['limit_teb'][index_sup_1]  - MesoNH_O_array[index_1].zs;
                 
                 tab_temp.push(temp);
 
@@ -979,8 +1036,11 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                 
                 var id = id_meso_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
-                var h = THAT[id - 1];
-                var h_w = THAT_W[id - 1];
+                
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + (id-0)*ni*nj;	
+				var h = general_config.data_volume_3D['limit_meso'][index_sup_1] + (general_config.data_volume_3D['limit_meso'][index_sup_2] - general_config.data_volume_3D['limit_meso'][index_sup_1])/2 - MesoNH_O_array[index_1].zs;
+                var h_w = general_config.data_volume_3D['limit_meso'][index_sup_1] - MesoNH_O_array[index_1].zs;
                 
                 tab_temp.push(temp)
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
@@ -1051,8 +1111,11 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
 				
                 var id = id_sbl_array[m];
                 var temp = MesoNH_O_array[index_1]['teb_'+id];
-                var h = HCanopy[id - 1];
-                var h_w = HCanopy_w[id - 1];
+                
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + id*ni*nj;					
+                var h = general_config.data_volume_3D['limit_teb'][index_sup_1] - MesoNH_O_array[index_1].zs + (general_config.data_volume_3D['limit_teb'][index_sup_2] - general_config.data_volume_3D['limit_teb'][index_sup_1])/2;
+                var h_w = general_config.data_volume_3D['limit_teb'][index_sup_1]  - MesoNH_O_array[index_1].zs;
                 
                 var tmin = temperature_scale[0];
                 var tmax = temperature_scale[1];
@@ -1140,9 +1203,9 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     
                     general_config.temp_values.push(temp);
                     
+
                     var transparency = general_config.transparency_factor;
-                            
-                   
+
 					
 					
 					
@@ -1161,8 +1224,11 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                 
                 var id = id_meso_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
-                var h = THAT[id - 1];
-                var h_w = THAT_W[id - 1];
+               
+			   var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + (id-0)*ni*nj;	
+				var h = general_config.data_volume_3D['limit_meso'][index_sup_1] + (general_config.data_volume_3D['limit_meso'][index_sup_2] - general_config.data_volume_3D['limit_meso'][index_sup_1])/2 - MesoNH_O_array[index_1].zs;
+                var h_w = general_config.data_volume_3D['limit_meso'][index_sup_1] - MesoNH_O_array[index_1].zs;
 				  
                 var tmin = temperature_scale[0];
                 var tmax = temperature_scale[1];
@@ -1248,11 +1314,10 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                     }
                     
                     general_config.temp_values.push(temp);
+
                     
                     var transparency = general_config.transparency_factor;
-                    
-                    
-                   					
+
 					
                 } else {
                     general_config.temp_values.push(temp);
@@ -1271,12 +1336,24 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
 	var bufferGeometry = new THREE.BufferGeometry();
     
     bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
+
 	bufferGeometry.setAttribute( 'voxel_level', new THREE.BufferAttribute(voxel_level_array_32,1));
 	
 	var texture = new THREE.DataTexture3D( general_config.data_volume_3D.data_temp, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, general_config.data_volume_3D.z_length );
 	texture.format = THREE.RedFormat;
 	texture.type = THREE.FloatType;
 	texture.unpackAlignment = 1;
+	
+	var texture_limit_meso = new THREE.DataTexture3D( general_config.data_volume_3D.limit_meso, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 33.0 );
+	texture_limit_meso.format = THREE.RedFormat;
+	texture_limit_meso.type = THREE.FloatType;
+	texture_limit_meso.unpackAlignment = 1;
+	
+	var texture_limit_teb = new THREE.DataTexture3D( general_config.data_volume_3D.limit_teb, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length, 7.0 );
+	texture_limit_teb.format = THREE.RedFormat;
+	texture_limit_teb.type = THREE.FloatType;
+	texture_limit_teb.unpackAlignment = 1;
+	
 	
 	var texture_zs = new THREE.DataTexture( general_config.data_volume_3D.data_zs, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length);
 	texture_zs.format = THREE.RedFormat;
@@ -1309,6 +1386,8 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
 							//light_color_5: { value: scene.children[4].color },
 							u_data: { value: texture },
 							zs_data: { value: texture_zs},
+							meso_limit: {value: texture_limit_meso},
+							teb_limit: {value: texture_limit_teb},
 							transparency_factor: { value: general_config.transparency_factor},
 							u_time: { type: "f", value: 0 },
 							u_cmdata: { value: cmtextures.blue_red_2 },
@@ -1384,8 +1463,11 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
 				
                 var id = id_sbl_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
-                var h = HCanopy[id - 1];
-                var h_w = HCanopy_w[id - 1];
+                				
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + id*ni*nj;					
+                var h = general_config.data_volume_3D['limit_teb'][index_sup_1] - MesoNH_O_array[index_1].zs + (general_config.data_volume_3D['limit_teb'][index_sup_2] - general_config.data_volume_3D['limit_teb'][index_sup_1])/2;
+                var h_w = general_config.data_volume_3D['limit_teb'][index_sup_1]  - MesoNH_O_array[index_1].zs;
                 
                 tab_temp.push(temp)
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
@@ -1456,8 +1538,11 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                 
                 var id = id_meso_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
-                var h = THAT[id - 1];
-                var h_w = THAT_W[id - 1];
+                
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + (id-0)*ni*nj;	
+				var h = general_config.data_volume_3D['limit_meso'][index_sup_1] + (general_config.data_volume_3D['limit_meso'][index_sup_2] - general_config.data_volume_3D['limit_meso'][index_sup_1])/2 - MesoNH_O_array[index_1].zs;
+                var h_w = general_config.data_volume_3D['limit_meso'][index_sup_1] - MesoNH_O_array[index_1].zs;
 
                 tab_temp.push(temp);
                                                 
@@ -1531,8 +1616,11 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                 var index_1 = j*ni + i;
                 var id = id_sbl_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
-                var h = HCanopy[id - 1];
-                var h_w = HCanopy_w[id - 1];
+                
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + id*ni*nj;					
+                var h = general_config.data_volume_3D['limit_teb'][index_sup_1] - MesoNH_O_array[index_1].zs + (general_config.data_volume_3D['limit_teb'][index_sup_2] - general_config.data_volume_3D['limit_teb'][index_sup_1])/2;
+                var h_w = general_config.data_volume_3D['limit_teb'][index_sup_1]  - MesoNH_O_array[index_1].zs;
                 
                 var x_u = MesoNH_U_array[index_1].x - general_config.Coord_X_paris;
                 var y_u = MesoNH_U_array[index_1].y - general_config.Coord_Y_paris;
@@ -1559,6 +1647,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                 
                 general_config.temp_values.push(temp);
                 
+
                 
                                     
                 var size;
@@ -1599,6 +1688,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                         coord_array.push(pX*general_config.cst_X); 
                         coord_array.push(pZ*general_config.cst_Z);
                         coord_array.push(-pY*general_config.cst_Y);
+
                         sizes.push(size);
                         transparency_factor_array.push(general_config.points_transparency);
                         custompercentagearray.push(percentage_color*2*Math.PI);
@@ -1621,8 +1711,11 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                 
                 var id = id_meso_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
-                var h = THAT[id - 1];
-                var h_w = THAT_W[id - 1];
+                
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + (id-0)*ni*nj;	
+				var h = general_config.data_volume_3D['limit_meso'][index_sup_1] + (general_config.data_volume_3D['limit_meso'][index_sup_2] - general_config.data_volume_3D['limit_meso'][index_sup_1])/2 - MesoNH_O_array[index_1].zs;
+                var h_w = general_config.data_volume_3D['limit_meso'][index_sup_1] - MesoNH_O_array[index_1].zs;
 				
                 var x_u = MesoNH_U_array[index_1].x - general_config.Coord_X_paris;
                 var y_u = MesoNH_U_array[index_1].y - general_config.Coord_Y_paris;
@@ -1649,7 +1742,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                 }
                 
                 general_config.temp_values.push(temp);
-               
+
                 
                                     
                 var size;
@@ -1690,6 +1783,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
                         coord_array.push(pX*general_config.cst_X); 
                         coord_array.push(pZ*general_config.cst_Z);
                         coord_array.push(-pY*general_config.cst_Y);
+
                         sizes.push(size);
                         transparency_factor_array.push(general_config.points_transparency);
                         custompercentagearray.push(percentage_color*2*Math.PI);
@@ -1721,6 +1815,7 @@ export function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
     var bufferGeometry = new THREE.BufferGeometry();
     
     bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
+
     bufferGeometry.setAttribute( 'customsize', new THREE.BufferAttribute(sizes_32,1));
     bufferGeometry.setAttribute( 'customtransparency', new THREE.BufferAttribute(transparency_factor_32,1));
     bufferGeometry.setAttribute( 'custompercentage', new THREE.BufferAttribute(custompercentage_32,1));
@@ -1777,8 +1872,11 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
 				
                 var id = id_sbl_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
-                var h = HCanopy[id - 1];
-                var h_w = HCanopy_w[id - 1];
+                
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + id*ni*nj;					
+                var h = general_config.data_volume_3D['limit_teb'][index_sup_1] - MesoNH_O_array[index_1].zs + (general_config.data_volume_3D['limit_teb'][index_sup_2] - general_config.data_volume_3D['limit_teb'][index_sup_1])/2;
+                var h_w = general_config.data_volume_3D['limit_teb'][index_sup_1]  - MesoNH_O_array[index_1].zs;
 				
                 tab_temp.push(temp)
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
@@ -1848,8 +1946,11 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                 var index_1 = j*ni + i;          
                 var id = id_meso_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
-                var h = THAT[id - 1];
-                var h_w = THAT_W[id - 1];
+                
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + (id-0)*ni*nj;	
+				var h = general_config.data_volume_3D['limit_meso'][index_sup_1] + (general_config.data_volume_3D['limit_meso'][index_sup_2] - general_config.data_volume_3D['limit_meso'][index_sup_1])/2 - MesoNH_O_array[index_1].zs;
+                var h_w = general_config.data_volume_3D['limit_meso'][index_sup_1] - MesoNH_O_array[index_1].zs;
 				
                 tab_temp.push(temp);
                                                 
@@ -1924,8 +2025,11 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
 				
                 var id = id_sbl_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['teb_'+id]);
-                var h = HCanopy[id - 1];
-                var h_w = HCanopy_w[id - 1];                
+                
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + id*ni*nj;					
+                var h = general_config.data_volume_3D['limit_teb'][index_sup_1] - MesoNH_O_array[index_1].zs + (general_config.data_volume_3D['limit_teb'][index_sup_2] - general_config.data_volume_3D['limit_teb'][index_sup_1])/2;
+                var h_w = general_config.data_volume_3D['limit_teb'][index_sup_1]  - MesoNH_O_array[index_1].zs;
                 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
@@ -1946,7 +2050,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                 }
                 
                 general_config.temp_values.push(temp);
-                
+
                     
                 var cell_volume = l_x*l_y*l_z;
                 
@@ -2031,6 +2135,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                             coord_array.push(pX*general_config.cst_X);
                             coord_array.push(pZ*general_config.cst_Z);
                             coord_array.push(-pY*general_config.cst_Y);
+
                             sizes.push(size);
                             transparency_factor_array.push(general_config.points_transparency);
                             custompercentagearray.push(percentage_color*2*Math.PI);
@@ -2053,8 +2158,11 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                 
                 var id = id_meso_array[m];
                 var temp = parseFloat(MesoNH_O_array[index_1]['tht_'+id]);
-                var h = THAT[id - 1];
-                var h_w = THAT_W[id - 1];
+                
+				var index_sup_1 = j*ni + i + (id-1)*ni*nj;	
+				var index_sup_2 = j*ni + i + (id-0)*ni*nj;	
+				var h = general_config.data_volume_3D['limit_meso'][index_sup_1] + (general_config.data_volume_3D['limit_meso'][index_sup_2] - general_config.data_volume_3D['limit_meso'][index_sup_1])/2 - MesoNH_O_array[index_1].zs;
+                var h_w = general_config.data_volume_3D['limit_meso'][index_sup_1] - MesoNH_O_array[index_1].zs;
                                                 
                 var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
                 var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
@@ -2075,7 +2183,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                 }
                 
                 general_config.temp_values.push(temp);
-                                   
+
                 var cell_volume = l_x*l_y*l_z;
                 
                 var relative_density;
@@ -2161,6 +2269,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
                             coord_array.push(pX*general_config.cst_X);
                             coord_array.push(pZ*general_config.cst_Z);
                             coord_array.push(-pY*general_config.cst_Y);
+
                             sizes.push(size);
                             transparency_factor_array.push(general_config.points_transparency);
                             custompercentagearray.push(percentage_color*2*Math.PI);
@@ -2194,6 +2303,7 @@ export function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH
     var bufferGeometry = new THREE.BufferGeometry();
     
     bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
+
     bufferGeometry.setAttribute( 'customsize', new THREE.BufferAttribute(sizes_32,1));
     bufferGeometry.setAttribute( 'customtransparency', new THREE.BufferAttribute(transparency_factor_32,1));
     bufferGeometry.setAttribute( 'custompercentage', new THREE.BufferAttribute(custompercentage_32,1));
@@ -2283,11 +2393,37 @@ var buildings_features_points_array = [];
 var buildings_features_color_array = [];
 var buildings_features_normal_array = [];
 
+var buildings_features_surface = [];
+
 var ground_features_points_array = [];
 var ground_features_color_array = [];
 var ground_features_normal_array = [];
+
+var z_offset=0;
+
   for(var a =0; a< data.features.length; a++){
         var feature = data.features[a];
+		
+			
+		var x = feature.geometry.coordinates[0][0][0][0]-general_config.Coord_X_paris;
+		var y = feature.geometry.coordinates[0][0][0][1]-general_config.Coord_Y_paris;
+			
+		
+		var voxel_position_x = parseInt((x - general_config.data_volume_3D.x_min)/(general_config.data_volume_3D.x_max - general_config.data_volume_3D.x_min)*general_config.data_ni);
+		var voxel_position_y = parseInt(general_config.data_nj-(y - general_config.data_volume_3D.y_min)/(general_config.data_volume_3D.y_max - general_config.data_volume_3D.y_min)*general_config.data_nj);
+			
+		if(voxel_position_x>=0 && voxel_position_x<general_config.data_ni && voxel_position_y>=0 && voxel_position_y<general_config.data_nj){
+			var zs_teb = general_config.data_volume_3D.data_zs_teb[voxel_position_y*general_config.data_ni + voxel_position_x];
+			z_offset = zs_teb - feature.properties.altitude_s;
+		}
+		
+		var feature_altitude_s = feature.properties.altitude_s + z_offset
+		var feature_altitude_t = feature.properties.altitude_t + z_offset
+		
+		
+		
+		
+		
         
         var polygon_coordinate = [];
         
@@ -2349,7 +2485,7 @@ var ground_features_normal_array = [];
 		
 		//building_color = {r:150/255,g:170/255,b:200/255};
         
-        
+		
         for(var j =0; j< feature.geometry.coordinates[0][0].length; j++){
             var index_1 = j;
             var index_2;
@@ -2358,20 +2494,24 @@ var ground_features_normal_array = [];
             } else {
                 index_2 = j+1;
             }
-            
+            									
             polygon_coordinate.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);
             polygon_coordinate.push((feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
             
-            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature_altitude_s*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature_altitude_t*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature_altitude_s*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+			
+			buildings_features_surface.push(feature_altitude_s);
             
-            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature_altitude_t*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature_altitude_t*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            buildings_features_points_array.push((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X);buildings_features_points_array.push(feature_altitude_s*general_config.cst_Z);buildings_features_points_array.push(-(feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+			
+			buildings_features_surface.push(feature_altitude_s);
             
-            var N_X = - (feature.properties.altitude_t*general_config.cst_Z-feature.properties.altitude_s*general_config.cst_Z)*((feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
-            var N_Y = (feature.properties.altitude_t*general_config.cst_Z-feature.properties.altitude_s*general_config.cst_Z)*((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X-(feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);
+            var N_X = - (feature_altitude_t*general_config.cst_Z-feature_altitude_s*general_config.cst_Z)*((feature.geometry.coordinates[0][0][index_2][1]-general_config.Coord_Y_paris)*general_config.cst_Y-(feature.geometry.coordinates[0][0][index_1][1]-general_config.Coord_Y_paris)*general_config.cst_Y);
+            var N_Y = (feature_altitude_t*general_config.cst_Z-feature_altitude_s*general_config.cst_Z)*((feature.geometry.coordinates[0][0][index_2][0]-general_config.Coord_X_paris)*general_config.cst_X-(feature.geometry.coordinates[0][0][index_1][0]-general_config.Coord_X_paris)*general_config.cst_X);
             
             var normal_vector = new THREE.Vector2( N_X, N_Y );
             normal_vector.normalize();
@@ -2394,16 +2534,20 @@ var ground_features_normal_array = [];
         var polygon_triangulate = earcut(polygon_coordinate,null,2);
         for(var t=0; t<polygon_triangulate.length; t++){
             buildings_features_points_array.push(polygon_coordinate[polygon_triangulate[t]*2]);
-            buildings_features_points_array.push(feature.properties.altitude_t*general_config.cst_Z);
+            buildings_features_points_array.push(feature_altitude_t*general_config.cst_Z);
             buildings_features_points_array.push(-polygon_coordinate[polygon_triangulate[t]*2 + 1]);
+			
+			buildings_features_surface.push(feature_altitude_s);
             
             buildings_features_color_array.push(building_color.r);buildings_features_color_array.push(building_color.g);buildings_features_color_array.push(building_color.b);
             buildings_features_normal_array.push(0);buildings_features_normal_array.push(1);buildings_features_normal_array.push(0);
         }
         for(var t=0; t<polygon_triangulate.length; t++){
             ground_features_points_array.push(polygon_coordinate[polygon_triangulate[t]*2]);
-            ground_features_points_array.push(feature.properties.altitude_s*general_config.cst_Z);
+            ground_features_points_array.push(feature_altitude_s*general_config.cst_Z);
             ground_features_points_array.push(-polygon_coordinate[polygon_triangulate[t]*2 + 1]);
+			
+			buildings_features_surface.push(feature_altitude_s);
             
             ground_features_color_array.push(building_color.r);ground_features_color_array.push(building_color.g);ground_features_color_array.push(building_color.b);
             ground_features_normal_array.push(0);ground_features_normal_array.push(1);ground_features_normal_array.push(0);
@@ -2414,11 +2558,16 @@ var ground_features_normal_array = [];
   var buildings_feature_coord_array_32 = new Float32Array(buildings_features_points_array);
     var buildings_feature_colors_32 = new Float32Array(buildings_features_color_array);
     var buildings_feature_normal_32 = new Float32Array(buildings_features_normal_array);
+	
 
  var ground_feature_coord_array_32 = new Float32Array(ground_features_points_array);
     var ground_feature_colors_32 = new Float32Array(ground_features_color_array);
     var ground_feature_normal_32 = new Float32Array(ground_features_normal_array);	
        
+	var texture_zs = new THREE.DataTexture( general_config.data_volume_3D.data_zs, general_config.data_volume_3D.x_length, general_config.data_volume_3D.y_length);
+	texture_zs.format = THREE.RedFormat;
+	texture_zs.type = THREE.FloatType;
+	texture_zs.unpackAlignment = 1;
 	
     var buildings_feature_material = new THREE.ShaderMaterial( {
 						side: THREE.DoubleSide,
@@ -2722,7 +2871,7 @@ export function getHCLcolor(tableau, temp, percentage, HCLscale){
     let tab_temp = tableau.slice(); 
     let array = [];
     let nb_arr = general_config.nb_array;
-    console.log(nb_arr)
+    
     if(general_config.active_color_class == "ecarts_egaux"){
         
         let temp_min =  general_config.temp_array[0];
@@ -2995,7 +3144,7 @@ export function getRoadColor(type){
     return color;
 }
 
-export function create_data_texture(Meso_NH, x_length, y_length, z_length, temp_min, temp_max){
+export function create_data_texture(Meso_NH, MesoNH_U, MesoNH_V, x_length, y_length, z_length, temp_min, temp_max){
     var volume = {
         "x_length": x_length,
         "y_length": y_length,
@@ -3003,40 +3152,193 @@ export function create_data_texture(Meso_NH, x_length, y_length, z_length, temp_
         "data": null,
         "data_temp": null,
         "data_zs": null,
-        "temp_min":parseFloat(temp_min),
-        "temp_max":parseFloat(temp_max)
+        "limit_teb":null,
+		"limit_meso":null,
+		"temp_min":parseFloat(temp_min),
+        "temp_max":parseFloat(temp_max),
+		"x_min":null,
+		"x_max":null,
+		"y_min":null,
+		"y_max":null,
+		"z_min_teb":null,
+		"z_max_teb":null,
+		"z_min_meso":null,
+		"z_max_meso":null,
+		"data_zs_teb":null
         };
-        
-    var data_array = [];
-    var data_array_temp = [];
-    var data_zs = [];
     
+	var data_array = [],
+	data_array_temp = [],
+	data_zs = [],
+	data_limit_teb = [],
+	date_limit_meso = [];
+	
+	var data_tebzh_1 = [],
+	data_tebzh_2 = [],
+	data_tebzh_3 = [],
+	data_tebzh_4 = [],
+	data_tebzh_5 = [],
+	data_tebzh_6 = [],
+	data_tebzh_7 = [];
+	
+	var z_min_teb = null;
+	var z_max_teb = null;
+	var z_min_meso = null;
+	var z_max_meso = null;
+	
+	var data_tebz_6 = [];
+	var data_mesoz_2 = [];
+	var data_mesoz_3 = [];
+	
+	var data_zs_teb = [];
+		
+	    
     for (var t=0; t< Meso_NH.length; t++){
         data_zs.push(Meso_NH[t].zs);
+		var zh=0;
+		data_tebzh_1.push(zh);
+		data_tebzh_2.push(parseFloat(Meso_NH[t].tebz_1) + (parseFloat(Meso_NH[t].tebz_1)-zh));zh = parseFloat(Meso_NH[t].tebz_1) + (parseFloat(Meso_NH[t].tebz_1)-zh);
+		data_tebzh_3.push(parseFloat(Meso_NH[t].tebz_2) + (parseFloat(Meso_NH[t].tebz_2)-zh));zh = parseFloat(Meso_NH[t].tebz_2) + (parseFloat(Meso_NH[t].tebz_2)-zh);
+		data_tebzh_4.push(parseFloat(Meso_NH[t].tebz_3) + (parseFloat(Meso_NH[t].tebz_3)-zh));zh = parseFloat(Meso_NH[t].tebz_3) + (parseFloat(Meso_NH[t].tebz_3)-zh);
+		data_tebzh_5.push(parseFloat(Meso_NH[t].tebz_4) + (parseFloat(Meso_NH[t].tebz_4)-zh));zh = parseFloat(Meso_NH[t].tebz_4) + (parseFloat(Meso_NH[t].tebz_4)-zh);
+		data_tebzh_6.push(parseFloat(Meso_NH[t].tebz_5) + (parseFloat(Meso_NH[t].tebz_5)-zh));zh = parseFloat(Meso_NH[t].tebz_5) + (parseFloat(Meso_NH[t].tebz_5)-zh);
+		data_tebzh_7.push(parseFloat(Meso_NH[t].tebz_6) + (parseFloat(Meso_NH[t].tebz_6)-zh));zh = parseFloat(Meso_NH[t].tebz_6) + (parseFloat(Meso_NH[t].tebz_6)-zh);
+				                       
+		data_tebz_6.push(parseFloat(Meso_NH[t].tebz_6));
+		data_mesoz_2.push(general_config.THAT_W[1]*((general_config.THAT_W[general_config.THAT_W.length-1] - parseFloat(Meso_NH[t].zs))/general_config.THAT_W[general_config.THAT_W.length-1]) + parseFloat(Meso_NH[t].zs));
+		data_mesoz_3.push(general_config.THAT_W[2]*((general_config.THAT_W[general_config.THAT_W.length-1] - parseFloat(Meso_NH[t].zs))/general_config.THAT_W[general_config.THAT_W.length-1]) + parseFloat(Meso_NH[t].zs));
+		
+		data_zs_teb.push((data_mesoz_2[t] +(data_mesoz_3[t] - data_mesoz_2[t])/2) - data_tebz_6[t]);
     }
+		
+		
+	z_min_teb = 0;
+	z_max_teb = 0;
+	z_min_meso = 0;
+	z_max_meso = 0;
+		
+	for (var t=0; t< Meso_NH.length; t++){
+		data_limit_teb.push(data_zs_teb[t] + data_tebzh_1[t]);
+		if((data_zs_teb[t] + data_tebzh_1[t]) < z_min_teb){
+			z_min_teb = data_zs_teb[t] + data_tebzh_1[t];
+		}
+	}
+	for (var t=0; t< Meso_NH.length; t++){
+		data_limit_teb.push(data_zs_teb[t] + data_tebzh_2[t]);
+	}
+	for (var t=0; t< Meso_NH.length; t++){
+		data_limit_teb.push(data_zs_teb[t] + data_tebzh_3[t]);
+	}
+	for (var t=0; t< Meso_NH.length; t++){
+		data_limit_teb.push(data_zs_teb[t] + data_tebzh_4[t]);
+	}
+	for (var t=0; t< Meso_NH.length; t++){
+		data_limit_teb.push(data_zs_teb[t] + data_tebzh_5[t]);
+	}
+	for (var t=0; t< Meso_NH.length; t++){
+		data_limit_teb.push(data_zs_teb[t] + data_tebzh_6[t]);
+	}
+	for (var t=0; t< Meso_NH.length; t++){
+		data_limit_teb.push(data_zs_teb[t] + data_tebzh_7[t]);
+		if((data_zs_teb[t] + data_tebzh_7[t]) > z_max_teb){
+			z_max_teb = data_zs_teb[t] + data_tebzh_7[t];
+		}
+	}
+	
 
 	for (var id = 1; id <= 6; id++) {
 		for (var t=0; t< Meso_NH.length; t++){
 			data_array_temp.push(Meso_NH[t]['teb_'+id]);
+						
 		}
 	}
+	
+	for (var t=0; t< Meso_NH.length; t++){
+		date_limit_meso.push(general_config.THAT_W[0]*((general_config.THAT_W[general_config.THAT_W.length-1] - parseFloat(Meso_NH[t].zs))/general_config.THAT_W[general_config.THAT_W.length-1]) + parseFloat(Meso_NH[t].zs));
+		if((general_config.THAT_W[0]*((general_config.THAT_W[general_config.THAT_W.length-1] - parseFloat(Meso_NH[t].zs))/general_config.THAT_W[general_config.THAT_W.length-1]) + parseFloat(Meso_NH[t].zs)) < z_min_meso){
+			z_min_meso = general_config.THAT_W[0]*((general_config.THAT_W[general_config.THAT_W.length-1] - parseFloat(Meso_NH[t].zs))/general_config.THAT_W[general_config.THAT_W.length-1]) + parseFloat(Meso_NH[t].zs);
+		}
+	}
+	
 	for (var id = 2; id <= 32; id++) {
 		for (var t=0; t< Meso_NH.length; t++){
 			data_array_temp.push(Meso_NH[t]['tht_'+id]);
+			
+			date_limit_meso.push(general_config.THAT_W[id-1]*((general_config.THAT_W[general_config.THAT_W.length-1] - parseFloat(Meso_NH[t].zs))/general_config.THAT_W[general_config.THAT_W.length-1]) + parseFloat(Meso_NH[t].zs));
+		}
+	}
+	for (var t=0; t< Meso_NH.length; t++){
+		date_limit_meso.push(general_config.THAT_W[31]*((general_config.THAT_W[general_config.THAT_W.length-1] - parseFloat(Meso_NH[t].zs))/general_config.THAT_W[general_config.THAT_W.length-1]) + parseFloat(Meso_NH[t].zs) + (general_config.THAT[general_config.THAT.length-1] - general_config.THAT_W[general_config.THAT_W.length-1])*2);
+		if((general_config.THAT_W[31]*((general_config.THAT_W[general_config.THAT_W.length-1] - parseFloat(Meso_NH[t].zs))/general_config.THAT_W[general_config.THAT_W.length-1]) + parseFloat(Meso_NH[t].zs) + (general_config.THAT[general_config.THAT.length-1] - general_config.THAT_W[general_config.THAT_W.length-1])*2) > z_max_meso){
+			z_max_meso = general_config.THAT_W[31]*((general_config.THAT_W[general_config.THAT_W.length-1] - parseFloat(Meso_NH[t].zs))/general_config.THAT_W[general_config.THAT_W.length-1]) + parseFloat(Meso_NH[t].zs) + (general_config.THAT[general_config.THAT.length-1] - general_config.THAT_W[general_config.THAT_W.length-1])*2;
 		}
 	}
 	
     for (var t=0; t< data_array_temp.length; t++){
 		data_array.push((data_array_temp[t] - temp_min)/(temp_max-temp_min));
 	}
+	
+	var x_min = null;
+	var x_max = null;
+	var y_min = null;
+	var y_max = null;
+	
+	for (var t=0; t< Meso_NH.length; t++){
+		var x_o = Meso_NH[t].x - general_config.Coord_X_paris;
+        var y_o = Meso_NH[t].y - general_config.Coord_Y_paris;	
+		var l_x = (Meso_NH[t].x - MesoNH_U[t].x)*2;
+        var l_y = (Meso_NH[t].y - MesoNH_V[t].y)*2;
+		if(x_min != null && x_max != null){
+            if((x_o - l_x/2) < x_min){
+                x_min = x_o - l_x/2;
+            }
+            if((x_o + l_x/2) > x_max){
+                x_max = x_o + l_x/2;
+            }
+        } else {
+            x_min = x_o - l_x/2;
+            x_max = x_o + l_x/2;
+        }
+        
+        if(y_min != null && y_max != null){
+            if((y_o - l_y/2) < y_min){
+                y_min = y_o - l_y/2;
+            }
+            if((y_o + l_y/2) > y_max){
+                y_max = y_o + l_y/2;
+            }
+        } else {
+            y_min = y_o - l_y/2;
+            y_max = y_o + l_y/2;
+        }
+	}
+	
     
     var data_array_32 = new Float32Array(data_array);
     var data_array_temp_32 = new Float32Array(data_array_temp);	
-    var data_zs_32 = new Float32Array(data_zs);			
+    var data_zs_32 = new Float32Array(data_zs);
+	var data_limit_teb_32 = new Float32Array(data_limit_teb);
+	var data_limit_meso_32 = new Float32Array(date_limit_meso);
     
+
     volume.data = data_array_32;
     volume.data_temp = data_array_temp_32;
     volume.data_zs = data_zs_32;
+	volume.limit_meso = data_limit_meso_32;
+	volume.limit_teb = data_limit_teb_32;
+	volume.x_min= x_min;
+	volume.x_max= x_max;
+	volume.y_min= y_min;
+	volume.y_max= y_max;
+	volume.data_zs_teb = data_zs_teb;
+	volume.z_min_teb = z_min_teb;
+	volume.z_max_teb = z_max_teb;
+	volume.z_min_meso = z_min_meso;
+	volume.z_max_meso = z_max_meso;
+	
+	console.log(volume);
+			
     return volume;
     
 }
+

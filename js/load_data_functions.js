@@ -237,13 +237,21 @@ export function loadChosenDataSet() {
 	load_Data("U", "CSV/lambert_U_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_U_2}],	"#ff5733");
 	load_Data("V", "CSV/lambert_V_" + dataset + ".csv", [{'level':2, 'data':general_config.data_points_V_2}],	"#ff5733");
 
+	setTimeout(function(d){
+		general_config.data_volume_3D = create_data_texture(general_config.data_points_O_2,general_config.data_points_U_2,general_config.data_points_V_2, general_config.data_ni, general_config.data_nj, 31 + 6,general_config.temp_min,general_config.temp_max);
+	}, 1000);
+	
+	
+	
 	dataset = dataset.split("_simu")[0];
 	fetch("geojson/roads_" + dataset + ".geojson").then(r => r.json()).then(function( data ) {
 		general_config.data_road = data;
 	});
 	fetch("geojson/buildings_" + dataset + ".geojson").then(r => r.json()).then(function( data ) {
 		general_config.data_build = data;
-		create_buildings(general_config.data_build,scene,$("#type_bati").val());
+		setTimeout(function(d){
+			create_buildings(general_config.data_build,scene,$("#type_bati").val());
+		}, 1000);
 	});
 
 	if ($( "#load_dataset option:selected" ).text() == "Beaubourg" || $( "#load_dataset option:selected" ).text() == "Beaubourg Simu"){
@@ -339,12 +347,12 @@ export function loadChosenData() {
 function closeChoiceContainer() {
 	let choiceContainer = document.getElementById("choose_data_container");
 	choiceContainer.style.height = "0em";
-	console.log(general_config);
 }
 
 function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
 
 	var data = d3.csv(data_url, function (d) {
+		
 		var temp_max = 0;
 		var temp_min = 0;
 		d.forEach(function (d,i) {
@@ -408,7 +416,14 @@ function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
 				TEB_4_var = null,
 				TEB_5_var = null,
 				TEB_6_var = null;
-
+				
+				var TEBZ_1_var = null,
+				TEBZ_2_var = null,
+				TEBZ_3_var = null,
+				TEBZ_4_var = null,
+				TEBZ_5_var = null,
+				TEBZ_6_var = null;
+				
 				if(type_point == "O"){
 					tht_2_var = d.THT_2;
 					tht_3_var = d.THT_3;
@@ -441,12 +456,19 @@ function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
 					tht_30_var = d.THT_30;
 					tht_31_var = d.THT_31;
 					tht_32_var = d.THT_32;
-					TEB_1_var = d.TEB_T1;
-					TEB_2_var = d.TEB_T2;
-					TEB_3_var = d.TEB_T3;
-					TEB_4_var = d.TEB_T4;
-					TEB_5_var = d.TEB_T5;
-					TEB_6_var = d.TEB_T6;
+					TEB_1_var = d.TEB_1;
+					TEB_2_var = d.TEB_2;
+					TEB_3_var = d.TEB_3;
+					TEB_4_var = d.TEB_4;
+					TEB_5_var = d.TEB_5;
+					TEB_6_var = d.TEB_6;
+					TEBZ_1_var = d.TEBZ_1;
+					TEBZ_2_var = d.TEBZ_2;
+					TEBZ_3_var = d.TEBZ_3;
+					TEBZ_4_var = d.TEBZ_4;
+					TEBZ_5_var = d.TEBZ_5;
+					TEBZ_6_var = d.TEBZ_6;
+					
 
 					temp_min = TEB_6_var;
 					temp_max = TEB_6_var;
@@ -467,7 +489,6 @@ function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
 					tht_7: tht_6_var,
 					tht_8: tht_7_var,
 					tht_9: tht_8_var,
-					tht_9: tht_9_var,
 					tht_10: tht_10_var,
 					tht_11: tht_11_var,
 					tht_12: tht_12_var,
@@ -497,15 +518,21 @@ function load_Data(type_point, data_url, data_Meso_NH_to_load_list){
 					teb_4: TEB_4_var,
 					teb_5: TEB_5_var,
 					teb_6: TEB_6_var,
+					tebz_1: TEBZ_1_var,
+					tebz_2: TEBZ_2_var,
+					tebz_3: TEBZ_3_var,
+					tebz_4: TEBZ_4_var,
+					tebz_5: TEBZ_5_var,
+					tebz_6: TEBZ_6_var,
 					zs: zs_var
 				})
 			}
 
 
 		})
-
 		if(type_point == "O"){
-			general_config.data_volume_3D = create_data_texture(general_config.data_points_O_2, general_config.data_ni, general_config.data_nj, 31 + 6,temp_min,temp_max);
+			general_config.temp_min=temp_min;
+			general_config.temp_max=temp_max;
 		}
 
 		return data_Meso_NH_to_load_list
