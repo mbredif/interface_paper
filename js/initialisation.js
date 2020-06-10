@@ -258,20 +258,16 @@ export function init(){
     controls.update();
 
     var light = new THREE.PointLight( 0xffffff, 1, 0 );
-    light.position.set(-6500,6000,1000);
-    scene.add( light );
-    
     var light2 = new THREE.PointLight( 0xffffff, 1, 0 );
-    light2.position.set(-6500,-7500,1000);
-    scene.add( light2 );
-	
 	var light3 = new THREE.PointLight( 0xffffff, 1, 0 );
-    light3.position.set(7500,6000,1000);
-    scene.add( light3 );
-    
     var light4 = new THREE.PointLight( 0xffffff, 1, 0 );
-    light4.position.set(7500,-7500,1000);
-    scene.add( light4 );
+	scene.add( light );
+	scene.add( light2 );
+	scene.add( light3 );
+	scene.add( light4 );
+	
+	
+	
 	
 	//var light5 = new THREE.PointLight( 0xffffff, 1, 0 );
     //light5.position.set(-1000,1000,0);
