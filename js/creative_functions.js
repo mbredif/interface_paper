@@ -3342,3 +3342,17 @@ export function create_data_texture(Meso_NH, MesoNH_U, MesoNH_V, x_length, y_len
     
 }
 
+export function set_light_position(){
+	var x_light_min = general_config.data_volume_3D.x_min - 1000;
+	var y_light_min = general_config.data_volume_3D.y_min - 1000;
+	var x_light_max = general_config.data_volume_3D.x_max + 1000;
+	var y_light_max = general_config.data_volume_3D.y_max + 1000;
+	var z_light = 600;
+		 	
+	scene.children[0].position.set(x_light_min * general_config.cst_X,z_light * general_config.cst_Z,-y_light_min * general_config.cst_Y);
+	scene.children[1].position.set(x_light_min * general_config.cst_X,z_light * general_config.cst_Z,-y_light_max * general_config.cst_Y);
+	scene.children[2].position.set(x_light_max * general_config.cst_X,z_light * general_config.cst_Z,-y_light_min * general_config.cst_Y);
+	scene.children[3].position.set(x_light_max * general_config.cst_X,z_light * general_config.cst_Z,-y_light_max * general_config.cst_Y);
+	
+}
+
