@@ -100,7 +100,8 @@
 					<div class="interface_labels">Color</div>
 					<div id="color_data_control">
 						<select id="color_data_control_input">
-							<option value="level" selected>Level represented by color</option>
+							<option value="temp-fcm" selected>Temperature represented by color - fixed cm</option>
+							<option value="level">Level represented by color</option>
 							<option value="temp">Temperature represented by color</option>
 						</select>
 						<div id="color_temp_control">
@@ -356,6 +357,8 @@
 		varying vec3 voxel_position;
 		varying float transparency;
 		varying float tempPercentage;
+		
+		varying float temp_val;
 
 		float sample1(vec3 texcoords) {
 			/* Sample float value from a 3D texture. Assumes intensity data. */
@@ -430,6 +433,7 @@
 			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
 
 			float val = sample1(voxel_position/u_size);
+			temp_val = val;
 
 			if (val<u_clim[0] || val> u_clim[1]) {
 				tempPercentage = -1.0;
@@ -483,6 +487,8 @@
 		
 		varying float voxel_point_level;
 		
+		varying float temp_val;
+		
 
 		varying float transparency;
 		varying float tempPercentage;
@@ -497,7 +503,24 @@
 				} else{
 					gl_FragColor = texture2D(u_cmdata, vec2(tempPercentage, 0.5));
 				}
-			} else {
+			} else if(active_color_control == 2){
+					float newval;
+					if(temp_val<300.8 && temp_val >= 300.02){
+						newval = 5.5/6.0;
+					} else if(temp_val<300.02 && temp_val >= 299.64){
+						newval = 4.5/6.0;
+					} else if(temp_val<299.64 && temp_val >= 299.36){
+						newval = 3.5/6.0;
+					} else if(temp_val<299.36 && temp_val >= 298.98){
+						newval = 2.5/6.0;
+					} else if(temp_val<298.98 && temp_val >= 298.40){
+						newval = 1.5/6.0;
+					} else if(temp_val<298.40 && temp_val >= 297.92){
+						newval = 0.5/6.0;
+					}
+					gl_FragColor = texture2D(u_cmdata, vec2(newval, 0.5));
+				
+				} else {
 			
 				//float val = fract((float(int(voxel_position[2]))+0.5)/(u_size[2]/7.0));
 				//float val = mod((float(int(voxel_position[2]))+0.5),6.0)/6.0;
@@ -566,6 +589,8 @@
 		varying vec3 v_position;
 		varying float transparency;
 		varying float tempPercentage;
+		
+		varying float temp_val;
 
 		float sample1(vec3 texcoords) {
 			/* Sample float value from a 3D texture. Assumes intensity data. */
@@ -637,6 +662,8 @@
 			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
 
 			float val = sample1(voxel_position/u_size);
+			
+			temp_val = val;
 
 			if (val<u_clim[0] || val> u_clim[1]) {
 				tempPercentage = -1.0;
@@ -728,6 +755,8 @@
 		varying vec3 v_position;
 		varying float transparency;
 		varying float tempPercentage;
+		
+		varying float temp_val;
 
 		float sample1(vec3 texcoords) {
 			/* Sample float value from a 3D texture. Assumes intensity data. */
@@ -799,6 +828,8 @@
 			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
 
 			float val = sample1(voxel_position/u_size);
+			
+			temp_val = val;
 
 			if (val<u_clim[0] || val> u_clim[1]) {
 				tempPercentage = -1.0;
@@ -887,6 +918,8 @@
 		varying vec3 v_position;
 		varying float transparency;
 		varying float tempPercentage;
+		
+		varying float temp_val;
 
 		float sample1(vec3 texcoords) {
 			/* Sample float value from a 3D texture. Assumes intensity data. */
@@ -958,6 +991,8 @@
 			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
 
 			float val = sample1(voxel_position/u_size);
+			
+			temp_val = val;
 
 			if (val<u_clim[0] || val> u_clim[1]) {
 				tempPercentage = -1.0;
@@ -1047,6 +1082,8 @@
 		varying vec3 v_position;
 		varying float transparency;
 		varying float tempPercentage;
+		
+		varying float temp_val;
 
 		float sample1(vec3 texcoords) {
 			/* Sample float value from a 3D texture. Assumes intensity data. */
@@ -1118,6 +1155,8 @@
 			voxel_position = vec3(voxel_position_x,voxel_position_y,voxel_position_z);
 
 			float val = sample1(voxel_position/u_size);
+			
+			temp_val = val;
 
 			if (val<u_clim[0] || val> u_clim[1]) {
 				tempPercentage = -1.0;
@@ -1291,6 +1330,24 @@
 						float new_val = (val - u_clim[0])/(u_clim[1] - u_clim[0]);
 						gl_FragColor = texture2D(u_cmdata, vec2(new_val, 0.5));
 					}
+				} else if(active_color_control == 2){
+					float val = sample1(voxel_position/u_size);
+					float newval;
+					if(val<300.8 && val >= 300.02){
+						newval = 5.5/6.0;
+					} else if(val<300.02 && val >= 299.64){
+						newval = 4.5/6.0;
+					} else if(val<299.64 && val >= 299.36){
+						newval = 3.5/6.0;
+					} else if(val<299.36 && val >= 298.98){
+						newval = 2.5/6.0;
+					} else if(val<298.98 && val >= 298.40){
+						newval = 1.5/6.0;
+					} else if(val<298.40 && val >= 297.92){
+						newval = 0.5/6.0;
+					}
+					gl_FragColor = texture2D(u_cmdata, vec2(newval, 0.5));
+				
 				} else {
 					//float val = fract(float(int(voxel_position[2]))/(u_size[2]/7.0));
 					//float val = mod((float(int(voxel_position[2]))+0.5),6.0)/6.0;
@@ -1536,6 +1593,22 @@
 								val = (firstval - u_clim[0])/(u_clim[1] - u_clim[0]);
 							}
 
+					} else if(active_color_control == 2){
+						float anteval = sample1(voxel_position/u_size);
+						if(anteval<300.8 && anteval >= 300.02){
+							val = 5.5/6.0;
+						} else if(anteval<300.02 && anteval >= 299.64){
+							val = 4.5/6.0;
+						} else if(anteval<299.64 && anteval >= 299.36){
+							val = 3.5/6.0;
+						} else if(anteval<299.36 && anteval >= 298.98){
+							val = 2.5/6.0;
+						} else if(anteval<298.98 && anteval >= 298.40){
+							val = 1.5/6.0;
+						} else if(anteval<298.40 && anteval >= 297.92){
+							val = 0.5/6.0;
+						}
+					
 					} else {
 						//val = fract(float(int(voxel_position_z))/(u_size[2]/7.0));
 						//val = mod((float(int(voxel_position[2]))+0.5),6.0)/6.0;
