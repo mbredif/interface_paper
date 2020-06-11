@@ -3248,6 +3248,31 @@ export function create_data_texture(Meso_NH, MesoNH_U, MesoNH_V, x_length, y_len
 		}
 	}
 	
+	var temp_teb_1= [];
+	var temp_teb_2= [];
+	var temp_teb_3= [];
+	var temp_teb_4= [];
+	var temp_teb_5= [];
+	var temp_teb_6= [];
+	
+	for (var t=0; t< Meso_NH.length; t++){
+		if(Meso_NH[t].teb_1 != 999){
+			temp_teb_1.push(parseFloat(Meso_NH[t].teb_1));
+		temp_teb_2.push(parseFloat(Meso_NH[t].teb_2));
+		temp_teb_3.push(parseFloat(Meso_NH[t].teb_3));
+		temp_teb_4.push(parseFloat(Meso_NH[t].teb_4));
+		temp_teb_5.push(parseFloat(Meso_NH[t].teb_5));
+		temp_teb_6.push(parseFloat(Meso_NH[t].teb_6));
+		}
+		
+	}
+	
+	console.log("teb_1",Math.min(...temp_teb_1),Math.max(...temp_teb_1));
+	console.log("teb_2",Math.min(...temp_teb_2),Math.max(...temp_teb_2));
+	console.log("teb_3",Math.min(...temp_teb_3),Math.max(...temp_teb_3));
+	console.log("teb_4",Math.min(...temp_teb_4),Math.max(...temp_teb_4));
+	console.log("teb_5",Math.min(...temp_teb_5),Math.max(...temp_teb_5));
+	console.log("teb_6",Math.min(...temp_teb_6),Math.max(...temp_teb_6));
 
 	for (var id = 1; id <= 6; id++) {
 		for (var t=0; t< Meso_NH.length; t++){
