@@ -104,7 +104,7 @@ export var general_config = {
 	"grid_building":null,
 	"buildings_transparency":1,
 	"points_transparency":1,
-	"active_color_control":"level"
+	"active_color_control":2
 }	
 
 export function init(){
@@ -159,8 +159,11 @@ export function init(){
 		if($("#color_data_control_input").val() == "temp"){
 			 general_config.active_color_control = 1;
 			$("#color_temp_control").show();
-		} else {
+		} else if($("#color_data_control_input").val() == "level") {
 			general_config.active_color_control = 0;
+			$("#color_temp_control").hide();
+		} else {
+			general_config.active_color_control = 2;
 			$("#color_temp_control").hide();
 		}
         recreate_scene();
