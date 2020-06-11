@@ -1,5 +1,5 @@
 import {general_config} from './initialisation.js'
-import { recreate_scene,change_buildings_transparency } from './creative_functions.js';
+import { recreate_scene,change_buildings_transparency,change_points_transparency,change_horizontal_planes_transparency,change_vertical_planes_transparency } from './creative_functions.js';
 
 
 // filter = TEMPERATURE SLIDER
@@ -16,10 +16,10 @@ $( function() {
       tempMax = general_config.temp_array[1]-273.15
       let tempMinCalc = tempMin + ((tempMax - tempMin)*(ui.values[ 0 ]/100))
       let tempMaxCalc = tempMin + ((tempMax - tempMin)*(ui.values[ 1 ]/100))
-      $( "#temperatures-label" ).val( tempMinCalc.toFixed(2) + "°C - " + tempMaxCalc.toFixed(2) + "°C" );    
-      general_config.temp_min_factor = (ui.values[ 0 ]/100)*2*Math.PI;  
+      $( "#temperatures-label" ).val( tempMinCalc.toFixed(2) + "°C - " + tempMaxCalc.toFixed(2) + "°C" );
+      general_config.temp_min_factor = (ui.values[ 0 ]/100)*2*Math.PI;
       general_config.temp_max_factor = (ui.values[ 1 ]/100)*2*Math.PI;
-      
+
     },
     stop: function (e, ui) {
       recreate_scene()
@@ -27,7 +27,7 @@ $( function() {
   });
 
   $( "#temperatures-label" ).val(`${tempMin.toFixed(2)}°C - ${tempMax.toFixed(2)}°C`)
-    
+
 });
 
 // filter = Z SLIDER
@@ -49,7 +49,7 @@ $( function() {
     });
     $( "#z-slider-label" ).val( $( "#z-slider-range" ).slider( "values", 0 ) +
     " - " + $( "#z-slider-range" ).slider( "values", 1 ));
-    
+
 });
 
 // filter = H SLIDER
@@ -71,7 +71,7 @@ $( function() {
     });
     $( "#h-slider-label" ).val( $( "#h-slider-range" ).slider( "values", 0 ) +
     " - " + $( "#h-slider-range" ).slider( "values", 1 ));
-    
+
 });
 
 //filter = X SLIDER
@@ -92,7 +92,7 @@ $( function() {
     });
     $( "#x-slider-label" ).val( $( "#x-slider-range" ).slider( "values", 0 ) +
     " - " + $( "#x-slider-range" ).slider( "values", 1 ));
-    
+
 });
 
 // filter = Y SLIDER
@@ -113,13 +113,13 @@ $( function() {
     });
     $( "#y-slider-label" ).val( $( "#y-slider-range" ).slider( "values", 0 ) +
     " - " + $( "#y-slider-range" ).slider( "values", 1 ));
-    
+
 });
 
 // graphic = h factor
 $( function() {
   $( "#h_slider" ).slider({
-    
+
     min: 1,
     max: 29,
     value: 10,
@@ -141,7 +141,7 @@ $( function() {
 // graphic = size of points
 $( function() {
   $( "#size_slider" ).slider({
-    
+
     min: 1,
     max: 200,
     value: general_config.regular_size*150,
@@ -150,7 +150,7 @@ $( function() {
     },
     stop: function (e, ui) {
       general_config.regular_size = ui.value/150;
-      //remet ici pour qu'un simple clic sur slider handle change quand même le texte, vu que ça change la taille des points 
+      //remet ici pour qu'un simple clic sur slider handle change quand même le texte, vu que ça change la taille des points
       // si on tape une valeur supérieur à 1.33 avant
       $("#size_text_input").val((ui.value/150).toFixed(2));
       recreate_scene()
@@ -161,7 +161,7 @@ $( function() {
 // graphic : relative size factor
 $( function() {
   $( "#relative_size_factor_size_slider" ).slider({
-    
+
     min: 1,
     max: 200,
     value: general_config.relative_size_factor*100,
@@ -178,7 +178,7 @@ $( function() {
       }
     },
     stop: function (e, ui) {
-      
+
       recreate_scene()
     }
   });
@@ -188,7 +188,7 @@ $( function() {
 // graphic = general density slider
 $( function() {
   $( "#density_slider" ).slider({
-    
+
     min: 1,
     max: 200,
     value: general_config.particle_density * 10000,
@@ -206,7 +206,7 @@ $( function() {
 // graphic = relative density factor slider
 $( function() {
   $( "#relative_density_factor_slider" ).slider({
-    
+
     min: 0,
     max: 200,
     value: general_config.relative_density_factor*100,
@@ -231,35 +231,50 @@ $( function() {
 
 // graphic = transparency slider
 $( function() {
-  $( "#transparency_slider" ).slider({
-    
+  $( "#horizontal_planes_transparency_slider" ).slider({
+
     min: 0,
     max: 100,
-    value: general_config.transparency_factor * 100,
+    value: general_config.horizontal_planes_transparency * 100,
     slide: function (event, ui) {
-      general_config.transparency_factor = ui.value/100;
-      $("#transparency_control_label").html("transparency_factor: " + general_config.transparency_factor);
+      general_config.horizontal_planes_transparency = ui.value/100;
+      $("#horizontal_planes_transparency_control_label").html("horizontal_planes_transparency: " + general_config.horizontal_planes_transparency);
     },
     stop: function (e, ui) {
+						change_horizontal_planes_transparency(general_config.horizontal_planes_transparency);
+    }
+  });
+} );
 
-      recreate_scene()
+$( function() {
+  $( "#vertical_planes_transparency_slider" ).slider({
+
+    min: 0,
+    max: 100,
+    value: general_config.vertical_planes_transparency * 100,
+    slide: function (event, ui) {
+      general_config.vertical_planes_transparency = ui.value/100;
+      $("#vertical_planes_transparency_control_label").html("vertical_planes_transparency: " + general_config.vertical_planes_transparency);
+    },
+    stop: function (e, ui) {
+						change_vertical_planes_transparency(general_config.vertical_planes_transparency);
     }
   });
 } );
 
 $( function() {
   $( "#points_transparency_slider" ).slider({
-    
+
     min: 0,
     max: 100,
     value: general_config.points_transparency * 100,
     slide: function (event, ui) {
       general_config.points_transparency = ui.value/100;
-      $("#points_transparency_control_label").html("points_transparency_factor: " + general_config.points_transparency);
+      $("#points_transparency_control_label").html("points_transparency: " + general_config.points_transparency);
     },
     stop: function (e, ui) {
 
-      recreate_scene()
+				change_points_transparency(general_config.points_transparency);
     }
   });
 } );
@@ -267,14 +282,14 @@ $( function() {
 // graphic = number of points real plane slider
 $( function() {
   $( "#number_of_points_real_plane_slider" ).slider({
-    
+
     min: 1,
     max: 200,
     value: general_config.number_of_points_real_plane ,
     slide: function (event, ui) {
       general_config.number_of_points_real_plane = ui.value;
       $("#number_of_points_real_plane_label").html("number_of_points_real_plane : " + general_config.number_of_points_real_plane);
-     
+
     },
     stop: function (e, ui) {
 
@@ -286,7 +301,7 @@ $( function() {
 // animation = animation speed slider
 $( function() {
   $( "#animation_speed_slider" ).slider({
-    
+
     min: 0,
     max: 200,
     value: general_config.animation_speed_factor*10000+100 ,
@@ -304,7 +319,7 @@ $( function() {
 // buildings_transparency = buildings_transparency slider
 $( function() {
   $( "#buildings_transparency_slider" ).slider({
-    
+
     min: 0,
     max: 100,
     value: general_config.buildings_transparency*100 ,

@@ -247,7 +247,7 @@ function nouvelObjet() {
     newObj.particle_density= general_config.particle_density;
     newObj.relative_density_factor= general_config.relative_density_factor;
     newObj.relative_size_factor= general_config.relative_size_factor;
-    newObj.transparency_factor= general_config.transparency_factor;
+    newObj.horizontal_planes_transparency= general_config.horizontal_planes_transparency;
     newObj.h_min= general_config.h_min;
     newObj.h_max= general_config.h_max;
     newObj.z_min= general_config.z_min;

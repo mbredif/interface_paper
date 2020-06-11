@@ -1,30 +1,29 @@
 function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array,grid,id_sbl_array,id_meso_array,temperature_scale,THAT,THAT_W,HCanopy,HCanopy_w){
-		
+
 		general_config.temp_values = [];
-		var ni = general_config.data_ni, 
+		var ni = general_config.data_ni,
 		nj = general_config.data_nj;
-		
+
 		var coord_array = [];
 		var colors = [];
 		var sizes = [];
-		var transparency_factor_array = [];
 		var custompercentagearray = [];
 		var z_position_array = [];
 		var x_position_array = [];
 		var y_position_array = [];
-		
+
 		var h_position_array = [];
-		
+
 		general_config.z_min = null;
 		general_config.z_max = null;
 		general_config.x_min = null;
 		general_config.x_max = null;
 		general_config.y_min = null;
 		general_config.y_max = null;
-		
+
 		general_config.h_min = null;
 		general_config.h_max = null;
-		
+
 		for(var m=0; m<general_config.id_sbl_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
@@ -59,16 +58,16 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-					
-					
+
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-									
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h - h_w)*2;
-					
+
 					if(general_config.h_min != null && general_config.h_max != null){
 						if(h_w < general_config.h_min){
 							general_config.h_min = h_w;
@@ -80,7 +79,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.h_min = h_w;
 						general_config.h_max = (h_w + l_z);
 					}
-					
+
 					if(general_config.z_min != null && general_config.z_max != null){
 						if((z_o - l_z/2) < general_config.z_min){
 							general_config.z_min = z_o - l_z/2;
@@ -92,7 +91,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.z_min = z_o - l_z/2;
 						general_config.z_max = z_o + l_z/2;
 					}
-					
+
 					if(general_config.x_min != null && general_config.x_max != null){
 						if((x_o - l_x/2) < general_config.x_min){
 							general_config.x_min = x_o - l_x/2;
@@ -104,7 +103,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.x_min = x_o - l_x/2;
 						general_config.x_max = x_o + l_x/2;
 					}
-					
+
 					if(general_config.y_min != null && general_config.y_max != null){
 						if((y_o - l_y/2) < general_config.y_min){
 							general_config.y_min = y_o - l_y/2;
@@ -116,17 +115,17 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.y_min = y_o - l_y/2;
 						general_config.y_max = y_o + l_y/2;
 					}
-					
+
 				}
 			}
-		}	
-		
+		}
+
 
 		for(var m=0; m<general_config.id_meso_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
 					var index_1 = j*ni + i;
-					
+
 					var h;
 					var h_w;
 					switch(general_config.id_meso_array[m]){
@@ -257,15 +256,15 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-													
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-					
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h-h_w)*2;
-									
+
 					if(general_config.h_min != null && general_config.h_max != null){
 						if(h_w < general_config.h_min){
 							general_config.h_min = h_w;
@@ -277,7 +276,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.h_min = h_w;
 						general_config.h_max = (h_w + l_z);
 					}
-						
+
 					if(general_config.z_min != null && general_config.z_max != null){
 						if((z_o - l_z/2) < general_config.z_min){
 							general_config.z_min = z_o - l_z/2;
@@ -289,7 +288,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.z_min = z_o - l_z/2;
 						general_config.z_max = z_o + l_z/2;
 					}
-					
+
 					if(general_config.x_min != null && general_config.x_max != null){
 						if((x_o - l_x/2) < general_config.x_min){
 							general_config.x_min = x_o - l_x/2;
@@ -301,7 +300,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.x_min = x_o - l_x/2;
 						general_config.x_max = x_o + l_x/2;
 					}
-					
+
 					if(general_config.y_min != null && general_config.y_max != null){
 						if((y_o - l_y/2) < general_config.y_min){
 							general_config.y_min = y_o - l_y/2;
@@ -313,12 +312,12 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.y_min = y_o - l_y/2;
 						general_config.y_max = y_o + l_y/2;
 					}
-				
-					
+
+
 				}
 			}
-		}	
-		
+		}
+
 		for(var m=0; m<general_config.id_sbl_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
@@ -360,17 +359,17 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-					
-					
+
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-									
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h - h_w)*2;
-					
-													
+
+
 					var tmin = temperature_scale[0];
 					var tmax = temperature_scale[1];
 					var percentage_color = (temp - tmin)/(tmax - tmin);
@@ -379,21 +378,21 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					} else if(percentage_color >1){
 						percentage_color = 1;
 					}
-					
-					
+
+
 					general_config.temp_values.push(parseFloat(temp));
 					var color_hex = getHCLcolor(percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-												
+
 					var color_rgb = hexToRgb(color_hex)
-					
+
 					var color_r = color_rgb.r/255;
 					var color_g = color_rgb.g/255;
 					var color_b = color_rgb.b/255;
-						
+
 					var cell_volume = l_x*l_y*l_z;
-					
+
 					var relative_density;
-					
+
 					if(general_config.relative_density_factor < 1){
 						var add_factor = 1-general_config.relative_density_factor;
 						if(percentage_color < 0.5){
@@ -415,12 +414,12 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							relative_density = general_config.particle_density + general_config.particle_density*add_factor*(percentage_color-0.5)*2;
 						}
 					}
-					
+
 					var particle_length = parseInt(relative_density*cell_volume);
-					
+
 					var size;
 					var basic_size = 10000;
-					
+
 					if(general_config.relative_size_factor < 1){
 						var add_factor = 1-general_config.relative_size_factor;
 						if(percentage_color < 0.5){
@@ -442,7 +441,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							size = parseInt(basic_size + basic_size*add_factor*(percentage_color-0.5)*2);
 						}
 					}
-											
+
 					for(var p =0; p< particle_length; p++){
 						var pX = (Math.random()-0.5)*2 * (l_x/2) + x_o,
 						 pY = (Math.random()-0.5)*2 * (l_y/2) + y_o,
@@ -452,7 +451,6 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						coord_array.push(-pY*general_config.cst_Y);
 						colors.push(color_r);colors.push(color_g);colors.push(color_b);
 						sizes.push(size);
-						transparency_factor_array.push(general_config.transparency_factor);
 						custompercentagearray.push(percentage_color*2*Math.PI);
 						z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
 						x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
@@ -461,14 +459,14 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					}
 				}
 			}
-		}	
-		
+		}
+
 
 		for(var m=0; m<general_config.id_meso_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
 					var index_1 = j*ni + i;
-					
+
 					var temp;
 					var h;
 					var h_w;
@@ -631,16 +629,16 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-													
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-					
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h-h_w)*2;
-									
-									
+
+
 					var tmin = temperature_scale[0];
 					var tmax = temperature_scale[1];
 					var percentage_color = (temp - tmin)/(tmax - tmin);
@@ -649,20 +647,20 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					} else if(percentage_color >1){
 						percentage_color = 1;
 					}
-										
+
 					general_config.temp_values.push(parseFloat(temp));
 					var color_hex = getHCLcolor(percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-												
+
 					var color_rgb = hexToRgb(color_hex)
-					
+
 					var color_r = color_rgb.r/255;
 					var color_g = color_rgb.g/255;
 					var color_b = color_rgb.b/255;
-						
+
 					var cell_volume = l_x*l_y*l_z;
-					
+
 					var relative_density;
-					
+
 					if(general_config.relative_density_factor < 1){
 						var add_factor = 1-general_config.relative_density_factor;
 						if(percentage_color < 0.5){
@@ -684,13 +682,13 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							relative_density = general_config.particle_density + general_config.particle_density*add_factor*(percentage_color-0.5)*2;
 						}
 					}
-					
-					
+
+
 					var particle_length = parseInt(relative_density*cell_volume);
-					
+
 					var size;
 					var basic_size = 10000;
-					
+
 					if(general_config.relative_size_factor < 1){
 						var add_factor = 1-general_config.relative_size_factor;
 						if(percentage_color < 0.5){
@@ -712,7 +710,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							size = parseInt(basic_size + basic_size*add_factor*(percentage_color-0.5)*2);
 						}
 					}
-						
+
 					for(var p =0; p< particle_length; p++){
 						var pX = (Math.random()-0.5)*2 * (l_x/2) + x_o,
 						  pY = (Math.random()-0.5)*2 * (l_y/2) + y_o,
@@ -722,42 +720,39 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						coord_array.push(-pY*general_config.cst_Y);
 						colors.push(color_r);colors.push(color_g);colors.push(color_b);
 						sizes.push(size);
-						transparency_factor_array.push(general_config.transparency_factor);
 						custompercentagearray.push(percentage_color*2*Math.PI);
 						z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
 						x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
 						y_position_array.push((pY - general_config.y_min)/(general_config.y_max - general_config.y_min));
 						h_position_array.push(((pZ-MesoNH_O_array[index_1].zs)-general_config.h_min)/(general_config.h_max - general_config.h_min));
 					}
-					
+
 				}
 			}
-		}	
-		
-				
+		}
+
+
 		var coord_array_32 = new Float32Array(coord_array);
-		var colors_32 = new Float32Array(colors);  
+		var colors_32 = new Float32Array(colors);
 		var sizes_32 = new Float32Array(sizes);
-		var transparency_factor_32 = new Float32Array(transparency_factor_array);
 		var custompercentage_32 = new Float32Array(custompercentagearray);
 		var z_position_array_32 = new Float32Array(z_position_array);
 		var x_position_array_32 = new Float32Array(x_position_array);
 		var y_position_array_32 = new Float32Array(y_position_array);
 		var h_position_array_32 = new Float32Array(h_position_array);
-		
+
 		var material;
 		var bufferGeometry = new THREE.BufferGeometry();
-		
+
 		bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
 		bufferGeometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors_32, 3 ) );
 		bufferGeometry.setAttribute( 'customsize', new THREE.BufferAttribute(sizes_32,1));
-		bufferGeometry.setAttribute( 'customtransparency', new THREE.BufferAttribute(transparency_factor_32,1));
 		bufferGeometry.setAttribute( 'custompercentage', new THREE.BufferAttribute(custompercentage_32,1));
 		bufferGeometry.setAttribute( 'z_position', new THREE.BufferAttribute(z_position_array_32,1));
 		bufferGeometry.setAttribute( 'x_position', new THREE.BufferAttribute(x_position_array_32,1));
 		bufferGeometry.setAttribute( 'y_position', new THREE.BufferAttribute(y_position_array_32,1));
 		bufferGeometry.setAttribute( 'h_position', new THREE.BufferAttribute(h_position_array_32,1));
-			
+
 		if(general_config.is_animated == false){
 			material = new THREE.ShaderMaterial( {
 				uniforms: {
@@ -803,7 +798,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			} else if(general_config.animation_parameter == 'Z'){
 				material = new THREE.ShaderMaterial( {
 					uniforms: {
@@ -826,7 +821,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			} else if(general_config.animation_parameter == 'X'){
 				material = new THREE.ShaderMaterial( {
 					uniforms: {
@@ -849,7 +844,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			} else if(general_config.animation_parameter == 'Y'){
 				material = new THREE.ShaderMaterial( {
 					uniforms: {
@@ -872,46 +867,45 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			}
 		}
-		
-	
+
+
 		var point = new THREE.Points( bufferGeometry, material);
-				
-		create_temp_histogram();		
-				
+
+		create_temp_histogram();
+
 		general_config.grid.add(point);
 		scene.add(general_config.grid);
 	}
-	
+
 	function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array,grid,id_sbl_array,id_meso_array,temperature_scale,THAT,THAT_W,HCanopy,HCanopy_w){
-	
+
 		general_config.temp_values = [];
-		var ni = general_config.data_ni, 
+		var ni = general_config.data_ni,
 		nj = general_config.data_nj;
-				
+
 		var coord_array = [];
 		var colors = [];
 		var sizes = [];
-		var transparency_factor_array = [];
 		var custompercentagearray = [];
 		var z_position_array = [];
 		var x_position_array = [];
 		var y_position_array = [];
-		
+
 		var h_position_array = [];
-		
+
 		general_config.z_min = null;
 		general_config.z_max = null;
 		general_config.x_min = null;
 		general_config.x_max = null;
 		general_config.y_min = null;
 		general_config.y_max = null;
-		
+
 		general_config.h_min = null;
 		general_config.h_max = null;
-		
+
 		for(var m=0; m<general_config.id_sbl_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
@@ -946,16 +940,16 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-					
-					
+
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-									
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h - h_w)*2;
-					
+
 					if(general_config.h_min != null && general_config.h_max != null){
 						if(h_w < general_config.h_min){
 							general_config.h_min = h_w;
@@ -967,7 +961,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.h_min = h_w;
 						general_config.h_max = (h_w + l_z);
 					}
-					
+
 					if(general_config.z_min != null && general_config.z_max != null){
 						if((z_o - l_z/2) < general_config.z_min){
 							general_config.z_min = z_o - l_z/2;
@@ -979,7 +973,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.z_min = z_o - l_z/2;
 						general_config.z_max = z_o + l_z/2;
 					}
-					
+
 					if(general_config.x_min != null && general_config.x_max != null){
 						if((x_o - l_x/2) < general_config.x_min){
 							general_config.x_min = x_o - l_x/2;
@@ -991,7 +985,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.x_min = x_o - l_x/2;
 						general_config.x_max = x_o + l_x/2;
 					}
-					
+
 					if(general_config.y_min != null && general_config.y_max != null){
 						if((y_o - l_y/2) < general_config.y_min){
 							general_config.y_min = y_o - l_y/2;
@@ -1003,17 +997,17 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.y_min = y_o - l_y/2;
 						general_config.y_max = y_o + l_y/2;
 					}
-					
+
 				}
 			}
-		}	
-		
+		}
+
 
 		for(var m=0; m<general_config.id_meso_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
 					var index_1 = j*ni + i;
-					
+
 					var h;
 					var h_w;
 					switch(general_config.id_meso_array[m]){
@@ -1144,15 +1138,15 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-													
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-					
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h-h_w)*2;
-									
+
 					if(general_config.h_min != null && general_config.h_max != null){
 						if(h_w < general_config.h_min){
 							general_config.h_min = h_w;
@@ -1164,7 +1158,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.h_min = h_w;
 						general_config.h_max = (h_w + l_z);
 					}
-						
+
 					if(general_config.z_min != null && general_config.z_max != null){
 						if((z_o - l_z/2) < general_config.z_min){
 							general_config.z_min = z_o - l_z/2;
@@ -1176,7 +1170,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.z_min = z_o - l_z/2;
 						general_config.z_max = z_o + l_z/2;
 					}
-					
+
 					if(general_config.x_min != null && general_config.x_max != null){
 						if((x_o - l_x/2) < general_config.x_min){
 							general_config.x_min = x_o - l_x/2;
@@ -1188,7 +1182,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.x_min = x_o - l_x/2;
 						general_config.x_max = x_o + l_x/2;
 					}
-					
+
 					if(general_config.y_min != null && general_config.y_max != null){
 						if((y_o - l_y/2) < general_config.y_min){
 							general_config.y_min = y_o - l_y/2;
@@ -1200,12 +1194,12 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.y_min = y_o - l_y/2;
 						general_config.y_max = y_o + l_y/2;
 					}
-				
-					
+
+
 				}
 			}
-		}	
-		
+		}
+
 		for(var m=0; m<general_config.id_sbl_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
@@ -1247,63 +1241,63 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-					
+
 					var x_u = MesoNH_U_array[index_1].x - general_config.Coord_X_paris;
 					var y_u = MesoNH_U_array[index_1].y - general_config.Coord_Y_paris;
 					var z_u = MesoNH_U_array[index_1].zs + h;
-					
+
 					var x_v = MesoNH_V_array[index_1].x - general_config.Coord_X_paris;
 					var y_v = MesoNH_V_array[index_1].y - general_config.Coord_Y_paris;
 					var z_v = MesoNH_V_array[index_1].zs + h;
-					
+
 					var z_o = MesoNH_O_array[index_1].zs + h;
-					
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2
-					
-					//up				
-					coord_array.push(x_u*general_config.cst_X); 
+
+					//up
+					coord_array.push(x_u*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
 					coord_array.push(x_u*general_config.cst_X);
-					coord_array.push(z_o*general_config.cst_Z); 
-					coord_array.push(-y_v*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-y_v*general_config.cst_Y);
-					
-					coord_array.push(x_u*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
+					coord_array.push(z_o*general_config.cst_Z);
+					coord_array.push(-y_v*general_config.cst_Y);
+
+					coord_array.push(x_u*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-y_v*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
-					
+
 					//down
-					coord_array.push(x_u*general_config.cst_X); 
+					coord_array.push(x_u*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-y_v*general_config.cst_Y);
-					coord_array.push(x_u*general_config.cst_X); 
+					coord_array.push(x_u*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-y_v*general_config.cst_Y);
-					
-					coord_array.push(x_u*general_config.cst_X); 
+
+					coord_array.push(x_u*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-y_v*general_config.cst_Y);
-					
-					
+
+
 					var tmin = temperature_scale[0];
 					var tmax = temperature_scale[1];
 					var percentage_color = (temp - tmin)/(tmax - tmin);
@@ -1312,40 +1306,39 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					} else if(percentage_color >1){
 						percentage_color = 1;
 					}
-					
+
 					general_config.temp_values.push(parseFloat(temp));
 					var color_hex = getHCLcolor(percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-												
+
 					var color_rgb = hexToRgb(color_hex)
-					
+
 					var color_r = color_rgb.r/255;
 					var color_g = color_rgb.g/255;
 					var color_b = color_rgb.b/255;
-					var transparency = general_config.transparency_factor;
-								
+
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
-					                                                               
+
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
-					
+
 				}
 			}
-		}	
+		}
 
 		for(var m=0; m<general_config.id_meso_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
 					var index_1 = j*ni + i;
-					
+
 					var temp;
 					var h;
 					var h_w;
@@ -1508,63 +1501,63 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-													
+
 					var x_u = MesoNH_U_array[index_1].x - general_config.Coord_X_paris;
 					var y_u = MesoNH_U_array[index_1].y - general_config.Coord_Y_paris;
 					var z_u = MesoNH_U_array[index_1].zs + h;
-					
+
 					var x_v = MesoNH_V_array[index_1].x - general_config.Coord_X_paris;
 					var y_v = MesoNH_V_array[index_1].y - general_config.Coord_Y_paris;
 					var z_v = MesoNH_V_array[index_1].zs + h;
-					
+
 					var z_o = MesoNH_O_array[index_1].zs + h;
-					
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2
-					
-					//up				
-					coord_array.push(x_u*general_config.cst_X); 
+
+					//up
+					coord_array.push(x_u*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
-					coord_array.push(x_u*general_config.cst_X); 
+					coord_array.push(x_u*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-y_v*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-y_v*general_config.cst_Y);
-					
-					coord_array.push(x_u*general_config.cst_X); 
+
+					coord_array.push(x_u*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-y_v*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
-					
+
 					//down
-					coord_array.push(x_u*general_config.cst_X); 
+					coord_array.push(x_u*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-y_v*general_config.cst_Y);
-					coord_array.push(x_u*general_config.cst_X); 
+					coord_array.push(x_u*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-y_v*general_config.cst_Y);
-					
-					coord_array.push(x_u*general_config.cst_X); 
+
+					coord_array.push(x_u*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-(y_v + l_y)*general_config.cst_Y);
-					coord_array.push((x_u + l_x)*general_config.cst_X); 
+					coord_array.push((x_u + l_x)*general_config.cst_X);
 					coord_array.push(z_o*general_config.cst_Z);
 					coord_array.push(-y_v*general_config.cst_Y);
-					
-					
+
+
 					var tmin = temperature_scale[0];
 					var tmax = temperature_scale[1];
 					var percentage_color = (temp - tmin)/(tmax - tmin);
@@ -1573,79 +1566,77 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					} else if(percentage_color >1){
 						percentage_color = 1;
 					}
-					
+
 					general_config.temp_values.push(parseFloat(temp));
 					var color_hex = getHCLcolor(percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-												
+
 					var color_rgb = hexToRgb(color_hex)
-					
+
 					var color_r = color_rgb.r/255;
 					var color_g = color_rgb.g/255;
 					var color_b = color_rgb.b/255;
-					var transparency = general_config.transparency_factor;
-								
+
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
-					                                                              
+
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
 					colors.push(color_r);colors.push(color_g);colors.push(color_b);
-					
-					
-					
+
+
+
 				}
 			}
-		}			
-		
-				
+		}
+
+
 		var coord_array_32 = new Float32Array(coord_array);
-		var colors_32 = new Float32Array(colors);  
-		
-		    
-		var material = new THREE.MeshBasicMaterial({  opacity:general_config.transparency_factor, transparent: true,vertexColors: THREE.VertexColors  });
+		var colors_32 = new Float32Array(colors);
+
+
+		var material = new THREE.MeshBasicMaterial({  vertexColors: THREE.VertexColors  });
 		var bufferGeometry = new THREE.BufferGeometry();
-        
+
 		bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
 		bufferGeometry.setAttribute( 'color', new THREE.BufferAttribute( colors_32, 3 ) );
 		var mesh = new THREE.Mesh( bufferGeometry, material);
-				
+
 		create_temp_histogram();
-				
+
 		general_config.grid.add(mesh);
 		scene.add(general_config.grid);
 	}
-	
+
 	function create_2D_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array,grid,id_sbl_array,id_meso_array,temperature_scale,THAT,THAT_W,HCanopy,HCanopy_w,number_points){
-		
+
 		general_config.temp_values = [];
-		var ni = general_config.data_ni, 
+		var ni = general_config.data_ni,
 		nj = general_config.data_nj;
-				
+
 		var coord_array = [];
 		var colors = [];
 		var sizes = [];
-		var transparency_factor_array = [];
 		var custompercentagearray = [];
 		var z_position_array = [];
 		var x_position_array = [];
 		var y_position_array = [];
-		
+
 		var h_position_array = [];
-		
+
 		general_config.z_min = null;
 		general_config.z_max = null;
 		general_config.x_min = null;
 		general_config.x_max = null;
 		general_config.y_min = null;
 		general_config.y_max = null;
-		
+
 		general_config.h_min = null;
 		general_config.h_max = null;
 		for(var m=0; m<general_config.id_sbl_array.length; m++){
@@ -1682,16 +1673,16 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-					
-					
+
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-									
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h - h_w)*2;
-					
+
 					if(general_config.h_min != null && general_config.h_max != null){
 						if(h_w < general_config.h_min){
 							general_config.h_min = h_w;
@@ -1703,7 +1694,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.h_min = h_w;
 						general_config.h_max = (h_w + l_z);
 					}
-					
+
 					if(general_config.z_min != null && general_config.z_max != null){
 						if((z_o - l_z/2) < general_config.z_min){
 							general_config.z_min = z_o - l_z/2;
@@ -1715,7 +1706,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.z_min = z_o - l_z/2;
 						general_config.z_max = z_o + l_z/2;
 					}
-					
+
 					if(general_config.x_min != null && general_config.x_max != null){
 						if((x_o - l_x/2) < general_config.x_min){
 							general_config.x_min = x_o - l_x/2;
@@ -1727,7 +1718,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.x_min = x_o - l_x/2;
 						general_config.x_max = x_o + l_x/2;
 					}
-					
+
 					if(general_config.y_min != null && general_config.y_max != null){
 						if((y_o - l_y/2) < general_config.y_min){
 							general_config.y_min = y_o - l_y/2;
@@ -1739,17 +1730,17 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.y_min = y_o - l_y/2;
 						general_config.y_max = y_o + l_y/2;
 					}
-					
+
 				}
 			}
-		}	
-		
+		}
+
 
 		for(var m=0; m<general_config.id_meso_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
 					var index_1 = j*ni + i;
-					
+
 					var h;
 					var h_w;
 					switch(general_config.id_meso_array[m]){
@@ -1880,15 +1871,15 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-													
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-					
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h-h_w)*2;
-									
+
 					if(general_config.h_min != null && general_config.h_max != null){
 						if(h_w < general_config.h_min){
 							general_config.h_min = h_w;
@@ -1900,7 +1891,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.h_min = h_w;
 						general_config.h_max = (h_w + l_z);
 					}
-						
+
 					if(general_config.z_min != null && general_config.z_max != null){
 						if((z_o - l_z/2) < general_config.z_min){
 							general_config.z_min = z_o - l_z/2;
@@ -1912,7 +1903,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.z_min = z_o - l_z/2;
 						general_config.z_max = z_o + l_z/2;
 					}
-					
+
 					if(general_config.x_min != null && general_config.x_max != null){
 						if((x_o - l_x/2) < general_config.x_min){
 							general_config.x_min = x_o - l_x/2;
@@ -1924,7 +1915,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.x_min = x_o - l_x/2;
 						general_config.x_max = x_o + l_x/2;
 					}
-					
+
 					if(general_config.y_min != null && general_config.y_max != null){
 						if((y_o - l_y/2) < general_config.y_min){
 							general_config.y_min = y_o - l_y/2;
@@ -1936,12 +1927,12 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.y_min = y_o - l_y/2;
 						general_config.y_max = y_o + l_y/2;
 					}
-				
-					
+
+
 				}
 			}
-		}	
-		
+		}
+
 		for(var m=0; m<general_config.id_sbl_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
@@ -1983,21 +1974,21 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-					
+
 					var x_u = MesoNH_U_array[index_1].x - general_config.Coord_X_paris;
 					var y_u = MesoNH_U_array[index_1].y - general_config.Coord_Y_paris;
 					var z_u = MesoNH_U_array[index_1].zs + h;
-					
+
 					var x_v = MesoNH_V_array[index_1].x - general_config.Coord_X_paris;
 					var y_v = MesoNH_V_array[index_1].y - general_config.Coord_Y_paris;
 					var z_v = MesoNH_V_array[index_1].zs + h;
-					
+
 					var z_o = MesoNH_O_array[index_1].zs + h;
-					
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h-h_w)*2;
-					
+
 					var tmin = temperature_scale[0];
 					var tmax = temperature_scale[1];
 					var percentage_color = (temp - tmin)/(tmax - tmin);
@@ -2006,20 +1997,20 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					} else if(percentage_color >1){
 						percentage_color = 1;
 					}
-					
+
 					general_config.temp_values.push(parseFloat(temp));
 					var color_hex = getHCLcolor(percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-												
+
 					var color_rgb = hexToRgb(color_hex)
-					
+
 					var color_r = color_rgb.r/255;
 					var color_g = color_rgb.g/255;
 					var color_b = color_rgb.b/255;
-					
-										
+
+
 					var size;
 					var basic_size = 10000;
-					
+
 					if(general_config.relative_size_factor < 1){
 						var add_factor = 1-general_config.relative_size_factor;
 						if(percentage_color < 0.5){
@@ -2041,21 +2032,20 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							size = parseInt(basic_size + basic_size*add_factor*(percentage_color-0.5)*2);
 						}
 					}
-								
+
 					var number_points_offset_x = l_x/number_points;
 					var number_points_offset_y = l_y/number_points;
-					
+
 					for(var a=0; a<number_points; a++){
 						for(var b=0; b<number_points; b++){
 							var pX = (x_u + a*number_points_offset_x);
 							var pY = (y_v + b*number_points_offset_y);
 							var pZ = z_o;
-							coord_array.push(pX*general_config.cst_X); 
+							coord_array.push(pX*general_config.cst_X);
 							coord_array.push(pZ*general_config.cst_Z);
 							coord_array.push(-pY*general_config.cst_Y);
 							colors.push(color_r);colors.push(color_g);colors.push(color_b);
 							sizes.push(size);
-							transparency_factor_array.push(general_config.transparency_factor);
 							custompercentagearray.push(percentage_color*2*Math.PI);
 							z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
 							x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
@@ -2063,16 +2053,16 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							h_position_array.push(((pZ-MesoNH_O_array[index_1].zs)-general_config.h_min)/(general_config.h_max - general_config.h_min));
 						}
 					}
-						
+
 				}
 			}
-		}	
+		}
 
 		for(var m=0; m<general_config.id_meso_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
 					var index_1 = j*ni + i;
-					
+
 					var temp;
 					var h;
 					var h_w;
@@ -2235,22 +2225,22 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-													
+
 					var x_u = MesoNH_U_array[index_1].x - general_config.Coord_X_paris;
 					var y_u = MesoNH_U_array[index_1].y - general_config.Coord_Y_paris;
 					var z_u = MesoNH_U_array[index_1].zs + h;
-					
+
 					var x_v = MesoNH_V_array[index_1].x - general_config.Coord_X_paris;
 					var y_v = MesoNH_V_array[index_1].y - general_config.Coord_Y_paris;
 					var z_v = MesoNH_V_array[index_1].zs + h;
-					
+
 					var z_o = MesoNH_O_array[index_1].zs + h;
-					
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h-h_w)*2;
-							
-					
+
+
 					var tmin = temperature_scale[0];
 					var tmax = temperature_scale[1];
 					var percentage_color = (temp - tmin)/(tmax - tmin);
@@ -2259,20 +2249,20 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					} else if(percentage_color >1){
 						percentage_color = 1;
 					}
-					
+
 					general_config.temp_values.push(parseFloat(temp));
 					var color_hex = getHCLcolor(percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-												
+
 					var color_rgb = hexToRgb(color_hex)
-					
+
 					var color_r = color_rgb.r/255;
 					var color_g = color_rgb.g/255;
 					var color_b = color_rgb.b/255;
-					
-										
+
+
 					var size;
 					var basic_size = 10000;
-					
+
 					if(general_config.relative_size_factor < 1){
 						var add_factor = 1-general_config.relative_size_factor;
 						if(percentage_color < 0.5){
@@ -2294,21 +2284,20 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							size = parseInt(basic_size + basic_size*add_factor*(percentage_color-0.5)*2);
 						}
 					}
-								
+
 					var number_points_offset_x = l_x/number_points;
 					var number_points_offset_y = l_y/number_points;
-					
+
 					for(var a=0; a<number_points; a++){
 						for(var b=0; b<number_points; b++){
 							var pX = (x_u + a*number_points_offset_x);
 							var pY = (y_v + b*number_points_offset_y);
 							var pZ = z_o;
-							coord_array.push(pX*general_config.cst_X); 
+							coord_array.push(pX*general_config.cst_X);
 							coord_array.push(pZ*general_config.cst_Z);
 							coord_array.push(-pY*general_config.cst_Y);
 							colors.push(color_r);colors.push(color_g);colors.push(color_b);
 							sizes.push(size);
-							transparency_factor_array.push(general_config.transparency_factor);
 							custompercentagearray.push(percentage_color*2*Math.PI);
 							z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
 							x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
@@ -2316,34 +2305,32 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							h_position_array.push(((pZ-MesoNH_O_array[index_1].zs)-general_config.h_min)/(general_config.h_max - general_config.h_min));
 						}
 					}
-										
+
 				}
 			}
-		}			
-		
+		}
+
 		var coord_array_32 = new Float32Array(coord_array);
-		var colors_32 = new Float32Array(colors);  
+		var colors_32 = new Float32Array(colors);
 		var sizes_32 = new Float32Array(sizes);
-		var transparency_factor_32 = new Float32Array(transparency_factor_array);
 		var custompercentage_32 = new Float32Array(custompercentagearray);
 		var z_position_array_32 = new Float32Array(z_position_array);
 		var x_position_array_32 = new Float32Array(x_position_array);
 		var y_position_array_32 = new Float32Array(y_position_array);
 		var h_position_array_32 = new Float32Array(h_position_array);
-					
+
 		var material;
 		var bufferGeometry = new THREE.BufferGeometry();
-		
+
 		bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
 		bufferGeometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors_32, 3 ) );
 		bufferGeometry.setAttribute( 'customsize', new THREE.BufferAttribute(sizes_32,1));
-		bufferGeometry.setAttribute( 'customtransparency', new THREE.BufferAttribute(transparency_factor_32,1));
 		bufferGeometry.setAttribute( 'custompercentage', new THREE.BufferAttribute(custompercentage_32,1));
 		bufferGeometry.setAttribute( 'z_position', new THREE.BufferAttribute(z_position_array_32,1));
 		bufferGeometry.setAttribute( 'x_position', new THREE.BufferAttribute(x_position_array_32,1));
 		bufferGeometry.setAttribute( 'y_position', new THREE.BufferAttribute(y_position_array_32,1));
 		bufferGeometry.setAttribute( 'h_position', new THREE.BufferAttribute(h_position_array_32,1));
-        
+
 		if(general_config.is_animated == false){
 			material = new THREE.ShaderMaterial( {
 				uniforms: {
@@ -2389,7 +2376,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			} else if(general_config.animation_parameter == 'Z'){
 				material = new THREE.ShaderMaterial( {
 					uniforms: {
@@ -2412,7 +2399,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			} else if(general_config.animation_parameter == 'X'){
 				material = new THREE.ShaderMaterial( {
 					uniforms: {
@@ -2435,7 +2422,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			} else if(general_config.animation_parameter == 'Y'){
 				material = new THREE.ShaderMaterial( {
 					uniforms: {
@@ -2458,46 +2445,45 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			}
 		}
-		
-	
+
+
 		var point = new THREE.Points( bufferGeometry, material);
-			
+
 		create_temp_histogram();
-			
+
 		general_config.grid.add(point);
 		scene.add(general_config.grid);
 	}
-	
+
 	function create_regular_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array,grid,id_sbl_array,id_meso_array,temperature_scale,THAT,THAT_W,HCanopy,HCanopy_w){
-	
+
 		general_config.temp_values = [];
-		var ni = general_config.data_ni, 
+		var ni = general_config.data_ni,
 		nj = general_config.data_nj;
-		
+
 		var coord_array = [];
 		var colors = [];
 		var sizes = [];
-		var transparency_factor_array = [];
 		var custompercentagearray = [];
 		var z_position_array = [];
 		var x_position_array = [];
 		var y_position_array = [];
-		
+
 		var h_position_array = [];
-		
+
 		general_config.z_min = null;
 		general_config.z_max = null;
 		general_config.x_min = null;
 		general_config.x_max = null;
 		general_config.y_min = null;
 		general_config.y_max = null;
-		
+
 		general_config.h_min = null;
 		general_config.h_max = null;
-		
+
 		for(var m=0; m<general_config.id_sbl_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
@@ -2532,16 +2518,16 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-					
-					
+
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-									
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h - h_w)*2;
-					
+
 					if(general_config.h_min != null && general_config.h_max != null){
 						if(h_w < general_config.h_min){
 							general_config.h_min = h_w;
@@ -2553,7 +2539,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.h_min = h_w;
 						general_config.h_max = (h_w + l_z);
 					}
-					
+
 					if(general_config.z_min != null && general_config.z_max != null){
 						if((z_o - l_z/2) < general_config.z_min){
 							general_config.z_min = z_o - l_z/2;
@@ -2565,7 +2551,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.z_min = z_o - l_z/2;
 						general_config.z_max = z_o + l_z/2;
 					}
-					
+
 					if(general_config.x_min != null && general_config.x_max != null){
 						if((x_o - l_x/2) < general_config.x_min){
 							general_config.x_min = x_o - l_x/2;
@@ -2577,7 +2563,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.x_min = x_o - l_x/2;
 						general_config.x_max = x_o + l_x/2;
 					}
-					
+
 					if(general_config.y_min != null && general_config.y_max != null){
 						if((y_o - l_y/2) < general_config.y_min){
 							general_config.y_min = y_o - l_y/2;
@@ -2589,17 +2575,17 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.y_min = y_o - l_y/2;
 						general_config.y_max = y_o + l_y/2;
 					}
-					
+
 				}
 			}
-		}	
-		
+		}
+
 
 		for(var m=0; m<general_config.id_meso_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
 					var index_1 = j*ni + i;
-					
+
 					var h;
 					var h_w;
 					switch(general_config.id_meso_array[m]){
@@ -2730,15 +2716,15 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-													
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-					
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h-h_w)*2;
-									
+
 					if(general_config.h_min != null && general_config.h_max != null){
 						if(h_w < general_config.h_min){
 							general_config.h_min = h_w;
@@ -2750,7 +2736,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.h_min = h_w;
 						general_config.h_max = (h_w + l_z);
 					}
-						
+
 					if(general_config.z_min != null && general_config.z_max != null){
 						if((z_o - l_z/2) < general_config.z_min){
 							general_config.z_min = z_o - l_z/2;
@@ -2762,7 +2748,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.z_min = z_o - l_z/2;
 						general_config.z_max = z_o + l_z/2;
 					}
-					
+
 					if(general_config.x_min != null && general_config.x_max != null){
 						if((x_o - l_x/2) < general_config.x_min){
 							general_config.x_min = x_o - l_x/2;
@@ -2774,7 +2760,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.x_min = x_o - l_x/2;
 						general_config.x_max = x_o + l_x/2;
 					}
-					
+
 					if(general_config.y_min != null && general_config.y_max != null){
 						if((y_o - l_y/2) < general_config.y_min){
 							general_config.y_min = y_o - l_y/2;
@@ -2786,13 +2772,13 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						general_config.y_min = y_o - l_y/2;
 						general_config.y_max = y_o + l_y/2;
 					}
-				
-					
+
+
 				}
 			}
-		}	
-		
-		
+		}
+
+
 		for(var m=0; m<general_config.id_sbl_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
@@ -2834,17 +2820,17 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-					
-					
+
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-									
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h - h_w)*2;
-					
-								
+
+
 					var tmin = temperature_scale[0];
 					var tmax = temperature_scale[1];
 					var percentage_color = (temp - tmin)/(tmax - tmin);
@@ -2853,20 +2839,20 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					} else if(percentage_color >1){
 						percentage_color = 1;
 					}
-					
+
 					general_config.temp_values.push(parseFloat(temp));
 					var color_hex = getHCLcolor(percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-												
+
 					var color_rgb = hexToRgb(color_hex)
-					
+
 					var color_r = color_rgb.r/255;
 					var color_g = color_rgb.g/255;
 					var color_b = color_rgb.b/255;
-						
+
 					var cell_volume = l_x*l_y*l_z;
-					
+
 					var relative_density;
-					
+
 					if(general_config.relative_density_factor < 1){
 						var add_factor = 1-general_config.relative_density_factor;
 						if(percentage_color < 0.5){
@@ -2888,10 +2874,10 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							relative_density = general_config.particle_density + general_config.particle_density*add_factor*(percentage_color-0.5)*2;
 						}
 					}
-										
+
 					var size;
 					var basic_size = 10000;
-					
+
 					if(general_config.relative_size_factor < 1){
 						var add_factor = 1-general_config.relative_size_factor;
 						if(percentage_color < 0.5){
@@ -2913,17 +2899,17 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							size = parseInt(basic_size + basic_size*add_factor*(percentage_color-0.5)*2);
 						}
 					}
-						
+
 					var particle_length_XY = parseInt(relative_density*l_x*l_y);
-					
+
 					var offset_xy = l_x/Math.sqrt(particle_length_XY);
-					
+
 					var number_particule_x = parseInt(Math.sqrt(particle_length_XY));
 					var number_particule_y = parseInt(Math.sqrt(particle_length_XY));
 					var number_particule_z = parseInt((l_z*general_config.cst_Z)/(offset_xy*general_config.cst_X));
-					
-					
-					
+
+
+
 					if(number_particule_x <1){
 					number_particule_x=1;
 					}
@@ -2934,7 +2920,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					number_particule_z=1;
 					}
 					var offset_z = l_z/number_particule_z;
-					var counter =0;									
+					var counter =0;
 					for(var a=0; a<number_particule_x; a++){
 						for(var b=0; b<number_particule_y; b++){
 							for(var c=0; c<number_particule_z; c++){
@@ -2946,7 +2932,6 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 								coord_array.push(-pY*general_config.cst_Y);
 								colors.push(color_r);colors.push(color_g);colors.push(color_b);
 								sizes.push(size);
-								transparency_factor_array.push(general_config.transparency_factor);
 								custompercentagearray.push(percentage_color*2*Math.PI);
 								z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
 								x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
@@ -2955,15 +2940,15 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							}
 						}
 					}
-												
+
 				}
 			}
-		}	
+		}
 		for(var m=0; m<general_config.id_meso_array.length; m++){
 			for(var j=0; j<nj; j++){
 				for(var i=0; i<ni; i++){
 					var index_1 = j*ni + i;
-					
+
 					var temp;
 					var h;
 					var h_w;
@@ -3126,16 +3111,16 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 						default:
 							return;
 					}
-													
+
 					var x_o = MesoNH_O_array[index_1].x - general_config.Coord_X_paris;
-					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;					
+					var y_o = MesoNH_O_array[index_1].y - general_config.Coord_Y_paris;
 					var z_o = MesoNH_O_array[index_1].zs + h;
-					
+
 					var l_x = (MesoNH_O_array[index_1].x - MesoNH_U_array[index_1].x)*2;
 					var l_y = (MesoNH_O_array[index_1].y - MesoNH_V_array[index_1].y)*2;
 					var l_z = (h-h_w)*2;
-									
-									
+
+
 					var tmin = temperature_scale[0];
 					var tmax = temperature_scale[1];
 					var percentage_color = (temp - tmin)/(tmax - tmin);
@@ -3144,20 +3129,20 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					} else if(percentage_color >1){
 						percentage_color = 1;
 					}
-					
+
 					general_config.temp_values.push(parseFloat(temp));
 					var color_hex = getHCLcolor(percentage_color,general_config.HCL_color_scales[general_config.active_HCL_id].scale);
-												
+
 					var color_rgb = hexToRgb(color_hex)
-					
+
 					var color_r = color_rgb.r/255;
 					var color_g = color_rgb.g/255;
 					var color_b = color_rgb.b/255;
-						
+
 					var cell_volume = l_x*l_y*l_z;
-					
+
 					var relative_density;
-					
+
 					if(general_config.relative_density_factor < 1){
 						var add_factor = 1-general_config.relative_density_factor;
 						if(percentage_color < 0.5){
@@ -3179,12 +3164,12 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							relative_density = general_config.particle_density + general_config.particle_density*add_factor*(percentage_color-0.5)*2;
 						}
 					}
-					
-					
-					
+
+
+
 					var size;
 					var basic_size = 10000;
-					
+
 					if(general_config.relative_size_factor < 1){
 						var add_factor = 1-general_config.relative_size_factor;
 						if(percentage_color < 0.5){
@@ -3206,17 +3191,17 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							size = parseInt(basic_size + basic_size*add_factor*(percentage_color-0.5)*2);
 						}
 					}
-						
+
 					var particle_length_XY = parseInt(relative_density*l_x*l_y);
-					
+
 					var offset_xy = l_x/Math.sqrt(particle_length_XY);
-					
+
 					var number_particule_x = parseInt(Math.sqrt(particle_length_XY));
 					var number_particule_y = parseInt(Math.sqrt(particle_length_XY));
 					var number_particule_z = parseInt((l_z*general_config.cst_Z)/(offset_xy*general_config.cst_X));
-					
-					
-					
+
+
+
 					if(number_particule_x <1){
 					number_particule_x=1;
 					}
@@ -3227,7 +3212,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					number_particule_z=1;
 					}
 					var offset_z = l_z/number_particule_z;
-									
+
 					for(var a=0; a<number_particule_x; a++){
 						for(var b=0; b<number_particule_y; b++){
 							for(var c=0; c<number_particule_z; c++){
@@ -3239,7 +3224,6 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 								coord_array.push(-pY*general_config.cst_Y);
 								colors.push(color_r);colors.push(color_g);colors.push(color_b);
 								sizes.push(size);
-								transparency_factor_array.push(general_config.transparency_factor);
 								custompercentagearray.push(percentage_color*2*Math.PI);
 								z_position_array.push((pZ - general_config.z_min)/(general_config.z_max - general_config.z_min));
 								x_position_array.push((pX - general_config.x_min)/(general_config.x_max - general_config.x_min));
@@ -3248,36 +3232,34 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 							}
 						}
 					}
-					
-					
-					
+
+
+
 				}
 			}
-		}			
-						
+		}
+
 		var coord_array_32 = new Float32Array(coord_array);
-		var colors_32 = new Float32Array(colors);  
+		var colors_32 = new Float32Array(colors);
 		var sizes_32 = new Float32Array(sizes);
-		var transparency_factor_32 = new Float32Array(transparency_factor_array);
 		var custompercentage_32 = new Float32Array(custompercentagearray);
 		var z_position_array_32 = new Float32Array(z_position_array);
 		var x_position_array_32 = new Float32Array(x_position_array);
 		var y_position_array_32 = new Float32Array(y_position_array);
 		var h_position_array_32 = new Float32Array(h_position_array);
-				
+
 		var material;
 		var bufferGeometry = new THREE.BufferGeometry();
-		
+
 		bufferGeometry.setAttribute( 'position', new THREE.BufferAttribute( coord_array_32, 3 ) );
 		bufferGeometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors_32, 3 ) );
 		bufferGeometry.setAttribute( 'customsize', new THREE.BufferAttribute(sizes_32,1));
-		bufferGeometry.setAttribute( 'customtransparency', new THREE.BufferAttribute(transparency_factor_32,1));
 		bufferGeometry.setAttribute( 'custompercentage', new THREE.BufferAttribute(custompercentage_32,1));
 		bufferGeometry.setAttribute( 'z_position', new THREE.BufferAttribute(z_position_array_32,1));
 		bufferGeometry.setAttribute( 'x_position', new THREE.BufferAttribute(x_position_array_32,1));
 		bufferGeometry.setAttribute( 'y_position', new THREE.BufferAttribute(y_position_array_32,1));
 		bufferGeometry.setAttribute( 'h_position', new THREE.BufferAttribute(h_position_array_32,1));
-			
+
 		if(general_config.is_animated == false){
 			material = new THREE.ShaderMaterial( {
 				uniforms: {
@@ -3323,7 +3305,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			} else if(general_config.animation_parameter == 'Z'){
 				material = new THREE.ShaderMaterial( {
 					uniforms: {
@@ -3346,7 +3328,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			} else if(general_config.animation_parameter == 'X'){
 				material = new THREE.ShaderMaterial( {
 					uniforms: {
@@ -3369,7 +3351,7 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			} else if(general_config.animation_parameter == 'Y'){
 				material = new THREE.ShaderMaterial( {
 					uniforms: {
@@ -3392,18 +3374,18 @@ function create_random_points_cloud(MesoNH_O_array,MesoNH_U_array,MesoNH_V_array
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 					transparent: true
 				} );
-				
+
 			}
 		}
-			
+
 		var point = new THREE.Points( bufferGeometry, material);
-				
+
 		create_temp_histogram();
-				
+
 		general_config.grid.add(point);
 		scene.add(general_config.grid);
 	}
-	
+
 	function create_temp_histogram(){
 		var temp_deg=[];
 		for(var j = 0; j<general_config.temp_values.length; j++){
