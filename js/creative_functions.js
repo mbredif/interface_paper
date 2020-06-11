@@ -3347,12 +3347,15 @@ export function set_light_position(){
 	var y_light_min = general_config.data_volume_3D.y_min - 1000;
 	var x_light_max = general_config.data_volume_3D.x_max + 1000;
 	var y_light_max = general_config.data_volume_3D.y_max + 1000;
-	var z_light = 600;
+	var z_light_1 = 0;
+	var z_light_2 = 600;
 		 	
-	scene.children[0].position.set(x_light_min * general_config.cst_X,z_light * general_config.cst_Z,-y_light_min * general_config.cst_Y);
-	scene.children[1].position.set(x_light_min * general_config.cst_X,z_light * general_config.cst_Z,-y_light_max * general_config.cst_Y);
-	scene.children[2].position.set(x_light_max * general_config.cst_X,z_light * general_config.cst_Z,-y_light_min * general_config.cst_Y);
-	scene.children[3].position.set(x_light_max * general_config.cst_X,z_light * general_config.cst_Z,-y_light_max * general_config.cst_Y);
+	scene.children[0].position.set(x_light_min * general_config.cst_X,z_light_1 * general_config.cst_Z,-y_light_min * general_config.cst_Y);
+	scene.children[1].position.set(x_light_min * general_config.cst_X,z_light_2 * general_config.cst_Z,-y_light_max * general_config.cst_Y);
+	scene.children[2].position.set(x_light_max * general_config.cst_X,z_light_2 * general_config.cst_Z,-y_light_min * general_config.cst_Y);
+	scene.children[3].position.set(x_light_max * general_config.cst_X,z_light_1 * general_config.cst_Z,-y_light_max * general_config.cst_Y);
 	
 }
+
+
 
