@@ -2660,7 +2660,10 @@ var z_offset=0;
       general_config.grid_building.add(ground_feature_mesh);  
     general_config.grid_building.add(buildings_feature_mesh);
 	
-    scene.add(general_config.grid_building);
+	if($('#buildings_presence_input').is(':checked') == true){
+		scene.add(general_config.grid_building);
+	}
+    
 
 }
 
@@ -3357,5 +3360,16 @@ export function set_light_position(){
 	
 }
 
-
+export function add_hide_buildings(){
+	
+	if($('#buildings_presence_input').is(':checked') == true){
+		scene.add(general_config.grid_building);
+	} else {
+		
+		if(general_config.grid_building != null){
+			scene.remove(general_config.grid_building);
+		} 
+		
+	}
+}
 
