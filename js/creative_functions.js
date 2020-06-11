@@ -2,6 +2,9 @@ import {general_config, renderer, scene, camera, controls, mesh} from './initial
 import * as THREE from './three.module.js';
 
 
+const light_direction = [];
+var light_ambient = 0.;
+
 export function activate_animation() {
     var material;
 		
@@ -307,16 +310,8 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		var road_material = new THREE.ShaderMaterial( {
 			side: THREE.DoubleSide,
 			uniforms: {
-				light_position_1: { value: scene.children[0].position },
-				light_color_1: { value: scene.children[0].color },
-				light_position_2: { value: scene.children[1].position },
-				light_color_2: { value: scene.children[1].color },
-				light_position_3: { value: scene.children[2].position },
-				light_color_3: { value: scene.children[2].color },
-				light_position_4: { value: scene.children[3].position },
-				light_color_4: { value: scene.children[3].color },
-				//light_position_5: { value: scene.children[4].position },
-				//light_color_5: { value: scene.children[4].color },
+				light_direction: { value: light_direction },
+				light_ambient: { value: light_ambient },
 				u_data: { value: texture },
 				zs_data: { value: texture_zs},
 				meso_limit: {value: texture_limit_meso},
@@ -429,18 +424,10 @@ export function create_2D_vertical_plane_series(road_summit_data, grid,id_sbl_ar
 		var road_material = new THREE.ShaderMaterial( {
 			side: THREE.DoubleSide,
 			uniforms: {
-				light_position_1: { value: scene.children[0].position },
-				light_color_1: { value: scene.children[0].color },
-				light_position_2: { value: scene.children[1].position },
-				light_color_2: { value: scene.children[1].color },
-				light_position_3: { value: scene.children[2].position },
-				light_color_3: { value: scene.children[2].color },
-				light_position_4: { value: scene.children[3].position },
-				light_color_4: { value: scene.children[3].color },
+				light_direction: { value: light_direction },
+				light_ambient: { value: light_ambient },
 				meso_limit: {value: texture_limit_meso},
 				teb_limit: {value: texture_limit_teb},
-				//light_position_5: { value: scene.children[4].position },
-				//light_color_5: { value: scene.children[4].color },
 				u_data: { value: texture },
 				zs_data: { value: texture_zs},
 				u_cmdata: { value: cmtextures.blue_red_2 },
@@ -1374,16 +1361,8 @@ export function create_2D_plane_series(MesoNH_O_array,MesoNH_U_array,MesoNH_V_ar
 						side: THREE.DoubleSide,
 						transparent:true,
 						uniforms: {
-							light_position_1: { value: scene.children[0].position },
-							light_color_1: { value: scene.children[0].color },
-							light_position_2: { value: scene.children[1].position },
-							light_color_2: { value: scene.children[1].color },
-							//light_position_3: { value: scene.children[2].position },
-							//light_color_3: { value: scene.children[2].color },
-							//light_position_4: { value: scene.children[3].position },
-							//light_color_4: { value: scene.children[3].color },
-							//light_position_5: { value: scene.children[4].position },
-							//light_color_5: { value: scene.children[4].color },
+							light_direction: { value: light_direction },
+							light_ambient: { value: light_ambient },
 							u_data: { value: texture },
 							zs_data: { value: texture_zs},
 							meso_limit: {value: texture_limit_meso},
@@ -2572,16 +2551,8 @@ var z_offset=0;
     var buildings_feature_material = new THREE.ShaderMaterial( {
 						side: THREE.DoubleSide,
 						uniforms: {
-							light_position_1: { value: scene.children[0].position },
-							light_color_1: { value: scene.children[0].color },
-							light_position_2: { value: scene.children[1].position },
-							light_color_2: { value: scene.children[1].color },
-							light_position_3: { value: scene.children[2].position },
-							light_color_3: { value: scene.children[2].color },
-							light_position_4: { value: scene.children[3].position },
-							light_color_4: { value: scene.children[3].color },
-							//light_position_5: { value: scene.children[4].position },
-							//light_color_5: { value: scene.children[4].color },
+							light_direction: { value: light_direction },
+							light_ambient: { value: light_ambient },
 							transparency: { value: general_config.buildings_transparency }
 						},
 						vertexShader: document.getElementById( 'vertexshader_buildings' ).textContent,
@@ -2592,21 +2563,11 @@ var z_offset=0;
 					} );
     var buildings_feature_bufferGeometry = new THREE.BufferGeometry();
 	
-	
 	var ground_feature_material = new THREE.ShaderMaterial( {
 						side: THREE.DoubleSide,
 						uniforms: {
-							light_position_1: { value: scene.children[0].position },
-							light_color_1: { value: scene.children[0].color },
-							light_position_2: { value: scene.children[1].position },
-							light_color_2: { value: scene.children[1].color },
-							light_position_3: { value: scene.children[2].position },
-							light_color_3: { value: scene.children[2].color },
-							light_position_4: { value: scene.children[3].position },
-							light_color_4: { value: scene.children[3].color },
-							//light_position_5: { value: scene.children[4].position },
-							//light_color_5: { value: scene.children[4].color },
-							transparency: { type: "f", value: 1.0 }
+							light_direction: { value: light_direction },
+							light_ambient: { value: light_ambient },
 						},
 						vertexShader: document.getElementById( 'vertexshader_buildings' ).textContent,
 						fragmentShader: document.getElementById( 'fragmentshader_buildings' ).textContent,
@@ -3370,19 +3331,12 @@ export function create_data_texture(Meso_NH, MesoNH_U, MesoNH_V, x_length, y_len
     
 }
 
-export function set_light_position(){
-	var x_light_min = general_config.data_volume_3D.x_min - 1000;
-	var y_light_min = general_config.data_volume_3D.y_min - 1000;
-	var x_light_max = general_config.data_volume_3D.x_max + 1000;
-	var y_light_max = general_config.data_volume_3D.y_max + 1000;
-	var z_light_1 = 0;
-	var z_light_2 = 600;
-		 	
-	scene.children[0].position.set(x_light_min * general_config.cst_X,z_light_1 * general_config.cst_Z,-y_light_min * general_config.cst_Y);
-	scene.children[1].position.set(x_light_min * general_config.cst_X,z_light_2 * general_config.cst_Z,-y_light_max * general_config.cst_Y);
-	scene.children[2].position.set(x_light_max * general_config.cst_X,z_light_2 * general_config.cst_Z,-y_light_min * general_config.cst_Y);
-	scene.children[3].position.set(x_light_max * general_config.cst_X,z_light_1 * general_config.cst_Z,-y_light_max * general_config.cst_Y);
-	
+export function set_lights(){
+	light_ambient = 0.6;
+	light_contrast = 0.1;
+	var x = light_contrast*Math.sqrt(3);
+	light_direction[0] = new THREE.Vector3( x,x, x);
+	light_direction[1] = new THREE.Vector3(-x,x,-x);
 }
 
 export function add_hide_buildings(){

@@ -1,5 +1,5 @@
 import { general_config, scene, camera } from './initialisation.js';
-import { create_data_texture, recreate_scene, create_temp_histogram,create_buildings,set_light_position } from './creative_functions.js'
+import { create_data_texture, recreate_scene, create_temp_histogram,create_buildings,set_lights } from './creative_functions.js'
 import { numberInArray } from './color_function.js';
 
 
@@ -239,7 +239,7 @@ export function loadChosenDataSet() {
 
 	setTimeout(function(d){
 		general_config.data_volume_3D = create_data_texture(general_config.data_points_O_2,general_config.data_points_U_2,general_config.data_points_V_2, general_config.data_ni, general_config.data_nj, 31 + 6,general_config.temp_min,general_config.temp_max);
-		set_light_position();
+		set_lights();
 	}, 1000);
 	
 	
@@ -320,7 +320,7 @@ export function loadChosenData() {
 		
 		setTimeout(function(d){
 			general_config.data_volume_3D = create_data_texture(general_config.data_points_O_2,general_config.data_points_U_2,general_config.data_points_V_2, general_config.data_ni, general_config.data_nj, 31 + 6,general_config.temp_min,general_config.temp_max);
-			set_light_position();
+			set_lights();
 		}, 1000);
 		
 		setTimeout(function(d){

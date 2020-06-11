@@ -260,22 +260,6 @@ export function init(){
     camera.position.set( general_config.camera_x, general_config.camera_y, general_config.camera_z );
     controls.update();
 
-    var light = new THREE.PointLight( 0xffffff, 1, 0 );
-    var light2 = new THREE.PointLight( 0xffffff, 1, 0 );
-	var light3 = new THREE.PointLight( 0xffffff, 1, 0 );
-    var light4 = new THREE.PointLight( 0xffffff, 1, 0 );
-	scene.add( light );
-	scene.add( light2 );
-	scene.add( light3 );
-	scene.add( light4 );
-	
-	
-	
-	
-	//var light5 = new THREE.PointLight( 0xffffff, 1, 0 );
-    //light5.position.set(-1000,1000,0);
-    //scene.add( light5 );
-    
     var axesHelper = new THREE.AxesHelper( 100 );
     scene.add( axesHelper );
     

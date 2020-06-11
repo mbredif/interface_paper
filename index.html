@@ -1389,37 +1389,16 @@
 		varying vec3 v_color;
 		varying vec3 Normal;
 
-		uniform vec3 light_position_1;
-		uniform vec3 light_color_1;
-		uniform vec3 light_position_2;
-		uniform vec3 light_color_2;
-		uniform vec3 light_position_3;
-		uniform vec3 light_color_3;
-		uniform vec3 light_position_4;
-		uniform vec3 light_color_4;
-		uniform vec3 light_position_5;
-		uniform vec3 light_color_5;
-
+		uniform vec3 light_direction[2];
+		uniform float light_ambient;
 
 		uniform float transparency;
 
 		void main() {
-
-			vec3 l_1 = normalize(light_position_1 - v_position);
-			vec3 l_2 = normalize(light_position_2 - v_position);
-			vec3 l_3 = normalize(light_position_3 - v_position);
-			vec3 l_4 = normalize(light_position_4 - v_position);
-			vec3 l_5 = normalize(light_position_5 - v_position);
-
-			vec3 color_1 = v_color * light_color_1 * max(0.0,dot(Normal,l_1));
-			vec3 color_2 = v_color * light_color_2 * max(0.0,dot(Normal,l_2));
-			vec3 color_3 = v_color * light_color_3 * max(0.0,dot(Normal,l_3));
-			vec3 color_4 = v_color * light_color_4 * max(0.0,dot(Normal,l_4));
-			vec3 color_5 = v_color * light_color_5 * max(0.0,dot(Normal,l_5));
-
-			vec3 new_color = color_1+color_2+color_3+color_4+color_5;
-
-			gl_FragColor= vec4(new_color[0],new_color[1],new_color[2],transparency);
+			float d = light_ambient;
+			d += max(0.0,dot(Normal,light_direction[0]));
+			d += max(0.0,dot(Normal,light_direction[1]));
+			gl_FragColor= vec4(d * v_color,transparency);
 		}
 	</script>
 
@@ -1448,17 +1427,10 @@
 		uniform sampler2D zs_data;
 		uniform sampler2D u_cmdata;
 
-		uniform vec3 light_position_1;
-		uniform vec3 light_color_1;
-		uniform vec3 light_position_2;
-		uniform vec3 light_color_2;
-		uniform vec3 light_position_3;
-		uniform vec3 light_color_3;
-		uniform vec3 light_position_4;
-		uniform vec3 light_color_4;
-		uniform vec3 light_position_5;
-		uniform vec3 light_color_5;
 		
+		uniform vec3 light_direction[2];
+		uniform float light_ambient;
+
 		uniform sampler3D meso_limit;
 		uniform sampler3D teb_limit;
 
@@ -1619,31 +1591,12 @@
 				vec4 point_color_4 = texture2D(u_cmdata, vec2(val, 0.5));
 				vec3 point_color_3 = vec3(point_color_4[0],point_color_4[1],point_color_4[2]);
 
-				vec3 l_1 = normalize(light_position_1 - v_position);
-				vec3 l_2 = normalize(light_position_2 - v_position);
-				vec3 l_3 = normalize(light_position_3 - v_position);
-				vec3 l_4 = normalize(light_position_4 - v_position);
-				//vec3 l_5 = normalize(light_position_5 - v_position);
-
-				vec3 color_1 = point_color_3 * light_color_1 * max(0.0,dot(Normal,l_1));
-				vec3 color_2 = point_color_3 * light_color_2 * max(0.0,dot(Normal,l_2));
-				vec3 color_3 = point_color_3 * light_color_3 * max(0.0,dot(Normal,l_3));
-				vec3 color_4 = point_color_3 * light_color_4 * max(0.0,dot(Normal,l_4));
-				//vec3 color_5 = point_color_3 * light_color_5 * max(0.0,dot(Normal,l_5));
-
-				//vec3 color = color_1+color_2+color_3+color_4+color_5;
-
-				vec3 color = color_1+color_2+color_3+color_4;
-
-				gl_FragColor = vec4(color[0],color[1],color[2],1.0);
-
-
-
+				float d = light_ambient;
+				d += max(0.0,dot(Normal,light_direction[0]));
+				d += max(0.0,dot(Normal,light_direction[1]));
+		
+				gl_FragColor = vec4(d * point_color_3,1.0);
 				}
-
-
-
-
 		}
 	</script>
 	<script type="module">
