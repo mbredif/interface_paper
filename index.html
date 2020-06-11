@@ -499,7 +499,8 @@
 			
 				//float val = fract((float(int(voxel_position[2]))+0.5)/(u_size[2]/7.0));
 				//float val = mod((float(int(voxel_position[2]))+0.5),6.0)/6.0;
-				float val = mod((voxel_point_level-0.5),6.0)/6.0;
+				//float val = mod((voxel_point_level-0.5),6.0)/6.0;
+				float val = (6.0-mod((voxel_point_level-0.5),6.0))/6.0;
 				
 				gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
 				
@@ -1290,7 +1291,8 @@
 					}
 				} else {
 					//float val = fract(float(int(voxel_position[2]))/(u_size[2]/7.0));
-					float val = mod((float(int(voxel_position[2]))+0.5),6.0)/6.0;
+					//float val = mod((float(int(voxel_position[2]))+0.5),6.0)/6.0;
+					float val = (6.0-mod((float(int(voxel_position[2]))+0.5),6.0))/6.0;
 					gl_FragColor = texture2D(u_cmdata, vec2(val, 0.5));
 				}
 				
@@ -1534,7 +1536,8 @@
 
 					} else {
 						//val = fract(float(int(voxel_position_z))/(u_size[2]/7.0));
-						val = mod((float(int(voxel_position[2]))+0.5),6.0)/6.0;
+						//val = mod((float(int(voxel_position[2]))+0.5),6.0)/6.0;
+						val = (6.0-mod((float(int(voxel_position[2]))+0.5),6.0))/6.0;
 					}
 
 
