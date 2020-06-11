@@ -317,11 +317,18 @@ export function loadChosenData() {
 		$.getJSON( "./geojson/"+ data_road, function( data ) {
 			general_config.data_road = data;
 		});
-		$.getJSON( "./geojson/"+ data_build, function( data ) {
-			general_config.data_build = data;
-			create_buildings(general_config.data_build,scene,$("#type_bati").val());
-		});
-
+		
+		setTimeout(function(d){
+			general_config.data_volume_3D = create_data_texture(general_config.data_points_O_2,general_config.data_points_U_2,general_config.data_points_V_2, general_config.data_ni, general_config.data_nj, 31 + 6,general_config.temp_min,general_config.temp_max);
+			set_light_position();
+		}, 1000);
+		
+		setTimeout(function(d){
+			$.getJSON( "./geojson/"+ data_build, function( data ) {
+				general_config.data_build = data;
+				create_buildings(general_config.data_build,scene,$("#type_bati").val());
+			});
+		}, 1000);
 
 		if (dataO.split("paris_beaubourg").length >1){
 			general_config.data_ni = 1;
@@ -330,6 +337,8 @@ export function loadChosenData() {
 			general_config.data_ni = 9;
 		general_config.data_nj = 6;
 		}
+		
+
 
 		$( "#type_bati" ).on( "change", function() {
 			create_buildings(general_config.data_build,scene,$("#type_bati").val());
