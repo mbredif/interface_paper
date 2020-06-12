@@ -3333,7 +3333,7 @@ export function create_data_texture(Meso_NH, MesoNH_U, MesoNH_V, x_length, y_len
 
 export function set_lights(){
 	light_ambient = 0.6;
-	light_contrast = 0.1;
+	var light_contrast = 0.1;
 	var x = light_contrast*Math.sqrt(3);
 	light_direction[0] = new THREE.Vector3( x,x, x);
 	light_direction[1] = new THREE.Vector3(-x,x,-x);
