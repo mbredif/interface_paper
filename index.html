@@ -575,6 +575,8 @@
 		uniform float zs;
 		uniform float u_time;
 		
+		varying float voxel_point_level;
+		
 		uniform sampler3D meso_limit;
 		uniform sampler3D teb_limit;
 		
@@ -605,6 +607,9 @@
 			float voxel_position_z = 0.0;
 			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
 			float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
+			
+			voxel_point_level = voxel_level;
+			
 			if(voxel_level < 7.0){
 			    
 					vec3 sample3D_size;
@@ -756,6 +761,8 @@
 		varying float transparency;
 		varying float tempPercentage;
 		
+		varying float voxel_point_level;
+		
 		varying float temp_val;
 
 		float sample1(vec3 texcoords) {
@@ -771,6 +778,7 @@
 			float voxel_position_z = 0.0;
 			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
 			float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
+			voxel_point_level = voxel_level;
 			if(voxel_level < 7.0){
 			    
 					vec3 sample3D_size;
@@ -897,6 +905,8 @@
 		uniform sampler3D meso_limit;
 		uniform sampler3D teb_limit;
 		
+		varying float voxel_point_level;
+		
 		uniform float x_min;
 		uniform float x_max;
 		uniform float y_min;
@@ -934,6 +944,8 @@
 			float voxel_position_z = 0.0;
 			vec2 voxel_xy = vec2(voxel_position_x,voxel_position_y);
 			float new_zs = texture2D(zs_data, (voxel_xy/vec2(u_size[0],u_size[1]))).r;
+			
+			voxel_point_level = voxel_level;
 			if(voxel_level < 7.0){
 			    
 					vec3 sample3D_size;
