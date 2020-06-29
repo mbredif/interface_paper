@@ -2406,9 +2406,14 @@ var z_offset=0;
         
         var polygon_coordinate = [];
         
-        
         var building_color;
         switch(nature_type){
+			case 'lcz_1':
+                building_color = return_building_color(feature.properties.lcz1,'lcz_1');
+                break;
+			case 'lcz_2':
+                building_color = return_building_color(feature.properties.lcz2,'lcz_2');
+                break;
             case 'typo_maj':
                 building_color = return_building_color(feature.properties.typo_maj,'typo_maj');
                 break;
@@ -2636,7 +2641,45 @@ export function change_buildings_transparency(transparency){
 export function return_building_color(type,nature_type){
     var color_hex = '#7f7f7f';
     var color = {'r':null,'g':null,'b':null};
-    if(nature_type == "typo_maj"){
+    if(nature_type == "lcz_1" || nature_type == "lcz_2"){
+        if(type == 1){
+			color_hex = '#8b0101';
+		} else if(type == 2) {
+			color_hex = '#cc0200';
+		} else if(type == 3) {
+			color_hex = '#fc0001';
+		} else if(type == 4) {
+			color_hex = '#be4c03';
+		} else if(type == 5) {
+			color_hex = '#ff6602';
+		} else if(type == 6) {
+			color_hex = '#ff9856';
+		} else if(type == 7) {
+			color_hex = '#fbed08';
+		} else if(type == 8) {
+			color_hex = '#bcbcba';
+		} else if(type == 9) {
+			color_hex = '#ffcca7';
+		} else if(type == 10) {
+			color_hex = '#57555a';
+		} else if(type == 101) {
+			color_hex = '#006700';
+		} else if(type == 102) {
+			color_hex = '#05aa05';
+		} else if(type == 103) {
+			color_hex = '#648423';
+		} else if(type == 104) {
+			color_hex = '#bbdb7a';
+		} else if(type == 105) {
+			color_hex = '#010101';
+		} else if(type == 106) {
+			color_hex = '#fdf6ae';
+		} else if(type == 107) {
+			color_hex = '#6d67fd';
+		} else {
+			color_hex = '#7f7f7f';
+		}
+    } else if(nature_type == "typo_maj"){
         switch(type){
             case 'ba':
                 color_hex = '#8f8f8f';
